@@ -144,7 +144,7 @@
         const svg = d3
           .create("svg")
           .attr("viewBox", [-width / 2, -height / 2, width, height])
-          .style("font", "10px sans-serif")
+          .style("font", "12px sans-serif")
           .attr("width", "100%") // Set SVG to 100% width
           .attr("height", height); // Adjust height dynamically
 
@@ -188,7 +188,7 @@
           .attr("dy", "0.35em")
           .attr("fill-opacity", (d) => +labelVisible(d.current))
           .attr("transform", (d) => labelTransform(d.current))
-          .style("font-size", "14px")
+          .style("font-size", "20px")
           .text((d) => d.data.name);
 
         const parent = svg
@@ -259,9 +259,20 @@
         function labelTransform(d) {
           const x = ((d.x0 + d.x1) / 2) * (180 / Math.PI);
           const y = ((d.y0 + d.y1) / 2) * radius;
-          return `rotate(${x - 90}) translate(${y},0) rotate(${
-            x < 180 ? 0 : 180
-          })`;
+
+          // Check if the label is in the inner circle based on its `depth`
+          if (d.depth === 1) {
+            // Adjust `depth` if needed based on your data structure
+            // Apply a 45-degree rotation to the inner circle text only
+            return `rotate(${x - 90 + 15}) translate(${y},0) rotate(${
+              x < 180 ? 0 : 180
+            })`;
+          } else {
+            // For outer circle text, apply the default transform
+            return `rotate(${x - 90}) translate(${y},0) rotate(${
+              x < 180 ? 0 : 180
+            })`;
+          }
         }
 
         return svg.node();
