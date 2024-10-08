@@ -18,7 +18,7 @@ const Navbar = () => {
         />
       </div>
 
-      {/* Icons and user */}
+      {/* Avatar and user */}
       <div className="flex items-center justify-end gap-4">
         <div className="flex flex-col text-gray-500">
           <span className="text-black">Joy Simha Oz</span>

@@ -25,3 +25,29 @@ body {
     text-wrap: balance;
   }
 }
+
+.react-calendar {
+  width: 100% !important;
+  color: #171717;
+  border: none !important;
+  font-family: "Inter", sans-serif !important;
+}
+
+.react-calendar__tile--active {
+  background: #c3ebfa !important;
+  color: #171717 !important;
+  border-radius: 8px !important;
+}
+
+.react-calendar__navigation__label__labelText {
+  font-weight: 700 !important;
+}
+
+.react-calendar__tile:hover {
+  border-radius: 8px !important;
+}
+
+.react-calendar__tile--now {
+  background-color: #fff48d !important; /* Change background color */
+  border-radius: 8px !important;
+}
