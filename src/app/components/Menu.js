@@ -27,6 +27,7 @@ const menuItems = [
 ];
 
 // TODO: Center the div horizontally
+// TODO: move the menu items left a right bit
 const Menu = () => {
   return (
     <div className="mt-4">
