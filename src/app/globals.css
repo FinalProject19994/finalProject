@@ -28,7 +28,6 @@ body {
 
 .react-calendar {
   width: 100% !important;
-  color: #171717;
   border: none !important;
   font-family: "Inter", sans-serif !important;
 }
@@ -50,4 +49,22 @@ body {
 .react-calendar__tile--now {
   background-color: #fff48d !important; /* Change background color */
   border-radius: 8px !important;
+}
+
+::-webkit-scrollbar {
+  border-radius: 5px;
+  width: 8px;
+  height: 8px;
+  background-color: #ccc7c7;
+  padding: 20px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #9c9797;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  /* Handle on hover */
+  background-color: #868282;
 }
