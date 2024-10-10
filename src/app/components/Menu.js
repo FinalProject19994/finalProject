@@ -5,8 +5,8 @@ const menuItems = [
   { icon: "/menuIcons/home.png", label: "Home", href: "/" },
   { icon: "/menuIcons/courses.png", label: "Courses", href: "/" },
   { icon: "/menuIcons/activities.png", label: "Activities", href: "/" },
-  { icon: "/menuIcons/lecturers.png", label: "Lecturers", href: "/" },
   { icon: "/menuIcons/skills.png", label: "Skills", href: "/" },
+  { icon: "/menuIcons/lecturers.png", label: "Lecturers", href: "/" },
   {
     icon: "/menuIcons/questionnaire.png",
     label: "Questionnaires",
@@ -20,22 +20,25 @@ const profileMenuItems = [
   { icon: "/menuIcons/logout.png", label: "Logout", href: "/" },
 ];
 
-// TODO: Center the div horizontally
 const Menu = () => {
   return (
-    <div className="mt-4">
-      {menuItems.map((item) => (
-        <Link
-          href={item.href}
-          key={item.label}
-          className="flex items-center justify-center gap-4 rounded-lg py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3"
-        >
-          <Image src={item.icon} alt="icon" width={25} height={25} />
-          <span className="hidden lg:block">{item.label}</span>
-        </Link>
-      ))}
+    <div className="mt-4 flex h-[87dvh] flex-col">
+      {/* Menu items */}
+      <div className="flex-1">
+        {menuItems.map((item) => (
+          <Link
+            href={item.href}
+            key={item.label}
+            className="flex items-center justify-center gap-4 rounded-lg py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3"
+          >
+            <Image src={item.icon} alt="icon" width={25} height={25} />
+            <span className="hidden lg:block">{item.label}</span>
+          </Link>
+        ))}
+      </div>
 
-      <div className="fixed bottom-0 w-full">
+      {/* Profile menu items at the bottom */}
+      <div>
         {profileMenuItems.map((item) => (
           <Link
             href={item.href}
