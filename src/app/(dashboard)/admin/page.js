@@ -2,10 +2,10 @@ import EventCalendar from "@/app/components/EventCalendar";
 
 const AdminPage = () => {
   return (
-    <div className="flex flex-col gap-4 p-4 md:flex-row">
+    <div className="flex flex-col gap-4 p-4 text-gray-500 md:flex-row">
       {/* LEFT */}
-      <div className="bg-primary_blue w-full rounded-md text-center text-3xl shadow-md md:w-2/3">
-        GRAPH
+      <div className="w-full rounded-md bg-primary_blue text-center text-3xl shadow-md md:w-2/3">
+        GRAPH (WIP)
       </div>
 
       {/* RIGHT */}
