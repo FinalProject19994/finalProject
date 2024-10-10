@@ -12,6 +12,7 @@ module.exports = {
         foreground: "var(--foreground)",
         primary_yellow: "#fff48d",
         primary_blue: "#c3ebfa",
+        primary_orange: "#FFC78E",
       },
       fontFamily: {
         oswald: ["var(--font-oswald)", "sans-serif"],

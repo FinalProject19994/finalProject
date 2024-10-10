@@ -29,7 +29,7 @@ const Menu = () => {
           <Link
             href={item.href}
             key={item.label}
-            className="flex items-center justify-center gap-4 rounded-lg py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3"
+            className="flex justify-center gap-4 py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3"
           >
             <Image src={item.icon} alt="icon" width={25} height={25} />
             <span className="hidden lg:block">{item.label}</span>
@@ -37,13 +37,13 @@ const Menu = () => {
         ))}
       </div>
 
-      {/* Profile menu items at the bottom */}
-      <div>
+      {/* Profile menu items */}
+      <div className="absolute bottom-2">
         {profileMenuItems.map((item) => (
           <Link
             href={item.href}
             key={item.label}
-            className="flex items-center justify-center gap-4 rounded-lg py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3"
+            className="flex justify-center gap-4 py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3"
           >
             <Image src={item.icon} alt="icon" width={25} height={25} />
             <span className="hidden lg:block">{item.label}</span>

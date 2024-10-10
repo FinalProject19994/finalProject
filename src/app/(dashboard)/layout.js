@@ -3,9 +3,10 @@ import Link from "next/link";
 import Menu from "../components/Menu";
 import Navbar from "../components/Navbar";
 
-import { Oswald } from "next/font/google";
+// TODO: Fix the font
+// import { Oswald } from "next/font/google";
 
-const oswald = Oswald({ subsets: ["latin"] });
+// const oswald = Oswald({ subsets: ["latin"] });
 
 const DashboardLayout = ({ children }) => {
   return (
@@ -16,10 +17,9 @@ const DashboardLayout = ({ children }) => {
           href="/"
           className="flex items-center justify-center lg:justify-start"
         >
-          <Image src="/logo.png" priority alt="logo" width={90} height={90} />
-          {/* Center the title of the site */}
+          <Image src="/logo.png" priority alt="logo" width={60} height={60} />
           <span
-            className="hidden text-start font-oswald text-2xl text-gray-500 lg:block"
+            className="hidden text-start font-oswald text-lg text-gray-500 lg:block"
             style={{ marginLeft: "auto", marginRight: "auto" }}
           >
             Core Skills Hub

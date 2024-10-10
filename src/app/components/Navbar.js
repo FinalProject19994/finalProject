@@ -19,7 +19,7 @@ const Navbar = () => {
       </div>
 
       {/* Avatar and user */}
-      <div className="flex items-center justify-end gap-4">
+      <div className="ml-auto flex items-center gap-4">
         <div className="flex flex-col text-gray-500">
           <span className="text-black">Joy Simha Oz</span>
           <span className="text-right text-xs leading-3">Admin</span>
