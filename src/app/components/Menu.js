@@ -38,6 +38,7 @@ const Menu = () => {
       </div>
 
       {/* Profile menu items */}
+      {/* TODO: center the buttons in small screens */}
       <div className="absolute bottom-2">
         {profileMenuItems.map((item) => (
           <Link
