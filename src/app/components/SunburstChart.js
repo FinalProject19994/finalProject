@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
-import data from "./data.json";
+// import data from "./data.json";
 
 const SIZE = 975;
 const RADIUS = SIZE / 2;
