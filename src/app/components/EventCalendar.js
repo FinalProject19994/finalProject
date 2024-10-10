@@ -60,12 +60,14 @@ const EventCalendar = () => {
   const [value, onChange] = useState(new Date());
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex h-full flex-col gap-4">
+      {/* Calendar component taking natural space */}
       <div className="rounded-md bg-white p-4 shadow-md">
         <Calendar value={value} onChange={onChange} />
       </div>
 
-      <div className="max-h-[55vh] overflow-hidden rounded-md bg-white p-4 shadow-md">
+      {/* Activities list taking remaining space and scrollable if needed */}
+      <div className="flex h-[calc(100vh-27rem)] flex-grow flex-col overflow-hidden rounded-md bg-white p-4 shadow-md">
         {/* Activities Heading */}
         <div className="sticky top-0 z-10 bg-white">
           <div className="flex items-center justify-between">
@@ -73,11 +75,11 @@ const EventCalendar = () => {
           </div>
         </div>
 
-        {/* Activities */}
-        <div className="flex h-full flex-col gap-3 overflow-y-scroll pr-2 text-sm">
+        {/* Scrollable activities list */}
+        <div className="flex flex-col gap-3 overflow-y-auto pr-2 text-sm">
           {dummyActivities.map((activity) => (
             <div
-              className="odd:border-t-primary_blue even:border-t-primary_yellow rounded-md border-2 border-t-4 border-gray-100 bg-white p-5"
+              className="rounded-md border-2 border-t-4 border-gray-100 bg-white p-5 odd:border-t-primary_blue even:border-t-primary_yellow"
               key={activity.id}
             >
               <div className="flex items-center justify-between">
@@ -86,7 +88,7 @@ const EventCalendar = () => {
                 </h1>
                 <span className="text-sm text-gray-400">{activity.time}</span>
               </div>
-              <p className="mt-2text-sm text-gray-400">
+              <p className="mt-2 text-sm text-gray-400">
                 {activity.description}
               </p>
             </div>
