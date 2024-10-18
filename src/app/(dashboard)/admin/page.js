@@ -15,7 +15,7 @@ const AdminPage = () => {
             Core skills - sunburst
           </div>
           {/* LEFT - LEFT - BOTTOM */}
-          <div className="bg-primary_orange flex-grow rounded-md shadow-md">
+          <div className="flex-grow rounded-md bg-primary_orange shadow-md">
             Activities - bar chart
           </div>
         </div>

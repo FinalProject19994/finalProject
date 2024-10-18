@@ -1,12 +1,17 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 
 const menuItems = [
-  { icon: "/menuIcons/home.png", label: "Home", href: "/" },
+  { icon: "/menuIcons/home.png", label: "Home", href: "/admin" },
   { icon: "/menuIcons/courses.png", label: "Courses", href: "/" },
   { icon: "/menuIcons/activities.png", label: "Activities", href: "/" },
   { icon: "/menuIcons/skills.png", label: "Skills", href: "/" },
-  { icon: "/menuIcons/lecturers.png", label: "Lecturers", href: "/" },
+  {
+    icon: "/menuIcons/lecturers.png",
+    label: "Lecturers",
+    href: "/list/lecturers",
+  },
   {
     icon: "/menuIcons/questionnaire.png",
     label: "Questionnaires",

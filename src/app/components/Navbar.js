@@ -14,7 +14,7 @@ const Navbar = () => {
         <input
           type="text"
           placeholder="Search..."
-          className="hidden pr-2 outline-none md:flex"
+          className="hidden outline-none md:flex"
         />
       </div>
 
