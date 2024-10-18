@@ -6,7 +6,9 @@ const Table = ({ columns, renderRow, data }) => {
       <thead>
         <tr className="text-left text-sm text-gray-500">
           {columns.map((column) => (
-            <th key={column.accessor}>{column.header}</th>
+            <th key={column.accessor} className={column.className}>
+              {column.header}
+            </th>
           ))}
         </tr>
       </thead>

@@ -104,7 +104,7 @@ const TeacherListPage = () => {
     return (
       <tr
         key={item.id}
-        className="hover:bg-primary_lightblue border-b border-gray-200 text-sm even:bg-slate-50"
+        className="border-collapse rounded-md border-t-2 text-sm odd:bg-primary_lightblue even:bg-primary_lightyellow hover:brightness-95"
       >
         <td className="flex items-center gap-4 p-4">
           <Image

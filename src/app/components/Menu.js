@@ -4,13 +4,13 @@ import Link from "next/link";
 
 const menuItems = [
   { icon: "/menuIcons/home.png", label: "Home", href: "/admin" },
-  { icon: "/menuIcons/courses.png", label: "Courses", href: "/" },
+  { icon: "/menuIcons/courses.png", label: "Courses", href: "/courses" },
   { icon: "/menuIcons/activities.png", label: "Activities", href: "/" },
   { icon: "/menuIcons/skills.png", label: "Skills", href: "/" },
   {
     icon: "/menuIcons/lecturers.png",
     label: "Lecturers",
-    href: "/list/lecturers",
+    href: "/lecturers",
   },
   {
     icon: "/menuIcons/questionnaire.png",

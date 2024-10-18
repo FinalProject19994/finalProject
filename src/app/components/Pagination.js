@@ -4,7 +4,7 @@ import React from "react";
 const Pagination = () => {
   return (
     <div className="mt-4 flex items-center justify-center gap-4 p-4 text-gray-500">
-      <button className="disabled:opacity-150 rounded-full bg-slate-100 px-3 py-3 hover:bg-slate-300 disabled:opacity-50">
+      <button className="disabled:opacity-150 rounded-full bg-slate-100 p-3 hover:bg-primary_blue disabled:opacity-50">
         <Image src="/menuIcons/back.png" alt="back" width={16} height={16} />
       </button>
       <div className="flex items-center gap-2 text-sm">
@@ -14,7 +14,7 @@ const Pagination = () => {
         ...
         <button className="rounded-full">10</button>
       </div>
-      <button className="disabled:opacity-150 rounded-full bg-slate-100 px-3 py-3 hover:bg-slate-300 disabled:opacity-50">
+      <button className="disabled:opacity-150 rounded-full bg-slate-100 p-3 hover:bg-primary_blue disabled:opacity-50">
         <Image src="/menuIcons/next.png" alt="next" width={16} height={16} />
       </button>
     </div>
