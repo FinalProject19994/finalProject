@@ -14,8 +14,9 @@ const menuItems = [
   },
   {
     icon: "/menuIcons/questionnaire.png",
-    label: "Questionnaires",
-    href: "/",
+    // label: "Questionnaires",
+    label: "Surveys",
+    href: "/surveys",
   },
 ];
 
@@ -27,7 +28,7 @@ const profileMenuItems = [
 
 const Menu = () => {
   return (
-    <div className="mt-4 flex h-[87dvh] flex-col">
+    <div className="mt-4 flex h-[87dvh] flex-col text-sm">
       {/* Menu items */}
       <div className="flex-1">
         {menuItems.map((item) => (
@@ -44,7 +45,7 @@ const Menu = () => {
 
       {/* Profile menu items */}
       {/* TODO: center the buttons in small screens */}
-      <div className="absolute bottom-2">
+      <div className="bottom-2 items-center md:absolute md:justify-start">
         {profileMenuItems.map((item) => (
           <Link
             href={item.href}

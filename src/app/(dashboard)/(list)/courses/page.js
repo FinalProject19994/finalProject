@@ -1,8 +1,6 @@
-import React from "react";
-import Image from "next/image";
-import Table from "@/app/components/Table";
-import TableSearch from "@/app/components/TableSearch";
 import Pagination from "@/app/components/Pagination";
+import Table from "@/app/components/Table";
+import TableHeader from "@/app/components/TableHeader";
 
 const courses = [
   {
@@ -40,12 +38,97 @@ const courses = [
     courseID: "MTH101",
     lecturers: ["Bob Johnson", "Jane Doe"],
   },
+  {
+    id: 6,
+    name: "Statistics",
+    department: "Mathematics",
+    courseID: "MTH201",
+    lecturers: ["John Smith", "Bob Johnson"],
+  },
+  {
+    id: 7,
+    name: "Computer Vision",
+    department: "Computer Science",
+    courseID: "CS301",
+    lecturers: ["Jane Doe", "Alice Brown"],
+  },
+  {
+    id: 8,
+    name: "Database Systems",
+    department: "Computer Science",
+    courseID: "CS302",
+    lecturers: ["Bob Johnson", "John Smith"],
+  },
+  {
+    id: 9,
+    name: "Artificial Intelligence",
+    department: "Computer Science",
+    courseID: "CS303",
+    lecturers: ["Jane Doe", "Alice Brown", "Bob Johnson"],
+  },
+  {
+    id: 10,
+    name: "Machine Learning",
+    department: "Computer Science",
+    courseID: "CS304",
+    lecturers: ["John Smith", "Jane Doe", "Bob Johnson"],
+  },
+  {
+    id: 11,
+    name: "Web Development",
+    department: "Computer Science",
+    courseID: "CS305",
+    lecturers: ["Alice Brown", "John Smith"],
+  },
+  {
+    id: 12,
+    name: "Operating Systems",
+    department: "Computer Science",
+    courseID: "CS306",
+    lecturers: ["Bob Johnson", "Jane Doe"],
+  },
+  {
+    id: 13,
+    name: "Quantum Computing",
+    department: "Physics",
+    courseID: "PHY401",
+    lecturers: ["Albert Einstein", "Niels Bohr"],
+  },
+  {
+    id: 14,
+    name: "Astrophysics",
+    department: "Physics",
+    courseID: "PHY402",
+    lecturers: ["Carl Sagan", "Stephen Hawking"],
+  },
+  {
+    id: 15,
+    name: "Organic Chemistry",
+    department: "Chemistry",
+    courseID: "CHEM301",
+    lecturers: ["Marie Curie", "Linus Pauling"],
+  },
+  {
+    id: 16,
+    name: "Genetics",
+    department: "Biology",
+    courseID: "BIO302",
+    lecturers: ["Gregor Mendel", "Rosalind Franklin"],
+  },
+  {
+    id: 17,
+    name: "Environmental Science",
+    department: "Environmental Studies",
+    courseID: "ENV201",
+    lecturers: ["Rachel Carson", "David Attenborough"],
+  },
 ];
 
 const columns = [
   {
-    header: "Name",
+    header: "Course Name",
     accessor: "name",
+    className: "hidden md:table-cell",
   },
   {
     header: "Department",
@@ -54,7 +137,8 @@ const columns = [
   },
   {
     header: "Course ID",
-    accessor: "corseId",
+    accessor: "courseID",
+    className: "hidden md:table-cell",
   },
   {
     header: "Lecturers",
@@ -64,57 +148,48 @@ const columns = [
 ];
 
 const page = () => {
-  const renderRow = (item) => {
+  const renderRow = (course) => {
     return (
       <tr
-        key={item.id}
-        className="border-collapse rounded-md border-t-2 text-sm odd:bg-primary_lightblue even:bg-primary_lightyellow hover:brightness-95"
+        key={course.id}
+        className="text-sm odd:bg-primary_lightblue hover:bg-slate-200"
       >
-        <td className="flex items-center gap-4 p-4">
-          <Image
-            src={item.avatar}
-            alt="image"
-            width={20}
-            height={20}
-            className="w-10 rounded-full object-cover"
-          />
-          <h3 className="font-semibold">{item.name}</h3>
+        {/* Flex container for data and button */}
+        <td className="flex w-full items-center justify-between p-4">
+          {/* Data content on the left */}
+          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+            <h3 className="font-semibold">{course.name}</h3>
+            <p className="text-xs text-gray-500 md:hidden">
+              {course.department} • {course.courseID}
+            </p>
+            <p className="text-xs text-gray-500 md:hidden">
+              Lecturers: {course.lecturers.join(", ")}
+            </p>
+          </div>
         </td>
-        <td className="hidden md:table-cell">{item.department}</td>
-        <td>{item.mail}</td>
-        <td className="hidden md:table-cell">{item.phone}</td>
+
+        <td className="hidden md:table-cell">{course.department}</td>
+        <td className="hidden md:table-cell">{course.courseID}</td>
+        <td className="hidden lg:table-cell">{course.lecturers.join(", ")}</td>
+
+        {/* Activities button */}
+        <td className="align-bottom md:align-middle">
+          <button className="mb-2 mr-1 mt-auto rounded-md bg-primary_yellow px-4 py-2 hover:bg-yellow-300 md:mb-0 md:mt-0">
+            Activities
+          </button>
+        </td>
       </tr>
     );
   };
 
   return (
     <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="hidden text-lg font-semibold md:block">All courses</h1>
-        <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row">
-          <TableSearch />
-          <div className="flex items-center gap-4 self-end">
-            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary_yellow">
-              <Image
-                src="/menuIcons/filter.png"
-                alt="filter"
-                width={16}
-                height={16}
-              />
-            </button>
-            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary_yellow">
-              <Image
-                src="/menuIcons/sort.png"
-                alt="filter"
-                width={16}
-                height={16}
-              />
-            </button>
-          </div>
-        </div>
+      <TableHeader title={"Courses"} />
+
+      <div className="h-[80dvh] overflow-auto rounded-lg">
+        <Table columns={columns} renderRow={renderRow} data={courses} />
+        {/* <Pagination /> */}
       </div>
-      <Table columns={columns} renderRow={renderRow} data={courses} />
-      <Pagination />
     </div>
   );
 };

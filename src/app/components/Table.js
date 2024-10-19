@@ -4,7 +4,7 @@ const Table = ({ columns, renderRow, data }) => {
   return (
     <table className="mt-4 w-full">
       <thead>
-        <tr className="text-left text-sm text-gray-500">
+        <tr className="sticky top-0 bg-white text-left text-sm text-gray-500">
           {columns.map((column) => (
             <th key={column.accessor} className={column.className}>
               {column.header}

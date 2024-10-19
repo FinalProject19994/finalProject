@@ -1,6 +1,6 @@
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
-import TableSearch from "@/app/components/TableSearch";
+import TableHeader from "@/app/components/TableHeader";
 import Image from "next/image";
 
 const lecturers = [
@@ -76,12 +76,45 @@ const lecturers = [
     mail: "denzel.washington@example.com",
     phone: "+1 (777) 777-7777",
   },
+  {
+    avatar: "/avatars/panda.png",
+    name: "Ariana Grande",
+    id: 10,
+    department: "Music",
+    mail: "ariana.grande@example.com",
+    phone: "+1 (123) 456-7890",
+  },
+  {
+    avatar: "/avatars/panda.png",
+    name: "Taylor Swift",
+    id: 12,
+    department: "Music",
+    mail: "taylor.swift@example.com",
+    phone: "+1 (555) 123-4567",
+  },
+  {
+    avatar: "/avatars/panda.png",
+    name: "Katy Perry",
+    id: 13,
+    department: "Music",
+    mail: "katy.perry@example.com",
+    phone: "+1 (777) 777-7777",
+  },
+  {
+    avatar: "/avatars/panda.png",
+    name: "Selena Gomez",
+    id: 14,
+    department: "Music",
+    mail: "selena.gomez@example.com",
+    phone: "+1 (123) 456-7890",
+  },
 ];
 
 const columns = [
   {
     header: "Name",
     accessor: "name",
+    className: "hidden md:table-cell",
   },
   {
     header: "Department",
@@ -91,66 +124,75 @@ const columns = [
   {
     header: "Email",
     accessor: "mail",
+    className: "hidden md:table-cell",
   },
   {
     header: "Phone",
     accessor: "phone",
     className: "hidden md:table-cell",
   },
+  {
+    header: "",
+    accessor: "activity",
+    className: "hidden md:table-cell",
+  },
 ];
 
 const TeacherListPage = () => {
-  const renderRow = (item) => {
+  const renderRow = (lecturer) => {
     return (
       <tr
-        key={item.id}
-        className="border-collapse rounded-md border-t-2 text-sm odd:bg-primary_lightblue even:bg-primary_lightyellow hover:brightness-95"
+        key={lecturer.id}
+        className="text-sm odd:bg-primary_lightblue hover:bg-slate-200"
       >
-        <td className="flex items-center gap-4 p-4">
-          <Image
-            src={item.avatar}
-            alt="image"
-            width={20}
-            height={20}
-            className="w-10 rounded-full object-cover"
-          />
-          <h3 className="font-semibold">{item.name}</h3>
+        {/* Flex container for data and button */}
+        <td className="flex w-full items-center justify-between p-4">
+          {/* Data content on the left */}
+          <div className="flex flex-col gap-2 md:flex-row md:items-center">
+            <Image
+              src={lecturer.avatar}
+              alt={lecturer.name}
+              width={40}
+              height={40}
+              className="hidden md:block"
+            />
+            <h3 className="font-semibold">{lecturer.name}</h3>
+            <p className="text-xs text-gray-500 md:hidden">
+              {lecturer.department} {lecturer.mail}
+            </p>
+            <p className="text-xs text-gray-500 md:hidden">
+              {/* Lecturers: {lecturer.lecturers.join(", ")} */}
+            </p>
+          </div>
         </td>
-        <td className="hidden md:table-cell">{item.department}</td>
-        <td>{item.mail}</td>
-        <td className="hidden md:table-cell">{item.phone}</td>
+
+        {/* Department column, visible on medium screens and up */}
+        <td className="hidden md:table-cell">{lecturer.department}</td>
+
+        {/* Email column */}
+        <td className="hidden lg:table-cell">{lecturer.mail}</td>
+
+        {/* Phone column, visible on medium screens and up */}
+        <td className="hidden md:table-cell">{lecturer.phone}</td>
+
+        {/* Activities button */}
+        <td className="align-bottom md:align-middle">
+          <button className="mb-2 mr-1 mt-auto rounded-md bg-primary_yellow px-4 py-2 hover:bg-yellow-300 md:mb-0 md:mt-0">
+            Activities
+          </button>
+        </td>
       </tr>
     );
   };
 
   return (
     <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="hidden text-lg font-semibold md:block">All lecturers</h1>
-        <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row">
-          <TableSearch />
-          <div className="flex items-center gap-4 self-end">
-            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary_yellow">
-              <Image
-                src="/menuIcons/filter.png"
-                alt="filter"
-                width={16}
-                height={16}
-              />
-            </button>
-            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary_yellow">
-              <Image
-                src="/menuIcons/sort.png"
-                alt="filter"
-                width={16}
-                height={16}
-              />
-            </button>
-          </div>
-        </div>
+      <TableHeader title={"Lecturers"} />
+
+      <div className="h-[80dvh] overflow-auto rounded-lg">
+        <Table columns={columns} renderRow={renderRow} data={lecturers} />
+        {/* <Pagination /> */}
       </div>
-      <Table columns={columns} renderRow={renderRow} data={lecturers} />
-      <Pagination />
     </div>
   );
 };

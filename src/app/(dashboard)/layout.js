@@ -22,13 +22,13 @@ const DashboardLayout = ({ children }) => {
             className="hidden text-start font-oswald text-lg text-gray-500 lg:block"
             style={{ marginLeft: "auto", marginRight: "auto" }}
           >
-            Core Skills Hub
+            Core Skills
           </span>
         </Link>
         <Menu />
       </div>
       {/* RIGHT */}
-      <div className="w-[86%] bg-[#F7F8FA] md:w-[92%] lg:w-[84%] xl:w-[90%]">
+      <div className="w-[86%] overflow-auto bg-[#F7F8FA] md:w-[92%] lg:w-[84%] xl:w-[90%]">
         <Navbar />
         {children}
       </div>
