@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }) => {
       {/* LEFT */}
       <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[10%]">
         <Link
-          href="/"
+          href="/homepage"
           className="flex items-center justify-center lg:justify-start"
         >
           <Image src="/logo.png" priority alt="logo" width={60} height={60} />
@@ -28,7 +28,7 @@ const DashboardLayout = ({ children }) => {
         <Menu />
       </div>
       {/* RIGHT */}
-      <div className="w-[86%] overflow-auto bg-[#F7F8FA] md:w-[92%] lg:w-[84%] xl:w-[90%]">
+      <div className="w-[86%] overflow-auto rounded-lg bg-[#F7F8FA] md:w-[92%] lg:w-[84%] xl:w-[90%]">
         <Navbar />
         {children}
       </div>

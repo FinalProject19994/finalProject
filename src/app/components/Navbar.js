@@ -1,6 +1,19 @@
+"use client";
 import Image from "next/image";
+import { useState } from "react";
+import ProfileMenu from "./ProfileMenu";
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleProfileMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const closeProfileMenu = () => {
+    setIsOpen(false);
+  };
+
   return (
     <div className="flex items-center justify-between p-4">
       {/* Search Bar */}
@@ -29,9 +42,12 @@ const Navbar = () => {
           width={40}
           height={40}
           alt="profile picture"
-          className="rounded-full hover:brightness-90"
+          className="cursor-pointer rounded-full hover:brightness-90"
+          onClick={handleProfileMenu}
         />
       </div>
+
+      {isOpen && <ProfileMenu closeMenu={closeProfileMenu} />}
     </div>
   );
 };
