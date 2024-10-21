@@ -2,197 +2,232 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const data = {
-  name: "root",
-  children: [
-    {
-      name: "Mindset",
-      children: [
-        { name: "Development of skills", value: 25 },
-        { name: "Coping with success and failure", value: 25 },
-        { name: "Moving from comfort zone", value: 25 },
-        { name: "Effort investing in learning", value: 25 },
-      ],
-    },
-    {
-      name: "Thinking development",
-      children: [
-        { name: "Creative thinking", value: 25 },
-        { name: "Analytical thinking", value: 25 },
-        { name: "Evaluative-critical thinking", value: 25 },
-        { name: "System thinking", value: 25 },
-      ],
-    },
-    {
-      name: "Emotional quotient",
-      children: [
-        { name: "Awareness of emotions", value: 25 },
-        { name: "Familiarity and acceptance", value: 25 },
-        { name: "Self regulation of emotions", value: 25 },
-        { name: "Relationship building", value: 25 },
-        { name: "Collaboration in the team", value: 25 },
-        { name: "Empathy", value: 25 },
-        { name: "Uncertainty and stress handling", value: 25 },
-      ],
-    },
-    {
-      name: "Professional self",
-      children: [
-        { name: "Meaning", value: 25 },
-        { name: "Positive framing", value: 25 },
-        { name: "Social relationship", value: 25 },
-        { name: "Wellbeing", value: 25 },
-      ],
-    },
-  ],
-};
+const SunburstChart = () => {
+  const chartRef = useRef(null);
 
-const Page = () => {
-  const svgRef = useRef();
-  let duration = 750;
-  let i = 0;
+  const data = {
+    name: "root",
+    children: [
+      {
+        name: "Mindset",
+        color: "#a7f9ab",
+        children: [
+          { name: "Development of skills", value: 25, color: "#a7f9ab" },
+          {
+            name: "Coping with success and failure",
+            value: 25,
+            color: "#a7f9ab",
+          },
+          { name: "Moving from comfort zone", value: 25, color: "#a7f9ab" },
+          { name: "Effort investing in learning", value: 25, color: "#a7f9ab" },
+        ],
+      },
+      {
+        name: "Thinking development",
+        color: "#c3ebfa",
+        children: [
+          { name: "Creative thinking", value: 25, color: "#c3ebfa" },
+          { name: "Analytical thinking", value: 25, color: "#c3ebfa" },
+          { name: "Evaluative-critical thinking", value: 25, color: "#c3ebfa" },
+          { name: "System thinking", value: 25, color: "#c3ebfa" },
+        ],
+      },
+      {
+        name: "Emotional quotient",
+        color: "#fff48d",
+        children: [
+          { name: "Awareness of emotions", value: 25, color: "#fff48d" },
+          { name: "Familiarity and acceptance", value: 25, color: "#fff48d" },
+          { name: "Self regulation of emotions", value: 25, color: "#fff48d" },
+          { name: "Relationship building", value: 25, color: "#fff48d" },
+          { name: "Collaboration in the team", value: 25, color: "#fff48d" },
+          { name: "Empathy", value: 25, color: "#fff48d" },
+          {
+            name: "Uncertainty and stress handling",
+            value: 25,
+            color: "#fff48d",
+          },
+        ],
+      },
+      {
+        name: "Professional self",
+        color: "#D396FF",
+        children: [
+          { name: "Meaning", value: 25, color: "#D396FF" },
+          { name: "Positive framing", value: 25, color: "#D396FF" },
+          { name: "Social relationship", value: 25, color: "#D396FF" },
+          { name: "Wellbeing", value: 25, color: "#D396FF" },
+        ],
+      },
+    ],
+  };
 
   useEffect(() => {
-    d3.select(svgRef.current).selectAll("*").remove();
+    const container = d3.select(chartRef.current);
+    const width = container.node().offsetWidth;
+    const height = window.innerHeight * 0.75;
+    const radius = width / 8;
 
-    const width = Math.min(window.innerWidth * 0.9, 800); // Maximum width
-    const height = Math.min(window.innerHeight * 0.9, 600); // Maximum height
+    const hierarchy = d3
+      .hierarchy(data)
+      .sum((d) => d.value)
+      .sort((a, b) => b.value - a.value);
+    const root = d3.partition().size([2 * Math.PI, hierarchy.height + 1])(
+      hierarchy,
+    );
+    root.each((d) => (d.current = d));
+
+    const arc = d3
+      .arc()
+      .startAngle((d) => d.x0)
+      .endAngle((d) => d.x1)
+      .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.005))
+      .padRadius(radius * 1.5)
+      .innerRadius((d) => d.y0 * radius)
+      .outerRadius((d) => Math.max(d.y0 * radius, d.y1 * radius - 1));
 
     const svg = d3
-      .select(svgRef.current)
-      .attr("viewBox", `0 0 ${width} ${height}`) // Set viewBox
-      .append("g") // Append a group for the tree
-      .attr("transform", `translate(40,0)`); // Center the graph horizontally with some padding
+      .create("svg")
+      .attr("viewBox", [
+        -width / 2,
+        -height / 2 - 45,
+        width,
+        window.innerHeight * 0.85,
+      ]);
 
-    const root = d3.hierarchy(data);
-    root.x0 = height / 2; // Center vertically
-    root.y0 = 0;
+    const path = svg
+      .append("g")
+      .selectAll("path")
+      .data(root.descendants().slice(1))
+      .join("path")
+      .attr("fill", (d) => d.data.color || "#ccc")
+      .attr("fill-opacity", (d) =>
+        arcVisible(d.current) ? (d.children ? 1 : 1) : 0,
+      )
+      .attr("pointer-events", (d) => (arcVisible(d.current) ? "auto" : "none"))
+      .attr("d", (d) => arc(d.current));
 
-    const treeLayout = d3.tree().size([height, width - 160]);
+    path
+      .filter((d) => d.children)
+      .style("cursor", "pointer")
+      .on("click", clicked);
 
-    // Collapse all children except the root
-    root.children.forEach(collapse);
+    const label = svg
+      .append("g")
+      .attr("pointer-events", "none")
+      .attr("text-anchor", "middle")
+      .style("user-select", "none")
+      .selectAll("text")
+      .data(root.descendants().slice(1))
+      .join("text")
+      .attr("dy", "0.35em")
+      .attr("fill-opacity", (d) => +labelVisible(d.current))
+      .attr("transform", (d) => labelTransform(d.current))
+      .style("font-size", (d) => (window.innerWidth < 768 ? "4px" : "12px"))
+      .text((d) => d.data.name);
 
-    function collapse(d) {
-      if (d.children) {
-        d._children = d.children;
-        d._children.forEach(collapse);
-        d.children = null;
-      }
-    }
+    const parent = svg
+      .append("circle") //Inner circle
+      .datum(root)
+      .attr("r", radius)
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
+      .on("click", clicked);
 
-    update(root);
+    function clicked(event, p) {
+      parent.datum(p.parent || root);
+      root.each(
+        (d) =>
+          (d.target = {
+            x0:
+              Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) *
+              2 *
+              Math.PI,
+            x1:
+              Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) *
+              2 *
+              Math.PI,
+            y0: Math.max(0, d.y0 - p.depth),
+            y1: Math.max(0, d.y1 - p.depth),
+          }),
+      );
 
-    function update(source) {
-      const treeData = treeLayout(root);
-      const nodes = treeData.descendants();
-      const links = treeData.descendants().slice(1);
-
-      nodes.forEach((d) => {
-        d.y = d.depth * 180; // Set the horizontal distance between nodes
-      });
-
-      const node = svg
-        .selectAll("g.node")
-        .data(nodes, (d) => d.id || (d.id = ++i));
-
-      const nodeEnter = node
-        .enter()
-        .append("g")
-        .attr("class", "node")
-        .attr("transform", (d) => `translate(${source.y0},${source.x0})`)
-        .on("click", (event, d) => {
-          d.children = d.children ? null : d._children;
-          update(d);
-        });
-
-      nodeEnter
-        .append("circle")
-        .attr("r", 5)
-        .style("fill", (d) => (d._children ? "#555" : "#999"))
-        .transition()
-        .duration(duration)
-        .attr("r", 10);
-
-      nodeEnter
-        .append("text")
-        .attr("dy", ".35em")
-        .attr("x", (d) => (d.children || d._children ? -13 : 13))
-        .attr("text-anchor", (d) =>
-          d.children || d._children ? "end" : "start",
-        )
-        .text((d) => d.data.name);
-
-      const nodeUpdate = nodeEnter.merge(node);
-
-      nodeUpdate
-        .transition()
-        .duration(duration)
-        .attr("transform", (d) => `translate(${d.y},${d.x})`);
-
-      nodeUpdate
-        .select("circle")
-        .attr("r", 5)
-        .style("fill", (d) => (d._children ? "#555" : "#999"));
-
-      const nodeExit = node
-        .exit()
-        .transition()
-        .duration(duration)
-        .attr("transform", (d) => `translate(${source.y},${source.x})`)
-        .remove();
-
-      nodeExit.select("circle").attr("r", 1e-6);
-      nodeExit.select("text").style("fill-opacity", 1e-6);
-
-      const link = svg.selectAll("path.link").data(links, (d) => d.id);
-
-      const linkEnter = link
-        .enter()
-        .insert("path", "g")
-        .attr("class", "link")
-        .attr("d", (d) => {
-          const o = { x: source.x0, y: source.y0 };
-          return diagonal(o, o);
-        });
-
-      const linkUpdate = linkEnter.merge(link);
-
-      linkUpdate
-        .transition()
-        .duration(duration)
-        .attr("d", (d) => diagonal(d, d.parent));
-
-      const linkExit = link
-        .exit()
-        .transition()
-        .duration(duration)
-        .attr("d", (d) => {
-          const o = { x: source.x, y: source.y };
-          return diagonal(o, o);
+      const t = svg.transition().duration(500);
+      path
+        .transition(t)
+        .tween("data", (d) => {
+          const i = d3.interpolate(d.current, d.target);
+          return (t) => (d.current = i(t));
         })
-        .remove();
+        .filter(function (d) {
+          return +this.getAttribute("fill-opacity") || arcVisible(d.target);
+        })
+        .attr("fill-opacity", (d) =>
+          arcVisible(d.target) ? (d.children ? 1 : 1) : 0,
+        )
+        .attr("pointer-events", (d) => (arcVisible(d.target) ? "auto" : "none"))
+        .attrTween("d", (d) => () => arc(d.current));
 
-      nodes.forEach((d) => {
-        d.x0 = d.x;
-        d.y0 = d.y;
-      });
+      label
+        .filter(function (d) {
+          return +this.getAttribute("fill-opacity") || labelVisible(d.target);
+        })
+        .transition(t)
+        .attr("fill-opacity", (d) => +labelVisible(d.target))
+        .attrTween("transform", (d) => () => labelTransform(d.current));
+    }
 
-      function diagonal(s, d) {
-        return `M${s.y},${s.x}C${(s.y + d.y) / 2},${s.x} ${(s.y + d.y) / 2},${
-          d.x
-        } ${d.y},${d.x}`;
+    function arcVisible(d) {
+      return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
+    }
+
+    function labelVisible(d) {
+      return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
+    }
+
+    function labelTransform(d) {
+      const x = ((d.x0 + d.x1) / 2) * (180 / Math.PI);
+      const y = ((d.y0 + d.y1) / 2) * radius;
+
+      if (d.depth === 1) {
+        return `rotate(${x - 90 + 15}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+      } else {
+        return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
       }
     }
-  }, []);
+
+    container.node().appendChild(svg.node());
+
+    // Clean up on unmount
+    return () => {
+      container.selectAll("*").remove();
+    };
+  }, [data]);
 
   return (
-    <div className="h-full px-4 py-2">
-      <div className="rounded-lg bg-white p-8 shadow-lg">
-        <svg ref={svgRef}></svg>
+    <div className="m-4 rounded-md bg-white shadow-md">
+      <div className="mx-14 flex items-center justify-between">
+        <div className="flex w-2/5 flex-col">
+          <h1 className="text-primary_green py-2 text-4xl font-semibold italic">
+            Core skills Sunburst
+          </h1>
+          <p className="text-2xl">
+            Core skills are essential competencies that empower individuals to
+            navigate various personal and professional challenges effectively.
+            In the context of a sunburst diagram, these skills are visually
+            represented as interconnected segments radiating from a central
+            point. This illustrates how foundational abilities—such as
+            communication, critical thinking, and problem-solving—branch out
+            into specialized skills. This visual structure emphasizes the
+            hierarchical relationship between core skills and their sub-skills,
+            highlighting the importance of developing a robust foundation to
+            support more advanced competencies.
+          </p>
+        </div>
+        <div ref={chartRef} className="h-[88dvh] w-3/5 max-w-[1000px] p-2" />
       </div>
     </div>
   );
 };
 
-export default Page;
+export default SunburstChart;
