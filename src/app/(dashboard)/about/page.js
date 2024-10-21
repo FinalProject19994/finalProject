@@ -2,7 +2,7 @@ const Page = () => {
   return (
     <div className="h-screen px-4 py-10">
       <div className="mx-auto max-w-4xl rounded-lg bg-white p-8 shadow-lg">
-        <h1 className="mb-6 text-center text-4xl font-bold text-primary_orange">
+        <h1 className="text-primary_purple mb-6 text-center text-4xl font-bold">
           Welcome to Core Skills Hub
         </h1>
         <p className="mb-6 text-justify text-lg leading-relaxed text-gray-700">
@@ -16,7 +16,7 @@ const Page = () => {
         </p>
 
         <section className="my-8">
-          <h2 className="mb-4 text-2xl font-semibold text-primary_orange">
+          <h2 className="text-primary_purple mb-4 text-2xl font-semibold">
             Why Core Skills Matter
           </h2>
           <p className="text-md mb-4 text-justify leading-relaxed text-gray-700">
@@ -30,7 +30,7 @@ const Page = () => {
         </section>
 
         <section className="my-8">
-          <h2 className="mb-4 text-2xl font-semibold text-primary_orange">
+          <h2 className="text-primary_purple mb-4 text-2xl font-semibold">
             Our Mission
           </h2>
           <p className="text-md mb-4 text-justify leading-relaxed text-gray-700">
@@ -45,7 +45,7 @@ const Page = () => {
         </section>
 
         <section className="my-8">
-          <h2 className="mb-4 text-2xl font-semibold text-primary_orange">
+          <h2 className="text-primary_purple mb-4 text-2xl font-semibold">
             Join Us in Transforming Education
           </h2>
           <p className="text-md mb-4 text-justify leading-relaxed text-gray-700">
@@ -58,7 +58,7 @@ const Page = () => {
         </section>
 
         <section className="my-8">
-          <h3 className="mb-4 text-2xl font-semibold text-primary_orange">
+          <h3 className="text-primary_purple mb-4 text-2xl font-semibold">
             Contact Us
           </h3>
           <p className="text-md text-justify leading-relaxed text-gray-700">
