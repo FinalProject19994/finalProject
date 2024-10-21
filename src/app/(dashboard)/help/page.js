@@ -112,6 +112,8 @@ const SunburstChart = () => {
       .style("cursor", "pointer")
       .on("click", clicked);
 
+    // TODO: Create a line break in the label to fit it inside the circle
+
     const label = svg
       .append("g")
       .attr("pointer-events", "none")
@@ -205,13 +207,13 @@ const SunburstChart = () => {
   }, [data]);
 
   return (
-    <div className="m-4 rounded-md bg-white shadow-md">
+    <div className="mx-4 rounded-md bg-white shadow-md">
       <div className="mx-14 flex items-center justify-between">
         <div className="flex w-2/5 flex-col">
           <h1 className="text-primary_green py-2 text-4xl font-semibold italic">
             Core skills Sunburst
           </h1>
-          <p className="text-2xl">
+          <p className="text-xl">
             Core skills are essential competencies that empower individuals to
             navigate various personal and professional challenges effectively.
             In the context of a sunburst diagram, these skills are visually

@@ -209,7 +209,7 @@ const Questionnaires = () => {
         <td className="p-4">
           <div className="flex items-center">
             {/* Survey Code */}
-            <h3 className="font-semibold">{questionnaire.questionnaireID}</h3>
+            <h3>{questionnaire.questionnaireID}</h3>
 
             {/* Creation Date floated to the right */}
             <p className="float-right ml-auto text-xs text-gray-500 md:hidden">
@@ -244,7 +244,7 @@ const Questionnaires = () => {
 
         {/* Edit button */}
         <td className="align-bottom md:align-middle">
-          <button className="mb-2 mr-1 mt-auto rounded-full p-2 hover:bg-primary_yellow md:mb-0 md:mt-0">
+          <button className="mb-2 mr-1 mt-auto rounded-full bg-primary_purple p-2 md:mb-0 md:mt-0">
             <Image
               src="/menuIcons/edit.png"
               alt="Edit"
@@ -252,13 +252,21 @@ const Questionnaires = () => {
               height={16}
             />
           </button>
+          {/* <button className="mb-2 mr-1 mt-auto rounded-full bg-primary_purple p-2 md:mb-0 md:mt-0">
+            <Image
+              src="/menuIcons/delete.png"
+              alt="Edit"
+              width={16}
+              height={16}
+            />
+          </button> */}
         </td>
       </tr>
     );
   };
 
   return (
-    <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4">
+    <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4 shadow-md">
       <TableHeader title={"Surveys"} />
       <div className="h-[80dvh] overflow-auto rounded-lg">
         <Table columns={columns} renderRow={renderRow} data={questionnaires} />

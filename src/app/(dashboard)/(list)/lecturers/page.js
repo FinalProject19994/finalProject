@@ -186,12 +186,11 @@ const TeacherListPage = () => {
   };
 
   return (
-    <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4">
+    <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4 shadow-md">
       <TableHeader title={"Lecturers"} />
 
       <div className="h-[80dvh] overflow-auto rounded-lg">
         <Table columns={columns} renderRow={renderRow} data={lecturers} />
-        {/* <Pagination /> */}
       </div>
     </div>
   );

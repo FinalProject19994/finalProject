@@ -12,8 +12,12 @@ import {
 const menuItems = [
   { icon: "/menuIcons/home.png", label: "Home", href: "/homepage" },
   { icon: "/menuIcons/courses.png", label: "Courses", href: "/courses" },
-  { icon: "/menuIcons/activities.png", label: "Activities", href: "/" },
-  { icon: "/menuIcons/skills.png", label: "Skills", href: "/" },
+  {
+    icon: "/menuIcons/activities.png",
+    label: "Activities",
+    href: "/activities",
+  },
+  { icon: "/menuIcons/skills.png", label: "Skills", href: "/skills" },
   {
     icon: "/menuIcons/lecturers.png",
     label: "Lecturers",

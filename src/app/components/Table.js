@@ -2,7 +2,7 @@ import React from "react";
 
 const Table = ({ columns, renderRow, data }) => {
   return (
-    <table className="mt-4 w-full">
+    <table className="mx-2 mt-4 w-[99%]">
       <thead>
         <tr className="sticky top-0 z-10 bg-white text-left text-sm text-gray-500">
           {columns.map((column) => (
