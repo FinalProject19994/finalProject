@@ -1,6 +1,6 @@
 const Page = () => {
   return (
-    <div className="min-h-screen px-4 py-10">
+    <div className="h-screen px-4 py-10">
       <div className="mx-auto max-w-4xl rounded-lg bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-center text-4xl font-bold text-primary_orange">
           Welcome to Core Skills Hub

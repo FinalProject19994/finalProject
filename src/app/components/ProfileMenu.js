@@ -16,7 +16,11 @@ const ProfileMenu = ({ closeMenu }) => {
             Profile settings
           </button>
         </Link>
-        <Link href={"/about"} className="flex" onClick={closeMenu}>
+        <Link
+          href={"/help"}
+          className="flex hover:brightness-0"
+          onClick={closeMenu}
+        >
           <Image
             src="/menuIcons/help.png"
             alt="help"
@@ -25,6 +29,20 @@ const ProfileMenu = ({ closeMenu }) => {
             className="cursor-pointer"
           />
           <button className="px-2 hover:text-black">Help</button>
+        </Link>
+        <Link
+          href={"/about"}
+          className="flex hover:brightness-0"
+          onClick={closeMenu}
+        >
+          <Image
+            src="/menuIcons/info.png"
+            alt="info"
+            width={25}
+            height={20}
+            className="cursor-pointer"
+          />
+          <button className="px-2 hover:text-black">About</button>
         </Link>
         <div className="flex hover:brightness-0">
           <Image
