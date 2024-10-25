@@ -129,22 +129,33 @@ const page = () => {
 
       {/* RIGHT */}
       <div className="flex flex-col rounded-md bg-white px-2 shadow-md md:w-1/4">
-        <div className="mx-4 flex justify-between p-2">
-          <h1>All Skills</h1>
-          <TableSearch />
+        {/* HEADER */}
+        <div className="m-2 flex items-center justify-center gap-4">
+          <h1 className="">All Skills</h1>
+          <div className="flex flex-grow items-center gap-2 rounded-full border border-gray-500 bg-white p-2 text-xs text-gray-500 md:flex md:w-auto">
+            <Image
+              src="/menuIcons/search.png"
+              alt="search"
+              width={14}
+              height={14}
+            />
+            <input
+              type="text"
+              placeholder="Search from table..."
+              className="bg-transparent outline-none"
+            />
+          </div>
           <Image
             src="/menuIcons/plus.png"
             className="rounded-full bg-primary_yellow p-2"
             alt="add"
-            width={50}
-            height={50}
+            width={35}
+            height={20}
           />
         </div>
-        {/* <TableHeader title="Skills" isAdmin={false} /> */}
-        {/* <Table columns={columns} renderRow={renderRow} data={skills} /> */}
 
         {/* Scrollable activities list */}
-        <div className="flex h-[78dvh] flex-col overflow-auto overflow-y-auto pr-2 text-sm">
+        <div className="flex h-[83dvh] flex-col overflow-auto overflow-y-auto pr-2 text-sm">
           {skills.map((skill) => (
             <div
               className="py-3 odd:bg-primary_lightblue hover:bg-slate-200"

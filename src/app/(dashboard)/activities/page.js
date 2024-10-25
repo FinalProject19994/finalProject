@@ -173,36 +173,60 @@ const columns = [
   {
     header: "Title",
     accessor: "title",
+    className: "hidden md:table-cell",
   },
-  //   {
-  //     header: "Description",
-  //     accessor: "description",
-  //   },
   {
     header: "Skills",
     accessor: "skills",
+    className: "hidden md:table-cell",
   },
   {
     header: "Course",
     accessor: "course",
+    className: "hidden md:table-cell",
+  },
+  {
+    header: "Department",
+    accessor: "department",
+    className: "hidden md:table-cell",
   },
   {
     header: "Date",
     accessor: "date",
+    className: "hidden md:table-cell",
   },
 ];
 
 const page = () => {
-  const renderRow = (activities) => {
+  const renderRow = (activity) => {
     return (
-      <tr className="odd:bg-primary_lightblue hover:bg-slate-200">
-        <td className="text-sm odd:bg-primary_lightblue hover:bg-slate-200">
-          {activities.title}
+      <tr className="text-sm odd:bg-primary_lightblue hover:bg-slate-200">
+        {/* Flex container for data */}
+        <td className="p-4">
+          <div className="flex items-center">
+            {/* Survey Code */}
+            <h3 className="font-semibold">{activity.title}</h3>
+
+            {/* Creation Date floated to the right */}
+            <p className="float-right ml-auto text-xs text-gray-500 md:hidden">
+              {activity.creationDate}
+            </p>
+          </div>
+
+          {/* Hidden elements for smaller screens */}
+          <p className="text-xs text-gray-500 md:hidden">{activity.course}</p>
+          <p className="text-xs text-gray-500 md:hidden">
+            {activity.skills.join(", ")}
+          </p>
         </td>
+
+        <td className="hidden text-sm md:table-cell">{activity.title}</td>
         {/* <td>{activities.description}</td> */}
-        <td>{activities.skills.join(", ")}</td>
-        <td>{activities.course}</td>
-        <td className="text-xs">{activities.date}</td>
+        <td className="hidden text-sm text-gray-500 md:table-cell">
+          {activity.skills.join(", ")}
+        </td>
+        <td className="hidden text-sm md:table-cell">{activity.course}</td>
+        <td className="hidden text-sm md:table-cell">{activity.date}</td>
       </tr>
     );
   };
@@ -210,12 +234,10 @@ const page = () => {
   return (
     <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
       {/* LEFT - ACTIVITIES TABLE */}
-      <div className="flex w-2/3 flex-col rounded-md bg-white p-4 shadow-md">
-        <div>
-          <TableHeader title="activities" isAdmin={false} />
-          <div className="h-[80dvh] overflow-auto rounded-lg">
-            <Table columns={columns} renderRow={renderRow} data={activities} />
-          </div>
+      <div className="rounded-md bg-white p-4 shadow-md">
+        <TableHeader title="activities" isAdmin={false} />
+        <div className="h-[80dvh] overflow-auto overflow-x-hidden pr-1">
+          <Table columns={columns} renderRow={renderRow} data={activities} />
         </div>
       </div>
 

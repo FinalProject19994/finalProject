@@ -160,9 +160,9 @@ const TeacherListPage = () => {
             <p className="text-xs text-gray-500 md:hidden">
               {lecturer.department} {lecturer.mail}
             </p>
-            <p className="text-xs text-gray-500 md:hidden">
-              {/* Lecturers: {lecturer.lecturers.join(", ")} */}
-            </p>
+            {/* <p className="text-xs text-gray-500 md:hidden">
+              Lecturers: {lecturer.lecturers.join(", ")}
+            </p> */}
           </div>
         </td>
 
@@ -177,8 +177,13 @@ const TeacherListPage = () => {
 
         {/* Activities button */}
         <td className="align-bottom md:align-middle">
-          <button className="mb-2 mr-1 mt-auto rounded-md bg-primary_yellow px-4 py-2 hover:bg-yellow-300 md:mb-0 md:mt-0">
-            Activities
+          <button className="mb-2 mr-1 mt-auto rounded-full bg-primary_yellow p-2 hover:bg-yellow-300 md:mb-0 md:mt-0">
+            <Image
+              src="/menuIcons/activities_black.png"
+              alt="Activities"
+              width={20}
+              height={20}
+            />
           </button>
         </td>
       </tr>

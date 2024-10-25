@@ -1,6 +1,7 @@
 import Pagination from "@/app/components/Pagination";
 import Table from "@/app/components/Table";
 import TableHeader from "@/app/components/TableHeader";
+import Image from "next/image";
 
 const courses = [
   {
@@ -145,6 +146,11 @@ const columns = [
     accessor: "lecturers",
     className: "hidden md:table-cell",
   },
+  {
+    header: "Activities",
+    accessor: "activities",
+    className: "hidden md:table-cell",
+  },
 ];
 
 const page = () => {
@@ -174,8 +180,13 @@ const page = () => {
 
         {/* Activities button */}
         <td className="align-bottom md:align-middle">
-          <button className="mb-2 mr-1 mt-auto rounded-md bg-primary_yellow px-4 py-2 hover:bg-yellow-300 md:mb-0 md:mt-0">
-            Activities
+          <button className="mt-auto rounded-full bg-primary_yellow p-2 hover:bg-yellow-300 md:mb-0 md:mt-0">
+            <Image
+              src="/menuIcons/activities_black.png"
+              alt="Activities"
+              width={20}
+              height={20}
+            />
           </button>
         </td>
       </tr>
@@ -186,9 +197,8 @@ const page = () => {
     <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4 shadow-md">
       <TableHeader title={"Courses"} />
 
-      <div className="h-[80dvh] overflow-auto rounded-lg">
+      <div className="h-[80dvh] overflow-auto">
         <Table columns={columns} renderRow={renderRow} data={courses} />
-        {/* <Pagination /> */}
       </div>
     </div>
   );
