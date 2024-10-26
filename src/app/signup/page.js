@@ -1,88 +1,93 @@
 "use client";
-import Image from "next/image";
-import { useState } from "react";
-import FormInput from "../components/form/FormInput";
+import { useRouter } from "next/navigation";
 
-const Page = () => {
-  const [value, setValues] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const inputs = [
-    {
-      id: 1,
-      name: "email",
-      type: "email",
-      placeholder: "Email",
-      label: "Email",
-    },
-    { id: 2, name: "firstName", type: "text", placeholder: "First Name" },
-    { id: 3, name: "lastName", type: "text", placeholder: "Last Name" },
-    { id: 4, name: "password", type: "password", placeholder: "Password" },
-    {
-      id: 5,
-      name: "confirmPassword",
-      type: "password",
-      placeholder: "Confirm Password",
-    },
-  ];
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const data = new FormData(e.target);
+const page = () => {
+  const router = useRouter();
+  const handleSignUp = () => {
+    router.replace("/homepage");
   };
-
-  const handleChange = (e) => {
-    setValues({
-      ...value,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  console.log(value);
   return (
-    <div className="flex h-[100vh] items-center justify-center">
-      <form onSubmit={handleSubmit}>
-        {inputs.map((input) => (
-          <FormInput
-            key={input.id}
-            {...input}
-            value={value[input.name]}
-            onChange={handleChange}
-          />
-        ))}
+    <div className="flex h-screen items-center justify-center bg-slate-100 lg:text-xl">
+      <form className="mx-4 flex max-h-screen w-4/5 flex-col gap-4 rounded-md bg-white p-4 text-gray-500 shadow-md lg:w-1/2">
+        <h1 className="m-2 text-center text-4xl font-bold text-primary_purple">
+          Create a new account
+        </h1>
+        <div className="mx-auto w-1/2 space-y-4 lg:w-1/3">
+          <h2 className="text-lg font-bold text-primary_green underline">
+            Personal information
+          </h2>
+          {/* First Name and Last Name */}
+          <div className="flex justify-between gap-8">
+            <input
+              type="text"
+              placeholder="First Name"
+              className="rounded-md border p-2 outline-none"
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              className="rounded-md border p-2 outline-none"
+            />
+          </div>
+          <div className="flex flex-col justify-between gap-8">
+            {/* Phone Number */}
+            <input
+              type="text"
+              placeholder="Phone Number"
+              className="rounded-md border p-2 outline-none"
+            />
 
-        <button>NEXT</button>
+            {/* Department */}
+            <select
+              defaultValue="select department"
+              className="rounded-md border p-2 outline-none"
+            >
+              <option value="Software Engineering">Software Engineering</option>
+              <option value="Applied Mathematics">Applied Mathematics</option>
+            </select>
+
+            {/* Courses */}
+            <select className="rounded-md border p-2 outline-none">
+              <option value="Computer Networks">Computer Networks</option>
+              <option value="Computer graphics">Computer graphics</option>
+            </select>
+          </div>
+
+          <h2 className="pt-6 text-lg font-bold text-primary_green underline">
+            Privacy information
+          </h2>
+          <div className="flex flex-col justify-between gap-8">
+            {/* Email */}
+            <input
+              type="Email"
+              placeholder="Email Address"
+              className="rounded-md border p-2 outline-none"
+            />
+
+            {/* Password */}
+            <input
+              type="Password"
+              placeholder="Password"
+              className="rounded-md border p-2 outline-none"
+            />
+
+            {/* Confirm Password */}
+            <input
+              type="Password"
+              placeholder="Confirm Password"
+              className="rounded-md border p-2 outline-none"
+            />
+          </div>
+        </div>
+        <button
+          onClick={handleSignUp}
+          className="mt-8 w-1/4 self-center rounded-md bg-primary_purple p-2 font-semibold text-white hover:brightness-110"
+        >
+          sign up
+        </button>
       </form>
     </div>
   );
 };
 
-export default Page;
-//   const [showPassword, setShowPassword] = useState(false);
-//   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-//   const handleShowPassword = () => {
-//     setShowPassword(!showPassword);
-//   };
-
-//   const handleShowConfirmPassword = () => {
-//     setShowConfirmPassword(!showConfirmPassword);
-//   };
-
-//   <div className="flex items-center gap-4">
-//     <Image src="/menuIcons/tick.png" alt="tick" width={20} height={20} />
-//     <p>Step 1: Personal information</p>
-//   </div>
-//   <div className="flex items-center gap-4">
-//     <Image src="/menuIcons/step.png" alt="step" width={20} height={20} />
-//     <p>Step 2: Academic information</p>
-//   </div>
-//   <div className="flex items-center gap-4">
-//     <Image src="/menuIcons/step.png" alt="step" width={20} height={20} />
-//     <p>Step 3: Review and submit</p>
-//   </div>
+export default page;
