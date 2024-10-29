@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const handleLogIn = () => {
     router.push("/homepage");
@@ -11,13 +11,13 @@ const page = () => {
   return (
     <div className="flex h-screen bg-slate-100 lg:text-xl">
       <div className="flex w-1/2 flex-col items-center justify-center">
-        <h1 className="text-center text-7xl font-bold text-primary_purple lg:text-8xl">
+        <h1 className="text-center text-7xl font-bold text-[#8300E0] lg:text-8xl">
           Core skills
         </h1>
-        <p className="text-center text-xl font-bold italic text-primary_green lg:text-2xl">
+        <p className="text-primary_ text-center text-xl font-bold italic text-gray-500 lg:text-2xl">
           Discover skills, unleash the potential
         </p>
-        <Image src="/logo.png" alt="signup" width={300} height={300} />
+        <Image src="/logo.png" alt="signup" width={400} height={400} />
       </div>
       <div className="flex w-1/2 items-center justify-center lg:justify-start">
         <div className="flex w-3/4 flex-col gap-4 rounded-md bg-white p-4 shadow-md lg:w-1/2">
@@ -41,22 +41,28 @@ const page = () => {
             Log in
           </button>
           <Link
-            href="#"
+            href="/forgotPassword"
             className="text-center font-semibold text-primary_purple hover:underline"
           >
             Forgot Password?
           </Link>
           <div className="h-px w-full bg-gray-300"></div>
-          <Link
-            href="/signup"
-            className="w-2/3 self-center rounded-md bg-primary_green p-2 text-center font-semibold text-white hover:brightness-110"
-          >
-            Create Account
-          </Link>
+
+          <div className="flex justify-center">
+            <p className="text-[16px]">Don't have an account? </p>
+            <span className="text-[19px]">
+              <Link
+                className="ml-1 text-primary_purple hover:underline"
+                href="/signup"
+              >
+                Sign up
+              </Link>
+            </span>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;

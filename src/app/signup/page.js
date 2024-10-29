@@ -1,35 +1,44 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
-  const handleSignUp = () => {
-    router.replace("/homepage");
+
+  const handleSignUp = (event) => {
+    event.preventDefault();
+    router.push("/homepage");
   };
+  // TODO: Add multiple selector for department and courses
   return (
-    <div className="flex h-screen items-center justify-center bg-slate-100 lg:text-xl">
-      <form className="mx-4 flex max-h-screen w-4/5 flex-col gap-4 rounded-md bg-white p-4 text-gray-500 shadow-md lg:w-1/2">
-        <h1 className="m-2 text-center text-4xl font-bold text-primary_purple">
+    <div className="flex min-h-screen items-center justify-center bg-slate-100 lg:text-xl">
+      <form
+        onSubmit={handleSignUp}
+        className="mx-4 flex w-full flex-col rounded-md bg-white p-6 text-gray-500 shadow-md md:w-3/5 md:p-8"
+      >
+        <h1 className="m-2 text-center text-3xl font-bold text-primary_purple sm:text-4xl">
           Create a new account
         </h1>
-        <div className="mx-auto w-1/2 space-y-4 lg:w-1/3">
+
+        <div className="mx-auto w-full space-y-6 md:w-3/4 lg:w-2/3">
           <h2 className="text-lg font-bold text-primary_green underline">
             Personal information
           </h2>
+
           {/* First Name and Last Name */}
-          <div className="flex justify-between gap-8">
+          <div className="flex flex-col gap-3 md:flex-row">
             <input
               type="text"
               placeholder="First Name"
-              className="rounded-md border p-2 outline-none"
+              className="flex-grow rounded-md border p-2 outline-none md:w-1/2"
             />
             <input
               type="text"
               placeholder="Last Name"
-              className="rounded-md border p-2 outline-none"
+              className="flex-grow rounded-md border p-2 outline-none md:w-1/2"
             />
           </div>
-          <div className="flex flex-col justify-between gap-8">
+
+          <div className="flex flex-col gap-4">
             {/* Phone Number */}
             <input
               type="text"
@@ -39,55 +48,67 @@ const page = () => {
 
             {/* Department */}
             <select
-              defaultValue="select department"
+              selected="select department"
               className="rounded-md border p-2 outline-none"
             >
+              <option value="" className="" selected disabled hidden>
+                Choose Department
+              </option>
               <option value="Software Engineering">Software Engineering</option>
               <option value="Applied Mathematics">Applied Mathematics</option>
             </select>
 
             {/* Courses */}
             <select className="rounded-md border p-2 outline-none">
+              <option value="" selected disabled hidden>
+                Choose Courses
+              </option>
               <option value="Computer Networks">Computer Networks</option>
-              <option value="Computer graphics">Computer graphics</option>
+              <option value="Computer Graphics">Computer Graphics</option>
             </select>
           </div>
 
           <h2 className="pt-6 text-lg font-bold text-primary_green underline">
             Privacy information
           </h2>
-          <div className="flex flex-col justify-between gap-8">
+          <div className="flex flex-col gap-4">
             {/* Email */}
             <input
-              type="Email"
+              type="email"
               placeholder="Email Address"
               className="rounded-md border p-2 outline-none"
             />
 
             {/* Password */}
             <input
-              type="Password"
+              type="password"
               placeholder="Password"
               className="rounded-md border p-2 outline-none"
             />
 
             {/* Confirm Password */}
             <input
-              type="Password"
+              type="password"
               placeholder="Confirm Password"
               className="rounded-md border p-2 outline-none"
             />
           </div>
         </div>
-        <button
-          onClick={handleSignUp}
-          className="mt-8 w-1/4 self-center rounded-md bg-primary_purple p-2 font-semibold text-white hover:brightness-110"
-        >
-          sign up
-        </button>
+
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={() => router.back()}
+            className="mt-8 self-center rounded-md bg-primary_purple p-2 font-semibold text-white hover:brightness-110 sm:w-1/5 lg:w-1/6"
+          >
+            Cancel
+          </button>
+          <button className="mt-8 w-1/2 self-center rounded-md bg-primary_green p-2 font-semibold text-white hover:brightness-110 sm:w-1/3 lg:w-1/4">
+            Sign up
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
-export default page;
+export default Page;

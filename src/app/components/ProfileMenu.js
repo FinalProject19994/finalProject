@@ -1,7 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const ProfileMenu = ({ closeMenu }) => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    router.push("/login");
+  };
+
   return (
     <div className="absolute right-4 top-16 z-50 rounded-lg bg-white px-4 py-6 text-gray-600 shadow-md">
       <div className="flex flex-col gap-4">
@@ -51,7 +58,7 @@ const ProfileMenu = ({ closeMenu }) => {
             width={25}
             height={20}
           />
-          <button className="px-2 hover:text-black" onClick={closeMenu}>
+          <button className="px-2 hover:text-black" onClick={handleLogout}>
             Log out
           </button>
         </div>

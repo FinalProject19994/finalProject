@@ -3,9 +3,13 @@ import React from "react";
 const page = () => {
   return (
     <form className="mx-4 flex h-[90dvh] max-h-screen flex-col gap-4 rounded-md bg-white p-4 text-gray-500 shadow-md">
-      <h1 className="m-2 text-center text-3xl">Profile Settings</h1>
+      <h1 className="m-2 text-center text-3xl font-bold text-primary_blue">
+        Profile Settings
+      </h1>
       <div className="mx-auto w-1/2 space-y-4 lg:w-1/3">
-        <h2 className="text-lg underline">Personal Settings</h2>
+        <h2 className="text-lg font-bold text-primary_green underline">
+          Personal Settings
+        </h2>
         {/* First Name and Last Name */}
         <div className="flex justify-between gap-8">
           <div className="flex w-1/2 flex-col text-sm">
@@ -54,7 +58,9 @@ const page = () => {
           </select>
         </div>
 
-        <h2 className="pt-6 text-lg underline">Privacy Settings</h2>
+        <h2 className="text-lg font-bold text-primary_green underline">
+          Privacy Settings
+        </h2>
         {/* Email */}
         <div className="flex flex-col text-sm">
           <label className="font-semibold italic">Email</label>
@@ -85,7 +91,7 @@ const page = () => {
           />
         </div>
       </div>
-      <button className="mt-8 w-1/12 self-center rounded-full bg-primary_blue p-2 hover:bg-sky-300">
+      <button className="mt-8 w-1/12 self-center rounded-md bg-primary_blue p-2 font-bold text-gray-400 hover:bg-sky-300">
         Save
       </button>
     </form>
