@@ -37,7 +37,7 @@ const Menu = () => {
         {/* Menu items */}
         <div className="flex-1">
           {menuItems.map((item) => (
-            <Tooltip key={item.label} delayDuration={100}>
+            <Tooltip key={item.label} delayDuration={50}>
               <TooltipTrigger asChild>
                 <Link
                   href={item.href}

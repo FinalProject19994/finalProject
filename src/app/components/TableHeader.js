@@ -17,9 +17,9 @@ const TableHeader = ({ title, isAdmin }) => {
         <TableSearch />
         <div className="flex items-center gap-4 self-end">
           <TooltipProvider>
-            <Tooltip>
+            <Tooltip delayDuration={50}>
               <TooltipTrigger asChild>
-                <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary_yellow">
+                <button className="flex h-8 w-8 items-center justify-center rounded-full hover:border hover:border-gray-500">
                   <Image
                     src="/menuIcons/filter.png"
                     alt="filter"
@@ -32,7 +32,7 @@ const TableHeader = ({ title, isAdmin }) => {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary_yellow">
+                <button className="flex h-8 w-8 items-center justify-center rounded-full hover:border hover:border-gray-500">
                   <Image
                     src="/menuIcons/sort.png"
                     alt="sort"
@@ -43,21 +43,19 @@ const TableHeader = ({ title, isAdmin }) => {
               </TooltipTrigger>
               <TooltipContent>Sort</TooltipContent>
             </Tooltip>
-            {isAdmin && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="flex h-8 w-8 items-center justify-center rounded-full bg-primary_yellow">
-                    <Image
-                      src="/menuIcons/plus.png"
-                      alt="add"
-                      width={14}
-                      height={14}
-                    />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Add</TooltipContent>
-              </Tooltip>
-            )}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button className="flex h-8 w-8 items-center justify-center rounded-full hover:border hover:border-gray-500">
+                  <Image
+                    src="/menuIcons/plus.png"
+                    alt="add"
+                    width={14}
+                    height={14}
+                  />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Add</TooltipContent>
+            </Tooltip>
           </TooltipProvider>
         </div>
       </div>

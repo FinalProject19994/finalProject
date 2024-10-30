@@ -1,7 +1,7 @@
-import Pagination from "@/app/components/Pagination";
-import Table from "@/app/components/Table";
+import DataTable from "@/app/components/data-table";
 import TableHeader from "@/app/components/TableHeader";
 import Image from "next/image";
+import { columns } from "./columns";
 
 const lecturers = [
   {
@@ -110,40 +110,12 @@ const lecturers = [
   },
 ];
 
-const columns = [
-  {
-    header: "Name",
-    accessor: "name",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Department",
-    accessor: "department",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Email",
-    accessor: "mail",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Phone",
-    accessor: "phone",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "",
-    accessor: "activity",
-    className: "hidden md:table-cell",
-  },
-];
-
 const TeacherListPage = () => {
   const renderRow = (lecturer) => {
     return (
       <tr
         key={lecturer.id}
-        className="text-sm odd:bg-primary_lightblue hover:bg-slate-200"
+        className="text-sm text-gray-500 odd:bg-nyanza hover:text-black"
       >
         {/* Flex container for data and button */}
         <td className="flex w-full items-center justify-between p-4">
@@ -156,7 +128,7 @@ const TeacherListPage = () => {
               height={40}
               className="hidden md:block"
             />
-            <h3 className="font-semibold">{lecturer.name}</h3>
+            <h3 className="">{lecturer.name}</h3>
             <p className="text-xs text-gray-500 md:hidden">
               {lecturer.department} {lecturer.mail}
             </p>
@@ -177,7 +149,7 @@ const TeacherListPage = () => {
 
         {/* Activities button */}
         <td className="align-bottom md:align-middle">
-          <button className="mb-2 mr-1 mt-auto rounded-full bg-primary_yellow p-2 hover:bg-yellow-300 md:mb-0 md:mt-0">
+          <button className="mb-2 mr-1 mt-auto rounded-full p-2 md:mb-0 md:mt-0">
             <Image
               src="/menuIcons/activities_black.png"
               alt="Activities"
@@ -195,7 +167,8 @@ const TeacherListPage = () => {
       <TableHeader title={"Lecturers"} />
 
       <div className="h-[80dvh] overflow-auto rounded-lg">
-        <Table columns={columns} renderRow={renderRow} data={lecturers} />
+        {/* <Table columns={columns} renderRow={renderRow} data={lecturers} /> */}
+        <DataTable columns={columns} data={lecturers} />
       </div>
     </div>
   );

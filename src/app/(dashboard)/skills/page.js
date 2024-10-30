@@ -2,6 +2,8 @@ import TableHeader from "@/app/components/TableHeader";
 import Table from "@/app/components/Table";
 import TableSearch from "@/app/components/TableSearch";
 import Image from "next/image";
+import DataTable from "@/app/components/data-table";
+import { columns } from "./columns";
 
 const skills = [
   {
@@ -96,20 +98,17 @@ const skills = [
   },
 ];
 
-const columns = [
-  {
-    header: "",
-    accessor: "",
-  },
-];
+// const columns = [
+//   {
+//     header: "",
+//     accessor: "",
+//   },
+// ];
 
 const page = () => {
   const renderRow = (skill) => {
     return (
-      <tr
-        key={skill.id}
-        className="odd:bg-primary_lightblue hover:bg-slate-200"
-      >
+      <tr key={skill.id} className="odd:bg-nyanza hover:font-semibold">
         <div className="p-4">
           <div className="">{skill.skill}</div>
           <div className="text-xs text-gray-400">{skill.category}</div>
@@ -147,7 +146,7 @@ const page = () => {
           </div>
           <Image
             src="/menuIcons/plus.png"
-            className="rounded-full bg-primary_yellow p-2"
+            className="rounded-full border-gray-500 p-2 hover:border"
             alt="add"
             width={35}
             height={20}
@@ -155,18 +154,16 @@ const page = () => {
         </div>
 
         {/* Scrollable activities list */}
-        <div className="flex h-[83dvh] flex-col overflow-auto overflow-y-auto pr-2 text-sm">
-          {skills.map((skill) => (
-            <div
-              className="py-3 odd:bg-primary_lightblue hover:bg-slate-200"
-              key={skill.id}
-            >
+        <div className="group flex h-[83dvh] flex-col overflow-auto overflow-y-auto pr-2 text-sm">
+          <DataTable columns={columns} data={skills} />
+          {/* {skills.map((skill) => (
+            <div className="odd:bg-nyanza py-3" key={skill.id}>
               <div className="mx-2 flex flex-col">
                 <h1 className="font-semibold text-gray-600">{skill.skill}</h1>
                 <span className="text-sm text-gray-400">{skill.category}</span>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

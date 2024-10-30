@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
-import Table from "@/app/components/Table";
 import TableHeader from "@/app/components/TableHeader";
+import DataTable from "@/app/components/data-table";
+import { columns } from "./columns";
 
 const questionnaires = [
   {
@@ -165,51 +168,51 @@ const questionnaires = [
   },
 ];
 
-const columns = [
-  {
-    header: "Code",
-    accessor: "code",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Course",
-    accessor: "course",
-    className: "hidden lg:table-cell",
-  },
-  {
-    header: "Department",
-    accessor: "department",
-    className: "hidden lg:table-cell",
-  },
-  {
-    header: "Skills",
-    accessor: "skills",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Creation Date",
-    accessor: "date",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "",
-    accessor: "Edit",
-    className: "hidden md:table-cell",
-  },
-];
+// const columns = [
+//   {
+//     header: "Code",
+//     accessor: "code",
+//     className: "hidden md:table-cell",
+//   },
+//   {
+//     header: "Course",
+//     accessor: "course",
+//     className: "hidden lg:table-cell",
+//   },
+//   {
+//     header: "Department",
+//     accessor: "department",
+//     className: "hidden lg:table-cell",
+//   },
+//   {
+//     header: "Skills",
+//     accessor: "skills",
+//     className: "hidden md:table-cell",
+//   },
+//   {
+//     header: "Creation Date",
+//     accessor: "date",
+//     className: "hidden md:table-cell",
+//   },
+//   {
+//     header: "",
+//     accessor: "Edit",
+//     className: "hidden md:table-cell",
+//   },
+// ];
 
 const Questionnaires = () => {
   const renderRow = (questionnaire) => {
     return (
       <tr
         key={questionnaire.questionnaireID}
-        className="group text-sm odd:bg-primary_lightblue hover:bg-slate-200"
+        className="group text-sm text-gray-500 odd:bg-nyanza hover:text-black"
       >
         {/* Flex container for data */}
         <td className="p-4">
           <div className="flex items-center">
             {/* Survey Code */}
-            <h3 className="font-semibold">{questionnaire.questionnaireID}</h3>
+            <h3 className="">{questionnaire.questionnaireID}</h3>
 
             {/* Creation Date floated to the right */}
             <p className="float-right ml-auto text-xs text-gray-500 md:hidden">
@@ -245,7 +248,7 @@ const Questionnaires = () => {
         {/* Edit button */}
         <td className="align-bottom md:align-middle">
           <div className="flex space-x-2 opacity-0 transition-opacity duration-100 group-hover:opacity-100">
-            <button className="mb-2 mr-1 mt-auto rounded-full bg-primary_purple p-2 md:mb-0 md:mt-0">
+            <button className="mb-2 mr-1 mt-auto rounded-full border border-gray-500 p-2 md:mb-0 md:mt-0">
               <Image
                 src="/menuIcons/edit.png"
                 alt="Edit"
@@ -253,7 +256,7 @@ const Questionnaires = () => {
                 height={16}
               />
             </button>
-            <button className="mb-2 mr-1 mt-auto rounded-full bg-primary_green p-2 md:mb-0 md:mt-0">
+            <button className="mb-2 mr-1 mt-auto rounded-full border border-gray-500 p-2 md:mb-0 md:mt-0">
               <Image
                 src="/menuIcons/delete.png"
                 alt="Delete"
@@ -271,7 +274,8 @@ const Questionnaires = () => {
     <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4 shadow-md">
       <TableHeader title={"Surveys"} />
       <div className="h-[80dvh] overflow-auto rounded-lg">
-        <Table columns={columns} renderRow={renderRow} data={questionnaires} />
+        {/* <Table columns={columns} renderRow={renderRow} data={questionnaires} /> */}
+        <DataTable columns={columns} data={questionnaires} />
       </div>
     </div>
   );

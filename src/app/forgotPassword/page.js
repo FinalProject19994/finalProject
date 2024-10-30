@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Page = () => {
   const router = useRouter();
@@ -16,8 +17,8 @@ const Page = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 lg:text-xl">
       <div className="mx-4 flex w-full flex-col rounded-md bg-white p-6 text-gray-500 shadow-md md:w-3/5 md:p-8">
-        <h1 className="m-2 text-center text-3xl font-bold text-primary_purple sm:text-4xl">
-          Did you forget your password?😢
+        <h1 className="m-8 text-center text-xl font-bold text-primary_purple sm:text-4xl">
+          Forgot your password?
         </h1>
         <p className="m-2 ml-1">Please enter your email</p>
         <input
@@ -27,17 +28,21 @@ const Page = () => {
         />
         <div className="flex justify-center gap-4">
           <button
-            onClick={handleGoBack}
-            className="mt-8 self-center rounded-md bg-primary_purple p-2 font-semibold text-white hover:brightness-110 sm:w-1/5 lg:w-1/6"
-          >
-            Cancel
-          </button>
-          <button
             onSubmit={handleForgotPassword}
-            className="mt-8 w-1/2 self-center rounded-md bg-primary_green p-2 font-semibold text-white hover:brightness-110 sm:w-1/3 lg:w-1/4"
+            className="mt-12 w-1/6 rounded-md bg-primary_green p-2 text-white"
           >
             Search
           </button>
+        </div>
+        <div className="mt-3 flex items-center justify-center text-base">
+          <p>Return to</p>
+          <Link
+            onClick={handleGoBack}
+            href={"/login"}
+            className="ml-1 flex cursor-pointer items-center justify-center text-primary_purple hover:underline"
+          >
+            Login
+          </Link>
         </div>
       </div>
     </div>

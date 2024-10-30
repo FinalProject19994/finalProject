@@ -79,7 +79,7 @@ const EventCalendar = () => {
         <div className="flex flex-col gap-3 overflow-y-auto pr-2 text-sm">
           {dummyActivities.map((activity) => (
             <div
-              className="rounded-md border-2 border-t-4 border-gray-100 bg-white p-5 odd:border-t-primary_blue even:border-t-primary_yellow"
+              className="even:border-t-primary_purple_table rounded-md border-2 border-t-4 border-gray-100 bg-white p-5 odd:border-t-primary_green"
               key={activity.id}
             >
               <div className="flex items-center justify-between">

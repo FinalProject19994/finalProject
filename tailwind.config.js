@@ -15,10 +15,11 @@ module.exports = {
         primary_lightyellow: "#FFF9C2",
         primary_blue: "#c3ebfa",
         primary_lightblue: "#ECF9FD",
-        // primary_green: "#a7f9ab",
-        primary_green: "#a7f9ab",
-        // primary_purple: "#D396FF",
+        // primary_green_old: "#a7f9ab",
+        primary_green: "#5DE000",
+        primary_purple_table: "#D396FF",
         primary_purple: "#8300E0",
+        nyanza: "#DAF7DC",
 
         card: {
           DEFAULT: "hsl(var(--card))",

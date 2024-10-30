@@ -26,7 +26,7 @@ body {
 }
 
 .react-calendar__tile--active {
-  background: #c3ebfa !important;
+  background: #5de000 !important;
   color: #171717 !important;
   border-radius: 8px !important;
 }
@@ -40,7 +40,7 @@ body {
 }
 
 .react-calendar__tile--now {
-  background-color: #fff48d !important; /* Change background color */
+  background-color: #5de00088 !important;
   border-radius: 8px !important;
 }
 
