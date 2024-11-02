@@ -1,8 +1,8 @@
-import TableHeader from "@/app/components/TableHeader";
-import Table from "@/app/components/Table";
-import TableSearch from "@/app/components/TableSearch";
-import Image from "next/image";
+"use client";
+
 import DataTable from "@/app/components/data-table";
+import Image from "next/image";
+import SigmaGraph from "../../components/SigmaGraph";
 import { columns } from "./columns";
 
 const skills = [
@@ -98,31 +98,13 @@ const skills = [
   },
 ];
 
-// const columns = [
-//   {
-//     header: "",
-//     accessor: "",
-//   },
-// ];
-
 const page = () => {
-  const renderRow = (skill) => {
-    return (
-      <tr key={skill.id} className="odd:bg-nyanza hover:font-semibold">
-        <div className="p-4">
-          <div className="">{skill.skill}</div>
-          <div className="text-xs text-gray-400">{skill.category}</div>
-        </div>
-      </tr>
-    );
-  };
-
   return (
     <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
       {/* LEFT */}
       <div className="flex gap-4 rounded-md text-3xl md:w-3/4">
         <div className="h-full w-full rounded-md bg-white shadow-md">
-          Nodes and Edges Graph
+          <SigmaGraph />
         </div>
       </div>
 

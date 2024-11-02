@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Tooltip,
@@ -11,13 +12,13 @@ import {
 
 const menuItems = [
   { icon: "/menuIcons/home.png", label: "Home", href: "/homepage" },
-  { icon: "/menuIcons/courses.png", label: "Courses", href: "/courses" },
+  { icon: "/menuIcons/skills.png", label: "Skills", href: "/skills" },
   {
     icon: "/menuIcons/activities.png",
     label: "Activities",
     href: "/activities",
   },
-  { icon: "/menuIcons/skills.png", label: "Skills", href: "/skills" },
+  { icon: "/menuIcons/courses.png", label: "Courses", href: "/courses" },
   {
     icon: "/menuIcons/lecturers.png",
     label: "Lecturers",
@@ -31,6 +32,8 @@ const menuItems = [
 ];
 
 const Menu = () => {
+  const pathname = usePathname();
+
   return (
     <TooltipProvider>
       <div className="mt-4 flex h-[87dvh] flex-col text-sm">
@@ -41,7 +44,10 @@ const Menu = () => {
               <TooltipTrigger asChild>
                 <Link
                   href={item.href}
-                  className="group relative flex justify-center gap-4 py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3"
+                  className={
+                    `group relative flex justify-center gap-4 py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3` +
+                    (pathname === item.href ? " brightness-0" : "")
+                  }
                 >
                   <Image src={item.icon} alt="icon" width={25} height={25} />
                   <span className="hidden lg:block">{item.label}</span>

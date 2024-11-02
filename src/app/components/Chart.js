@@ -51,8 +51,8 @@ export default function Chart() {
         />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} verticalAlign="top" />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+        <Bar dataKey="desktop" fill="#5DE000" radius={4} />
+        <Bar dataKey="mobile" fill="#d396ff" radius={4} />
       </BarChart>
     </ChartContainer>
   );
