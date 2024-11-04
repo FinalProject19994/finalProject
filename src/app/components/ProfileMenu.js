@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const ProfileMenu = ({ closeMenu }) => {
   const router = useRouter();
@@ -9,8 +10,22 @@ const ProfileMenu = ({ closeMenu }) => {
     router.push("/login");
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".profile-menu")) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [closeMenu]);
+
   return (
-    <div className="absolute right-4 top-16 z-50 rounded-lg bg-white px-4 py-6 text-gray-600 shadow-md">
+    <div className="profile-menu absolute right-4 top-16 z-50 rounded-lg bg-white px-4 py-6 text-gray-600 shadow-md">
       <div className="flex flex-col gap-4">
         <Link href={"/settings"} className="flex hover:brightness-0">
           <Image
@@ -19,9 +34,7 @@ const ProfileMenu = ({ closeMenu }) => {
             width={25}
             height={20}
           />
-          <button className="px-2 hover:text-black" onClick={closeMenu}>
-            Profile settings
-          </button>
+          <button className="px-2 hover:text-black">Profile settings</button>
         </Link>
         <Link
           href={"/help"}
