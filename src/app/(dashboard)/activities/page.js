@@ -1,8 +1,7 @@
-import TableHeader from "@/app/components/TableHeader";
-import Image from "next/image";
-
+"use client";
 import { columns } from "@/app/(dashboard)/activities/columns";
-import DataTable from "@/app/components/data-table";
+import DataTable from "@/components/data-table";
+import ActivityDialog from "@/components/ActivityDialog";
 
 const activities = [
   {
@@ -192,77 +191,26 @@ const activities = [
   },
 ];
 
-// const columns = [
-//   {
-//     header: "Title",
-//     accessor: "title",
-//     className: "hidden md:table-cell",
-//   },
-//   {
-//     header: "Skills",
-//     accessor: "skills",
-//     className: "hidden md:table-cell",
-//   },
-//   {
-//     header: "Course",
-//     accessor: "course",
-//     className: "hidden md:table-cell",
-//   },
-//   // {
-//   //   header: "Department",
-//   //   accessor: "department",
-//   //   className: "hidden md:table-cell",
-//   // },
-//   {
-//     header: "Date",
-//     accessor: "date",
-//     className: "hidden md:table-cell",
-//   },
-//   {
-//     header: "Edit",
-//     accessor: "edit",
-//     className: "hidden md:table-cell",
-//   },
-// ];
-
-const page = () => {
-  const renderRow = (activity) => {
-    return (
-      <tr className="text-sm text-gray-500 odd:bg-nyanza hover:text-black">
-        {/* Mobile view */}
-
-        {/* Desktop View */}
-        <td className="hidden px-2 py-4 text-sm md:table-cell">
-          {activity.title}
-        </td>
-        <td className="hidden text-sm md:table-cell">
-          {activity.skills.join(", ")}
-        </td>
-        <td className="hidden px-2 text-sm md:table-cell">{activity.course}</td>
-        <td className="hidden text-sm md:table-cell">{activity.date}</td>
-        <td className="hidden px-4 text-sm md:table-cell">
-          <button className="rounded-full p-2 hover:brightness-0">
-            <Image
-              src="/menuIcons/edit.png"
-              alt="Edit"
-              width={16}
-              height={16}
-            />
-          </button>
-        </td>
-      </tr>
-    );
-  };
-
+const Page = () => {
   return (
     <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
+      {/* ADD ACTIVITY MODAL */}
+
       {/* LEFT - ACTIVITIES TABLE */}
-      <div className="w-3/5 rounded-md bg-white p-4 shadow-md">
-        <TableHeader title="activities" isAdmin={false} />
-        <div className="h-[80dvh] overflow-auto overflow-x-hidden pr-1">
-          <DataTable data={activities} columns={columns} />
-          {/* <Table columns={columns} renderRow={renderRow} data={activities} /> */}
-        </div>
+      <div className="w-3/5 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
+        {/* LEFT - ACTIVITIES TABLE */}
+
+        {/* <Dialog>
+          <DialogTrigger className="flex h-8 w-8 items-center justify-center rounded-full hover:border hover:border-gray-500">
+            <Image src="/menuIcons/plus.png" alt="add" width={14} height={14} />
+          </DialogTrigger>
+          <ActivityDialog />
+        </Dialog> */}
+        <DataTable
+          data={activities}
+          columns={columns}
+          dialog={<ActivityDialog />}
+        />
       </div>
 
       {/* RIGHT - GRAPH */}
@@ -275,4 +223,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

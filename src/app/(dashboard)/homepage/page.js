@@ -1,9 +1,9 @@
 "use client";
-import EventCalendar from "@/app/components/EventCalendar";
-import Chart from "@/app/components/Chart";
-import SigmaGraph from "@/app/components/SigmaGraph";
-import ForceDirectedGraph from "@/app/components/ForceDirectedGraph";
-import { nodes, links } from "@/lib/dummyData";
+import EventCalendar from "@/components/EventCalendar";
+import Chart from "@/components/Chart";
+import ForceDirectedGraph from "@/components/ForceDirectedGraph";
+import { nodes, links } from "@/lib/data";
+import Legend from "@/components/ui/Legend";
 
 const HomePage = () => {
   return (
@@ -13,26 +13,10 @@ const HomePage = () => {
         <div className="relative h-2/3 w-full rounded-md bg-white shadow-md">
           <div className="absolute left-2 top-0 z-10">
             <h2 className="h-fit bg-white text-lg font-semibold">Overview</h2>
-
-            {/* LEGEND */}
-            <div className="absolute left-2 top-10 bg-white">
-              <div className="flex items-center gap-2 text-sm">
-                <div className="h-2 w-2 bg-primary_green"></div>
-                <p>Skills</p>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <div className="h-2 w-2 bg-primary_yellow"></div>
-                <p>Courses</p>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <div className="h-2 w-2 bg-primary_purple_table"></div>
-                <p>Activities</p>
-              </div>
-            </div>
+            <Legend />
           </div>
 
           <ForceDirectedGraph nodes={nodes} links={links} />
-          {/* <SigmaGraph /> */}
         </div>
 
         {/* LEFT - BOTTOM (Admin only) */}

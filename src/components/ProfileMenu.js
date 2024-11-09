@@ -27,7 +27,11 @@ const ProfileMenu = ({ closeMenu }) => {
   return (
     <div className="profile-menu absolute right-4 top-16 z-50 rounded-lg bg-white px-4 py-6 text-gray-600 shadow-md">
       <div className="flex flex-col gap-4">
-        <Link href={"/settings"} className="flex hover:brightness-0">
+        <Link
+          href={"/settings"}
+          className="flex hover:brightness-0"
+          onClick={closeMenu}
+        >
           <Image
             src="/menuIcons/profile.png"
             alt="profile"
@@ -66,10 +70,12 @@ const ProfileMenu = ({ closeMenu }) => {
         </Link>
         <div className="flex hover:brightness-0">
           <Image
+            onClick={handleLogout}
             src="/menuIcons/logout.png"
             alt="logout"
             width={25}
             height={20}
+            className="cursor-pointer"
           />
           <button className="px-2 hover:text-black" onClick={handleLogout}>
             Log out

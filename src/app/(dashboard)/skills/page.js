@@ -1,8 +1,7 @@
 "use client";
 
-import DataTable from "@/app/components/data-table";
+import DataTable from "@/components/data-table";
 import Image from "next/image";
-import SigmaGraph from "../../components/SigmaGraph";
 import { columns } from "./columns";
 
 const skills = [
@@ -103,50 +102,13 @@ const page = () => {
     <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
       {/* LEFT */}
       <div className="flex gap-4 rounded-md text-3xl md:w-3/4">
-        <div className="h-full w-full rounded-md bg-white shadow-md">
-          <SigmaGraph />
-        </div>
+        <div className="h-full w-full rounded-md bg-white shadow-md"></div>
       </div>
 
       {/* RIGHT */}
-      <div className="flex flex-col rounded-md bg-white px-2 shadow-md md:w-1/4">
-        {/* HEADER */}
-        <div className="m-2 flex items-center justify-center gap-4">
-          <h1 className="">All Skills</h1>
-          <div className="flex flex-grow items-center gap-2 rounded-full border border-gray-500 bg-white p-2 text-xs text-gray-500 md:flex md:w-auto">
-            <Image
-              src="/menuIcons/search.png"
-              alt="search"
-              width={14}
-              height={14}
-            />
-            <input
-              type="text"
-              placeholder="Search from table..."
-              className="bg-transparent outline-none"
-            />
-          </div>
-          <Image
-            src="/menuIcons/plus.png"
-            className="rounded-full border-gray-500 p-2 hover:border"
-            alt="add"
-            width={35}
-            height={20}
-          />
-        </div>
-
+      <div className="flex flex-col overflow-y-scroll rounded-md bg-white px-2 shadow-md md:w-1/4">
         {/* Scrollable activities list */}
-        <div className="group flex h-[83dvh] flex-col overflow-auto overflow-y-auto pr-2 text-sm">
-          <DataTable columns={columns} data={skills} />
-          {/* {skills.map((skill) => (
-            <div className="odd:bg-nyanza py-3" key={skill.id}>
-              <div className="mx-2 flex flex-col">
-                <h1 className="font-semibold text-gray-600">{skill.skill}</h1>
-                <span className="text-sm text-gray-400">{skill.category}</span>
-              </div>
-            </div>
-          ))} */}
-        </div>
+        <DataTable columns={columns} data={skills} />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import Menu from "../components/Menu";
-import Navbar from "../components/Navbar";
+import Menu from "../../components/Menu";
+import Navbar from "../../components/Navbar";
 
 // TODO: Fix the font
 // import { Oswald } from "next/font/google";

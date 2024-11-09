@@ -1,4 +1,4 @@
-import React from "react";
+import MultipleSelector from "@/components/ui/MultipleSelector";
 
 const page = () => {
   return (
@@ -7,13 +7,13 @@ const page = () => {
         Profile Settings
       </h1>
       <div className="mx-auto w-1/2 lg:w-1/3">
-        <h2 className="mb-2 text-lg font-bold text-primary_green">
+        <h2 className="mb-2 text-lg font-bold text-gray-600">
           Personal Settings
         </h2>
         {/* First Name and Last Name */}
         <div className="my-2 flex justify-between gap-8">
           <div className="flex w-1/2 flex-col text-sm">
-            <label className="font-semibold italic">First Name</label>
+            <label className="font-semibold">First Name</label>
             <input
               type="text"
               defaultValue="Joy"
@@ -21,7 +21,7 @@ const page = () => {
             />
           </div>
           <div className="flex w-1/2 flex-col text-sm">
-            <label className="font-semibold italic">Last Name</label>
+            <label className="font-semibold">Last Name</label>
             <input
               type="text"
               defaultValue="Simha Oz"
@@ -32,7 +32,7 @@ const page = () => {
 
         {/* Phone Number */}
         <div className="my-2 flex flex-col text-sm">
-          <label className="font-semibold italic">Phone number</label>
+          <label className="font-semibold">Phone number</label>
           <input
             type="text"
             defaultValue="054-7777-7777"
@@ -40,30 +40,49 @@ const page = () => {
           />
         </div>
 
-        {/* Department */}
-        <div className="my-2 flex flex-col text-sm">
-          <label className="font-semibold italic">Department</label>
-          <select className="rounded-md border p-2 outline-none">
-            <option value="Software Engineering">Software Engineering</option>
-            <option value="Applied Mathematics">Applied Mathematics</option>
-          </select>
+        <div className="mt-4 flex flex-col gap-4 text-sm">
+          <div>
+            {/* Department */}
+            <label className="font-semibold">Department</label>
+            <MultipleSelector
+              options={[
+                { id: 1, label: "Aerospace Engineering" },
+                { id: 2, label: "Biological Engineering" },
+                { id: 3, label: "Chemical Engineering" },
+                { id: 4, label: "Civil Engineering" },
+                { id: 5, label: "Computer Science and Engineering" },
+                { id: 6, label: "Electrical Engineering" },
+                { id: 7, label: "Environmental Engineering" },
+                { id: 8, label: "Industrial Engineering" },
+                { id: 9, label: "Materials Science and Engineering" },
+                { id: 10, label: "Mechanical Engineering" },
+              ]}
+            />
+          </div>
+
+          <div>
+            {/* Courses */}
+            <label className="font-semibold">Courses</label>
+            <MultipleSelector
+              options={[
+                { id: 1, label: "Computing for Business" },
+                { id: 2, label: "Data Mining" },
+                { id: 3, label: "Computational Biology" },
+                { id: 4, label: "Computer Networks" },
+                { id: 5, label: "Mathematics" },
+                { id: 6, label: "Statistics" },
+                { id: 7, label: "Computer Vision" },
+              ]}
+            />
+          </div>
         </div>
 
-        {/* Courses */}
-        <div className="my-2 flex flex-col text-sm">
-          <label className="font-semibold italic">Courses</label>
-          <select className="rounded-md border p-2 outline-none">
-            <option value="Computer Networks">Computer Networks</option>
-            <option value="Computer graphics">Computer graphics</option>
-          </select>
-        </div>
-
-        <h2 className="mb-2 mt-8 text-lg font-bold text-primary_green">
+        <h2 className="mb-2 mt-8 text-lg font-bold text-gray-600">
           Privacy Settings
         </h2>
         {/* Email */}
         <div className="my-2 flex flex-col text-sm">
-          <label className="font-semibold italic">Email</label>
+          <label className="font-semibold">Email</label>
           <input
             type="Email"
             defaultValue="Simha2015@gmail.com"
@@ -73,7 +92,7 @@ const page = () => {
 
         {/* Password */}
         <div className="my-2 flex flex-col text-sm">
-          <label className="font-semibold italic">Password</label>
+          <label className="font-semibold">Password</label>
           <input
             type="Password"
             placeholder="Password"
@@ -83,7 +102,7 @@ const page = () => {
 
         {/* Confirm Password */}
         <div className="my-2 flex flex-col text-sm">
-          <label className="font-semibold italic">Confirm Password</label>
+          <label className="font-semibold">Confirm Password</label>
           <input
             type="Password"
             placeholder="Confirm Password"

@@ -11,7 +11,6 @@ import {
 const TableHeader = ({ title, isAdmin }) => {
   return (
     <div className="mb-8 mt-2 flex items-center justify-between">
-      {/* TODO: move the title to the same line as the buttons */}
       <h1 className="justify-start text-lg font-semibold">All {title}</h1>
       <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row">
         <TableSearch />

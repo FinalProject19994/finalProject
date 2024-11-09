@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import TableHeader from "@/app/components/TableHeader";
-import DataTable from "@/app/components/data-table";
+import TableHeader from "@/components/TableHeader";
+import DataTable from "@/components/data-table";
 import { columns } from "./columns";
 
 const questionnaires = [
@@ -202,81 +202,9 @@ const questionnaires = [
 // ];
 
 const Questionnaires = () => {
-  const renderRow = (questionnaire) => {
-    return (
-      <tr
-        key={questionnaire.questionnaireID}
-        className="group text-sm text-gray-500 odd:bg-nyanza hover:text-black"
-      >
-        {/* Flex container for data */}
-        <td className="p-4">
-          <div className="flex items-center">
-            {/* Survey Code */}
-            <h3 className="">{questionnaire.questionnaireID}</h3>
-
-            {/* Creation Date floated to the right */}
-            <p className="float-right ml-auto text-xs text-gray-500 md:hidden">
-              {questionnaire.creationDate}
-            </p>
-          </div>
-
-          {/* Hidden elements for smaller screens */}
-          <div className="md:hidden">
-            <p className="text-xs text-gray-500">
-              {questionnaire.course} • {questionnaire.department}
-            </p>
-            <p className="text-xs text-gray-500">
-              {questionnaire.skills.join(", ")}
-            </p>
-          </div>
-        </td>
-
-        {/* Course column */}
-        <td className="hidden lg:table-cell">{questionnaire.course}</td>
-
-        {/* Department column */}
-        <td className="hidden lg:table-cell">{questionnaire.department}</td>
-
-        {/* Skills column */}
-        <td className="hidden md:table-cell">
-          {questionnaire.skills.join(", ")}
-        </td>
-
-        {/* Creation Date column */}
-        <td className="hidden lg:table-cell">{questionnaire.creationDate}</td>
-
-        {/* Edit button */}
-        <td className="align-bottom md:align-middle">
-          <div className="flex space-x-2 opacity-0 transition-opacity duration-100 group-hover:opacity-100">
-            <button className="mb-2 mr-1 mt-auto rounded-full border border-gray-500 p-2 md:mb-0 md:mt-0">
-              <Image
-                src="/menuIcons/edit.png"
-                alt="Edit"
-                width={16}
-                height={16}
-              />
-            </button>
-            <button className="mb-2 mr-1 mt-auto rounded-full border border-gray-500 p-2 md:mb-0 md:mt-0">
-              <Image
-                src="/menuIcons/delete.png"
-                alt="Delete"
-                width={16}
-                height={16}
-              />
-            </button>
-          </div>
-        </td>
-      </tr>
-    );
-  };
-
   return (
-    <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4 shadow-md">
-      <TableHeader title={"Surveys"} />
-      <div className="h-[80dvh] overflow-auto rounded-lg">
-        {/* <Table columns={columns} renderRow={renderRow} data={questionnaires} /> */}
-        <DataTable columns={columns} data={questionnaires} />
-      </div>
+    <div className="m-4 mt-0 h-[90dvh] flex-1 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
+      <DataTable columns={columns} data={questionnaires} />
     </div>
   );
 };

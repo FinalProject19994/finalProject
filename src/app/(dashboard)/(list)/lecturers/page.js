@@ -1,5 +1,5 @@
-import DataTable from "@/app/components/data-table";
-import TableHeader from "@/app/components/TableHeader";
+import DataTable from "@/components/data-table";
+import TableHeader from "@/components/TableHeader";
 import Image from "next/image";
 import { columns } from "./columns";
 
@@ -111,65 +111,9 @@ const lecturers = [
 ];
 
 const TeacherListPage = () => {
-  const renderRow = (lecturer) => {
-    return (
-      <tr
-        key={lecturer.id}
-        className="text-sm text-gray-500 odd:bg-nyanza hover:text-black"
-      >
-        {/* Flex container for data and button */}
-        <td className="flex w-full items-center justify-between p-4">
-          {/* Data content on the left */}
-          <div className="flex flex-col gap-2 md:flex-row md:items-center">
-            <Image
-              src={lecturer.avatar}
-              alt={lecturer.name}
-              width={40}
-              height={40}
-              className="hidden md:block"
-            />
-            <h3 className="">{lecturer.name}</h3>
-            <p className="text-xs text-gray-500 md:hidden">
-              {lecturer.department} {lecturer.mail}
-            </p>
-            {/* <p className="text-xs text-gray-500 md:hidden">
-              Lecturers: {lecturer.lecturers.join(", ")}
-            </p> */}
-          </div>
-        </td>
-
-        {/* Department column, visible on medium screens and up */}
-        <td className="hidden md:table-cell">{lecturer.department}</td>
-
-        {/* Email column */}
-        <td className="hidden lg:table-cell">{lecturer.mail}</td>
-
-        {/* Phone column, visible on medium screens and up */}
-        <td className="hidden md:table-cell">{lecturer.phone}</td>
-
-        {/* Activities button */}
-        <td className="align-bottom md:align-middle">
-          <button className="mb-2 mr-1 mt-auto rounded-full p-2 md:mb-0 md:mt-0">
-            <Image
-              src="/menuIcons/activities_black.png"
-              alt="Activities"
-              width={20}
-              height={20}
-            />
-          </button>
-        </td>
-      </tr>
-    );
-  };
-
   return (
-    <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4 shadow-md">
-      <TableHeader title={"Lecturers"} />
-
-      <div className="h-[80dvh] overflow-auto rounded-lg">
-        {/* <Table columns={columns} renderRow={renderRow} data={lecturers} /> */}
-        <DataTable columns={columns} data={lecturers} />
-      </div>
+    <div className="m-4 mt-0 h-[90dvh] flex-1 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
+      <DataTable columns={columns} data={lecturers} />
     </div>
   );
 };

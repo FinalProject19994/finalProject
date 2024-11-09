@@ -25,7 +25,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-export default function DataTable({ data, columns }) {
+export default function DataTable({ data, columns, dialog }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});

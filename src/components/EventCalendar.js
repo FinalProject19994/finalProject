@@ -57,13 +57,13 @@ const dummyActivities = [
 ];
 
 const EventCalendar = () => {
-  const [value, onChange] = useState(new Date());
+  const [date, setDate] = useState(new Date());
 
   return (
     <div className="flex h-full flex-col gap-4">
       {/* Calendar component taking natural space */}
       <div className="rounded-md bg-white p-4 shadow-md">
-        <Calendar value={value} onChange={onChange} />
+        <Calendar value={date} onChange={setDate} />
       </div>
 
       {/* Activities list taking remaining space and scrollable if needed */}

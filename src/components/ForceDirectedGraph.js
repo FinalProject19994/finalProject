@@ -4,7 +4,7 @@ import * as d3 from "d3";
 const ForceDirectedGraph = ({ nodes, links }) => {
   const svgRef = useRef();
   const containerRef = useRef();
-  const [dimensions, setDimensions] = useState({ width: 400, height: 300 });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     // Function to update dimensions based on the parent container
@@ -30,7 +30,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear any existing elements
+    svg.selectAll("*").remove();
 
     // Set dimensions from state
     const { width, height } = dimensions;
@@ -63,13 +63,15 @@ const ForceDirectedGraph = ({ nodes, links }) => {
 
     const nodeCircle = node
       .append("circle")
-      .attr("r", 8)
+      .attr("r", (d) => (d.type === "course" ? 10 : d.type === "skill" ? 8 : 6))
       .attr("fill", (d) =>
         d.type === "skill"
-          ? "#69b3a2"
+          ? "#5de000"
           : d.type === "activity"
             ? "#f7dc6f"
-            : "#ff5252",
+            : d.type === "course"
+              ? "#d396ff"
+              : "#ccc",
       )
       .call(
         d3
@@ -84,7 +86,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .attr("x", 12)
       .attr("dy", ".35em")
       .attr("font-size", "12px")
-      .text((d) => d.id);
+      .text((d) => d.name);
 
     // Update simulation on each tick
     simulation.nodes(nodes).on("tick", () => {
