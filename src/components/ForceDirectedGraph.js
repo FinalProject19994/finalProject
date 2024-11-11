@@ -7,7 +7,6 @@ const ForceDirectedGraph = ({ nodes, links }) => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    // Function to update dimensions based on the parent container
     const updateDimensions = () => {
       if (containerRef.current) {
         const { width, height } = containerRef.current.getBoundingClientRect();
@@ -15,14 +14,11 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       }
     };
 
-    // Set initial dimensions
     updateDimensions();
 
-    // Observe changes in the size of the parent container
     const resizeObserver = new ResizeObserver(updateDimensions);
     resizeObserver.observe(containerRef.current);
 
-    // Cleanup observer on component unmount
     return () => {
       resizeObserver.disconnect();
     };
@@ -32,10 +28,8 @@ const ForceDirectedGraph = ({ nodes, links }) => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    // Set dimensions from state
     const { width, height } = dimensions;
 
-    // Create a simulation
     const simulation = d3
       .forceSimulation(nodes)
       .force(
@@ -48,7 +42,6 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .force("charge", d3.forceManyBody().strength(-20))
       .force("center", d3.forceCenter(width / 2, height / 2));
 
-    // Create links
     const link = svg
       .append("g")
       .selectAll("line")
@@ -58,7 +51,6 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .attr("stroke-width", 1)
       .attr("stroke", "#999");
 
-    // Create nodes
     const node = svg.append("g").selectAll("g").data(nodes).enter().append("g");
 
     const nodeCircle = node
@@ -79,7 +71,9 @@ const ForceDirectedGraph = ({ nodes, links }) => {
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended),
-      );
+      )
+      .on("mouseover", highlight)
+      .on("mouseout", resetHighlight);
 
     const nodeText = node
       .append("text")
@@ -88,7 +82,6 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .attr("font-size", "12px")
       .text((d) => d.name);
 
-    // Update simulation on each tick
     simulation.nodes(nodes).on("tick", () => {
       link
         .attr("x1", (d) => d.source.x)
@@ -101,7 +94,6 @@ const ForceDirectedGraph = ({ nodes, links }) => {
 
     simulation.force("link").links(links);
 
-    // Dragging functions
     function dragstarted(event, d) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
@@ -117,6 +109,99 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       if (!event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
+    }
+
+    function highlight(event, d) {
+      nodeCircle
+        .attr("fill", (o) =>
+          o === d ||
+          links.some(
+            (l) =>
+              (l.source === d && l.target === o) ||
+              (l.target === d && l.source === o),
+          )
+            ? o.type === "skill"
+              ? "#5de000"
+              : o.type === "activity"
+                ? "#f7dc6f"
+                : o.type === "course"
+                  ? "#d396ff"
+                  : "gray"
+            : "gray",
+        )
+        .attr("r", (o) =>
+          o === d ||
+          links.some(
+            (l) =>
+              (l.source === d && l.target === o) ||
+              (l.target === d && l.source === o),
+          )
+            ? o.type === "course"
+              ? 14 // Larger radius for highlighted course nodes
+              : o.type === "skill"
+                ? 12 // Larger radius for highlighted skill nodes
+                : o.type === "activity"
+                  ? 10 // Larger radius for highlighted activity nodes
+                  : 6
+            : o.type === "course"
+              ? 10 // Default radius
+              : o.type === "skill"
+                ? 8
+                : o.type === "activity"
+                  ? 6
+                  : 4,
+        )
+        .attr("opacity", (o) =>
+          o === d ||
+          links.some(
+            (l) =>
+              (l.source === d && l.target === o) ||
+              (l.target === d && l.source === o),
+          )
+            ? 1
+            : 0.5,
+        );
+
+      link
+        .attr("stroke", (l) =>
+          l.source === d || l.target === d
+            ? d.type === "skill"
+              ? "#5de000"
+              : d.type === "activity"
+                ? "#f7dc6f"
+                : d.type === "course"
+                  ? "#d396ff"
+                  : "#999"
+            : "gray",
+        )
+        .attr("opacity", (l) => (l.source === d || l.target === d ? 1 : 0.5));
+    }
+
+    function resetHighlight() {
+      nodeCircle
+        .attr("fill", (d) =>
+          d.type === "skill"
+            ? "#5de000"
+            : d.type === "activity"
+              ? "#f7dc6f"
+              : d.type === "course"
+                ? "#d396ff"
+                : "#ccc",
+        )
+        .attr(
+          "r",
+          (d) =>
+            d.type === "course"
+              ? 10 // Default radius for course nodes
+              : d.type === "skill"
+                ? 8 // Default radius for skill nodes
+                : d.type === "activity"
+                  ? 6 // Default radius for activity nodes
+                  : 4, // Default radius for other nodes
+        )
+        .attr("opacity", 1);
+
+      link.attr("stroke", "#999").attr("opacity", 1);
     }
   }, [nodes, links, dimensions]);
 

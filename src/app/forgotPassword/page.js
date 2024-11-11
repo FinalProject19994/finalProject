@@ -6,7 +6,7 @@ const Page = () => {
   const router = useRouter();
 
   const handleGoBack = () => {
-    router.push("/login");
+    router.push("/");
   };
 
   const handleForgotPassword = (event) => {
@@ -38,7 +38,7 @@ const Page = () => {
           <p>Return to</p>
           <Link
             onClick={handleGoBack}
-            href={"/login"}
+            href={"/"}
             className="ml-1 flex cursor-pointer items-center justify-center text-primary_purple hover:underline"
           >
             Login

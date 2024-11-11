@@ -7,7 +7,7 @@ const ProfileMenu = ({ closeMenu }) => {
   const router = useRouter();
 
   const handleLogout = () => {
-    router.push("/login");
+    router.push("/");
   };
 
   useEffect(() => {

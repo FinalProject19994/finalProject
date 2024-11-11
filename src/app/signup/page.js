@@ -101,7 +101,7 @@ const Page = () => {
         </button>
         <div className="mt-2 flex justify-center">
           <p className="mr-2 text-center">Already have an account?</p>
-          <Link href="/login" className="text-center text-primary_purple">
+          <Link href="/" className="text-center text-primary_purple">
             Log in
           </Link>
         </div>
