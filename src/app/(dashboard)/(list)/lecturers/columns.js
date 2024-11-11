@@ -25,11 +25,29 @@ export const columns = [
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "department",
-    header: "Department",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Department
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "email",

@@ -1,108 +1,43 @@
 "use client";
-
 import DataTable from "@/components/data-table";
-import Image from "next/image";
+import ForceDirectedGraph from "@/components/ForceDirectedGraph";
+import Legend from "@/components/ui/Legend";
+import { links, nodes } from "@/lib/data";
+import { db } from "@/lib/firebase";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { columns } from "./columns";
 
-const skills = [
-  {
-    id: 1,
-    skill: "Web Development",
-    category: "Development",
-  },
-  {
-    id: 2,
-    skill: "Data Analysis",
-    category: "Data Science",
-  },
-  {
-    id: 3,
-    skill: "Machine Learning",
-    category: "Artificial Intelligence",
-  },
-  {
-    id: 4,
-    skill: "Public Speaking",
-    category: "Communication",
-  },
-  {
-    id: 5,
-    skill: "Time Management",
-    category: "Productivity",
-  },
-  {
-    id: 6,
-    skill: "Teamwork",
-    category: "Collaboration",
-  },
-  {
-    id: 7,
-    skill: "Problem Solving",
-    category: "Logic",
-  },
-  {
-    id: 8,
-    skill: "Communication",
-    category: "Interpersonal Skills",
-  },
-  {
-    id: 9,
-    skill: "Adaptability",
-    category: "Personal Skills",
-  },
-  {
-    id: 10,
-    skill: "Leadership",
-    category: "Management",
-  },
-  {
-    id: 11,
-    skill: "Digital Marketing",
-    category: "Marketing",
-  },
-  {
-    id: 12,
-    skill: "User Experience",
-    category: "Design",
-  },
-  {
-    id: 13,
-    skill: "Cloud Computing",
-    category: "Cloud",
-  },
-  {
-    id: 14,
-    skill: "Cybersecurity",
-    category: "Security",
-  },
-  {
-    id: 15,
-    skill: "Artificial Intelligence",
-    category: "Artificial Intelligence",
-  },
-  {
-    id: 16,
-    skill: "Data Visualization",
-    category: "Data Science",
-  },
-  {
-    id: 17,
-    skill: "Computer Vision",
-    category: "Artificial Intelligence",
-  },
-  {
-    id: 18,
-    skill: "Robotics",
-    category: "Artificial Intelligence",
-  },
-];
+const Page = () => {
+  const [skills, setSkills] = useState([]);
 
-const page = () => {
+  // Fetching the skills
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const skillsCollection = collection(db, "skills");
+        const querySnapshot = await getDocs(skillsCollection);
+        const skillsData = querySnapshot.docs.map((doc) => doc.data());
+        setSkills(skillsData);
+        console.log(skillsData);
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
   return (
     <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
       {/* LEFT */}
       <div className="flex gap-4 rounded-md text-3xl md:w-3/4">
-        <div className="h-full w-full rounded-md bg-white shadow-md"></div>
+        <div className="h-full w-full rounded-md bg-white shadow-md">
+          <div className="relative left-2 top-0 z-10">
+            <Legend />
+          </div>
+          <ForceDirectedGraph nodes={nodes} links={links} page="skill" />
+        </div>
       </div>
 
       {/* RIGHT */}
@@ -114,4 +49,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

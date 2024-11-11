@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
-const ForceDirectedGraph = ({ nodes, links }) => {
+const ForceDirectedGraph = ({ nodes, links, page }) => {
   const svgRef = useRef();
   const containerRef = useRef();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -55,7 +55,18 @@ const ForceDirectedGraph = ({ nodes, links }) => {
 
     const nodeCircle = node
       .append("circle")
-      .attr("r", (d) => (d.type === "course" ? 10 : d.type === "skill" ? 8 : 6))
+      .attr("r", (d) => {
+        switch (page) {
+          case "skill":
+            return d.type === "skill" ? 12 : d.type === "course" ? 10 : 8;
+          case "activity":
+            return d.type === "activity" ? 12 : d.type === "course" ? 10 : 8;
+          case "course":
+            return d.type === "course" ? 12 : d.type === "activity" ? 10 : 8;
+          default:
+            return d.type === "skill" ? 10 : d.type === "course" ? 8 : 6;
+        }
+      })
       .attr("fill", (d) =>
         d.type === "skill"
           ? "#5de000"

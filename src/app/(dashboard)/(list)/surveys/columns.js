@@ -12,32 +12,86 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 export const columns = [
   {
     id: "questionnaireID",
-    header: "Code",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Code
+        </Button>
+      );
+    },
     accessorKey: "questionnaireID",
   },
   {
     id: "course",
-    header: "Course",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Course
+        </Button>
+      );
+    },
     accessorKey: "course",
   },
   {
     id: "department",
-    header: "Department",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Department
+        </Button>
+      );
+    },
     accessorKey: "department",
   },
   {
     id: "composer",
-    header: "Composer",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Composer
+        </Button>
+      );
+    },
     accessorKey: "composer",
   },
   {
     id: "skills",
-    header: "Skills",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Skills
+        </Button>
+      );
+    },
     accessorKey: "skills",
   },
   {
     id: "creationDate",
-    header: "Creation Date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          creation Date
+        </Button>
+      );
+    },
     accessorKey: "creationDate",
   },
   {

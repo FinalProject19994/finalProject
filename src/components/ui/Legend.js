@@ -8,11 +8,11 @@ const Legend = () => {
         <p>Skills</p>
       </div>
       <div className="flex items-center gap-2 text-sm">
-        <div className="h-2 w-2 bg-primary_yellow"></div>
+        <div className="h-2 w-2 bg-primary_purple_table"></div>
         <p>Courses</p>
       </div>
       <div className="flex items-center gap-2 text-sm">
-        <div className="h-2 w-2 bg-primary_purple_table"></div>
+        <div className="h-2 w-2 bg-primary_yellow"></div>
         <p>Activities</p>
       </div>
     </div>

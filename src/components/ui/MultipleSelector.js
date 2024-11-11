@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, X, Search } from "lucide-react";
 
+// TODO: style this component
 export default function Component({ options }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   const toggleOption = (option) => {
     setSelectedOptions((prev) =>
@@ -16,10 +19,14 @@ export default function Component({ options }) {
     );
   };
 
-  const removeOption = (option, event) => {
-    event.stopPropagation();
+  const removeOption = (option, e) => {
+    e.stopPropagation();
     setSelectedOptions((prev) => prev.filter((item) => item.id !== option.id));
   };
+
+  const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -34,12 +41,18 @@ export default function Component({ options }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isOpen]);
+
   return (
-    <div className="w-full" ref={dropdownRef}>
+    <div className="mx-auto w-full max-w-md" ref={dropdownRef}>
       <div className="relative">
         <button
           type="button"
-          className="flex w-full items-center justify-between rounded-md border bg-white p-2 text-left text-sm focus:outline-none"
+          className="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white p-2 text-left shadow-sm focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -63,39 +76,57 @@ export default function Component({ options }) {
                 </span>
               ))
             ) : (
-              <span className="text-gray-400">Select options</span>
+              <span className="text-gray-500">Select options</span>
             )}
           </div>
           <ChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
         </button>
 
         {isOpen && (
-          <ul
-            className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-            tabIndex={-1}
-            role="listbox"
-            aria-labelledby="listbox-label"
-            aria-activedescendant="listbox-option-0"
-          >
-            {options.map((option) => (
-              <li
-                key={option.id}
-                className={`relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-primary_purple_table hover:text-primary-foreground ${
-                  selectedOptions.some((item) => item.id === option.id)
-                    ? "bg-gray-300 text-gray-700"
-                    : ""
-                }`}
-                id={`listbox-option-${option.id}`}
-                role="option"
-                aria-selected={selectedOptions.some(
-                  (item) => item.id === option.id,
-                )}
-                onClick={() => toggleOption(option)}
-              >
-                <span className="block truncate">{option.label}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="absolute z-10 mt-1 max-h-60 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            <div className="sticky top-0 z-10 bg-white p-2">
+              <div className="relative">
+                <Search
+                  className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400"
+                  size={18}
+                />
+                <input
+                  type="text"
+                  className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-3 text-sm leading-5 text-gray-900 focus:outline-none"
+                  placeholder="Search options..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  ref={searchInputRef}
+                />
+              </div>
+            </div>
+            <ul
+              className="max-h-48 overflow-auto py-1 text-base"
+              tabIndex={-1}
+              role="listbox"
+              aria-labelledby="listbox-label"
+              aria-activedescendant="listbox-option-0"
+            >
+              {filteredOptions.map((option) => (
+                <li
+                  key={option.id}
+                  className={`relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-primary_purple_table hover:text-primary-foreground ${
+                    selectedOptions.some((item) => item.id === option.id)
+                      ? "bg-primary_purple text-primary-foreground"
+                      : ""
+                  }`}
+                  id={`listbox-option-${option.id}`}
+                  role="option"
+                  aria-selected={selectedOptions.some(
+                    (item) => item.id === option.id,
+                  )}
+                  onClick={() => toggleOption(option)}
+                >
+                  <span className="block truncate">{option.label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
     </div>

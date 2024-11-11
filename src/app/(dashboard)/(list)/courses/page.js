@@ -1,3 +1,4 @@
+"use client";
 import DataTable from "@/components/data-table";
 import { columns } from "./columns";
 
@@ -10,6 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import MultipleSelector from "@/components/ui/MultipleSelector";
+import ForceDirectedGraph from "@/components/ForceDirectedGraph";
+import { nodes, links } from "@/lib/data";
+import Legend from "@/components/ui/Legend";
 
 const courses = [
   {
@@ -151,6 +155,7 @@ const page = () => {
             className="rounded-md border p-2 text-gray-700 outline-none"
           />
           <MultipleSelector
+            // TODO: add skills from the database and remove the local array
             options={[
               { id: 1, label: "Communication" },
               { id: 2, label: "Teamwork" },
@@ -161,6 +166,7 @@ const page = () => {
               { id: 7, label: "Critical Thinking" },
               { id: 8, label: "Interpersonal Skills" },
             ]}
+            // TODO: add Lecturers from the database
           />
           <input
             type="number"
@@ -202,7 +208,10 @@ const page = () => {
       {/* RIGHT - GRAPH */}
       <div className="flex w-2/5 gap-4 rounded-md text-3xl">
         <div className="h-full w-full rounded-md bg-white shadow-md">
-          Nodes and Edges Graph
+          <div className="relative left-2 top-0 z-10">
+            <Legend />
+          </div>
+          <ForceDirectedGraph nodes={nodes} links={links} page="course" />
         </div>
       </div>
     </div>

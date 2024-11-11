@@ -12,11 +12,29 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 export const columns = [
   {
     accessorKey: "title",
-    header: "Title",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Title
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "department",
-    header: "Department",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Department
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "id",
@@ -27,14 +45,22 @@ export const columns = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           ID
-          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
     accessorKey: "lecturers",
-    header: "Lecturers",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Lecturers
+        </Button>
+      );
+    },
     cell: ({ getValue }) => {
       const lecturers = getValue();
       return lecturers.join(", ");

@@ -1,7 +1,10 @@
 "use client";
 import { columns } from "@/app/(dashboard)/activities/columns";
-import DataTable from "@/components/data-table";
 import ActivityDialog from "@/components/ActivityDialog";
+import DataTable from "@/components/data-table";
+import ForceDirectedGraph from "@/components/ForceDirectedGraph";
+import Legend from "@/components/ui/Legend";
+import { links, nodes } from "@/lib/data";
 
 const activities = [
   {
@@ -216,7 +219,10 @@ const Page = () => {
       {/* RIGHT - GRAPH */}
       <div className="flex w-2/5 gap-4 rounded-md text-3xl">
         <div className="h-full w-full rounded-md bg-white shadow-md">
-          Nodes and Edges Graph
+          <div className="relative left-2 top-0 z-10">
+            <Legend />
+          </div>
+          <ForceDirectedGraph nodes={nodes} links={links} page="activity" />
         </div>
       </div>
     </div>

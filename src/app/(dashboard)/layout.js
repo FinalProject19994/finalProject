@@ -18,10 +18,7 @@ const DashboardLayout = ({ children }) => {
           className="flex items-center justify-center lg:justify-start"
         >
           <Image src="/logo.png" priority alt="logo" width={60} height={60} />
-          <span
-            className="hidden text-start font-oswald text-lg text-gray-500 lg:block"
-            style={{ marginLeft: "auto", marginRight: "auto" }}
-          >
+          <span className="mx-auto hidden text-start font-oswald text-lg text-gray-500 lg:block">
             Core Skills
           </span>
         </Link>

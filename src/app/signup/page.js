@@ -1,15 +1,59 @@
 "use client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRef } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const Page = () => {
   const router = useRouter();
 
-  const handleSignUp = (event) => {
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const confirmPasswordRef = useRef();
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
+  const phoneNumberRef = useRef();
+  // const departmentRef = useRef();
+  // const coursesRef = useRef();
+
+  const handleSignUp = async (event) => {
     event.preventDefault();
-    router.push("/homepage");
+
+    // Ensure passwords match before creating the user
+    if (passwordRef.current.value !== confirmPasswordRef.current.value) {
+      console.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      // Create the user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value,
+      );
+
+      // Get the created user
+      const user = userCredential.user;
+
+      // Save attributes in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        firstName: firstNameRef.current.value,
+        lastName: lastNameRef.current.value,
+        phoneNumber: phoneNumberRef.current.value,
+        // department: departmentRef.current.value,
+        // courses: coursesRef.current.value,
+      });
+
+      router.push("/homepage");
+    } catch (error) {
+      console.error("Error creating user:", error.message);
+    }
   };
-  // TODO: Add multiple selector for department and courses
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 lg:text-xl">
       <form
@@ -31,11 +75,13 @@ const Page = () => {
               type="text"
               placeholder="First Name"
               className="flex-grow rounded-md border p-2 outline-none md:w-1/2"
+              ref={firstNameRef}
             />
             <input
               type="text"
               placeholder="Last Name"
               className="flex-grow rounded-md border p-2 outline-none md:w-1/2"
+              ref={lastNameRef}
             />
           </div>
 
@@ -45,6 +91,7 @@ const Page = () => {
               type="text"
               placeholder="Phone Number"
               className="rounded-md border p-2 outline-none"
+              ref={phoneNumberRef}
             />
 
             {/* Department */}
@@ -58,15 +105,6 @@ const Page = () => {
               <option value="Software Engineering">Software Engineering</option>
               <option value="Applied Mathematics">Applied Mathematics</option>
             </select>
-
-            {/* Courses */}
-            <select className="rounded-md border p-2 outline-none">
-              <option value="" selected disabled hidden>
-                Choose Courses
-              </option>
-              <option value="Computer Networks">Computer Networks</option>
-              <option value="Computer Graphics">Computer Graphics</option>
-            </select>
           </div>
 
           <h2 className="pt-6 text-lg font-bold text-gray-500">
@@ -78,6 +116,7 @@ const Page = () => {
               type="email"
               placeholder="Email Address"
               className="rounded-md border p-2 outline-none"
+              ref={emailRef}
             />
 
             {/* Password */}
@@ -85,6 +124,7 @@ const Page = () => {
               type="password"
               placeholder="Password"
               className="rounded-md border p-2 outline-none"
+              ref={passwordRef}
             />
 
             {/* Confirm Password */}
@@ -92,6 +132,7 @@ const Page = () => {
               type="password"
               placeholder="Confirm Password"
               className="rounded-md border p-2 outline-none"
+              ref={confirmPasswordRef}
             />
           </div>
         </div>

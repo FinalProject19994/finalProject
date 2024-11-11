@@ -25,7 +25,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-export default function DataTable({ data, columns, dialog }) {
+export default function DataTable({ data, columns }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -49,14 +49,14 @@ export default function DataTable({ data, columns, dialog }) {
   return (
     <div className="rounded-md">
       <div className="flex items-center py-4">
-        <Input
+        {/* <Input
           placeholder="Filter emails..."
           value={table.getColumn("email")?.getFilterValue() ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
-        />
+        /> */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

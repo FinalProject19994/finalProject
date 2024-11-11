@@ -2,11 +2,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../lib/firebase";
 
 const Page = () => {
   const router = useRouter();
+
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  // TODO: add login errors
+  // TODO: add login validation
   const handleLogIn = () => {
-    router.push("/homepage");
+    signInWithEmailAndPassword(
+      auth,
+      emailRef.current.value,
+      passwordRef.current.value,
+    )
+      .then(() => router.push("/homepage"))
+      .catch((error) => {
+        console.error("Error logging in:", error.message);
+      });
+    console.log(emailRef.current.value, passwordRef.current.value);
   };
   return (
     <div className="flex h-screen bg-slate-100 lg:text-xl">
@@ -26,6 +44,7 @@ const Page = () => {
             type="Email"
             placeholder="Email Address"
             className="rounded-md border p-2 outline-none"
+            ref={emailRef}
           />
 
           {/* Password */}
@@ -33,6 +52,7 @@ const Page = () => {
             type="Password"
             placeholder="Password"
             className="rounded-md border p-2 outline-none"
+            ref={passwordRef}
           />
           <button
             onClick={handleLogIn}
