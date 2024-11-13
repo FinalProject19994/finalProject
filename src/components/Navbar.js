@@ -1,26 +1,25 @@
 "use client";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore"; // Firestore imports
-import { db } from "@/lib/firebase"; // Import Firestore database reference
 import ProfileMenu from "./ProfileMenu";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const [userData, setUserData] = useState(null);
 
   // Fetch user data from Firestore after authentication
   useEffect(() => {
     if (user) {
       const fetchUserData = async () => {
-        const userDocRef = doc(db, "users", user.uid); // Get the document by user UID
-        const docSnap = await getDoc(userDocRef); // Get the document snapshot
+        const userDocRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userDocRef);
 
         if (docSnap.exists()) {
-          setUserData(docSnap.data()); // Set the user data from Firestore
+          setUserData(docSnap.data());
         } else {
           console.error("No such document!");
         }
@@ -37,16 +36,6 @@ const Navbar = () => {
   const closeProfileMenu = () => {
     setIsOpen(false);
   };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
-  // Check if user is logged in and display appropriate name
-  const userName =
-    userData?.firstName && userData?.lastName
-      ? `${userData.firstName} ${userData.lastName}`
-      : "Unknown User";
-  const role = userData?.role || "Unknown Role";
 
   return (
     <div className="flex items-center justify-between p-4">
@@ -69,8 +58,8 @@ const Navbar = () => {
       <div className="ml-auto flex items-center gap-4">
         <div className="flex flex-col text-gray-500">
           {/* Display the user's name */}
-          <span className="text-black">{userName}</span>
-          <span className="text-right text-xs leading-3">{role}</span>
+          <span className="text-black">{userData?.name}</span>
+          <span className="text-right text-xs leading-3">{userData?.role}</span>
         </div>
         <Image
           // TODO: Add random avatars

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, X, Search } from "lucide-react";
 
 // TODO: style this component
-export default function Component({ options }) {
+export default function Component({ options, onSelect, selection }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,20 +12,26 @@ export default function Component({ options }) {
   const searchInputRef = useRef(null);
 
   const toggleOption = (option) => {
-    setSelectedOptions((prev) =>
-      prev.some((item) => item.id === option.id)
-        ? prev.filter((item) => item.id !== option.id)
-        : [...prev, option],
-    );
+    setSelectedOptions((prev) => {
+      const updated = prev.includes(option.label)
+        ? prev.filter((item) => item !== option.label)
+        : [...prev, option];
+      onSelect(updated);
+      return updated;
+    });
   };
 
   const removeOption = (option, e) => {
     e.stopPropagation();
-    setSelectedOptions((prev) => prev.filter((item) => item.id !== option.id));
+    setSelectedOptions((prev) => {
+      const updated = prev.filter((item) => item !== option);
+      onSelect(updated);
+      return updated;
+    });
   };
 
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchTerm.toLowerCase()),
+    option.label?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   useEffect(() => {
@@ -48,11 +54,11 @@ export default function Component({ options }) {
   }, [isOpen]);
 
   return (
-    <div className="mx-auto w-full max-w-md" ref={dropdownRef}>
+    <div className="w-full" ref={dropdownRef}>
       <div className="relative">
         <button
           type="button"
-          className="flex w-full items-center justify-between rounded-md border border-gray-300 bg-white p-2 text-left shadow-sm focus:outline-none"
+          className="flex w-full items-center justify-between rounded-md border border-gray-200 bg-white p-2 text-left text-sm focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -76,7 +82,7 @@ export default function Component({ options }) {
                 </span>
               ))
             ) : (
-              <span className="text-gray-500">Select options</span>
+              <span className="text-gray-500">Select {selection}</span>
             )}
           </div>
           <ChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />

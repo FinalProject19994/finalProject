@@ -1,9 +1,8 @@
 "use client";
-
-import Image from "next/image";
-import TableHeader from "@/components/TableHeader";
 import DataTable from "@/components/data-table";
 import { columns } from "./columns";
+import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 
 const questionnaires = [
   {
@@ -168,42 +167,24 @@ const questionnaires = [
   },
 ];
 
-// const columns = [
-//   {
-//     header: "Code",
-//     accessor: "code",
-//     className: "hidden md:table-cell",
-//   },
-//   {
-//     header: "Course",
-//     accessor: "course",
-//     className: "hidden lg:table-cell",
-//   },
-//   {
-//     header: "Department",
-//     accessor: "department",
-//     className: "hidden lg:table-cell",
-//   },
-//   {
-//     header: "Skills",
-//     accessor: "skills",
-//     className: "hidden md:table-cell",
-//   },
-//   {
-//     header: "Creation Date",
-//     accessor: "date",
-//     className: "hidden md:table-cell",
-//   },
-//   {
-//     header: "",
-//     accessor: "Edit",
-//     className: "hidden md:table-cell",
-//   },
-// ];
-
 const Questionnaires = () => {
+  const router = useRouter();
+
   return (
     <div className="m-4 mt-0 h-[90dvh] flex-1 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
+      <div className="flex justify-between">
+        <h1 className="text-3xl font-bold text-gray-600">Surveys</h1>
+        <button
+          onClick={() => {
+            router.push("/surveys/new");
+          }}
+          className="flex gap-2 rounded-md border border-gray-200 p-2 duration-150 hover:bg-gray-100"
+        >
+          <Plus />
+          {/* TODO: Center the text vertically */}
+          <span className="text-sm text-gray-700">Create new survey</span>
+        </button>
+      </div>
       <DataTable columns={columns} data={questionnaires} />
     </div>
   );

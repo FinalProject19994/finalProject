@@ -10,21 +10,13 @@ const page = () => {
         <h2 className="mb-2 text-lg font-bold text-gray-600">
           Personal Settings
         </h2>
-        {/* First Name and Last Name */}
-        <div className="my-2 flex justify-between gap-8">
-          <div className="flex w-1/2 flex-col text-sm">
-            <label className="font-semibold">First Name</label>
+        {/* Full name */}
+        <div className="my-2 flex flex-col text-sm">
+          <div className="flex flex-col text-sm">
+            <label className="font-semibold">Full Name</label>
             <input
               type="text"
-              defaultValue="Joy"
-              className="rounded-md border p-2 text-gray-700 outline-none"
-            />
-          </div>
-          <div className="flex w-1/2 flex-col text-sm">
-            <label className="font-semibold">Last Name</label>
-            <input
-              type="text"
-              defaultValue="Simha Oz"
+              defaultValue="Joy Simha Oz"
               className="rounded-md border p-2 text-gray-700 outline-none"
             />
           </div>

@@ -91,6 +91,15 @@ const ForceDirectedGraph = ({ nodes, links, page }) => {
       .attr("x", 12)
       .attr("dy", ".35em")
       .attr("font-size", "12px")
+      .attr("fill", (d) =>
+        d.type === "skill"
+          ? "#5de000"
+          : d.type === "activity"
+            ? "#f7dc6f"
+            : d.type === "course"
+              ? "#d396ff"
+              : "#ccc",
+      )
       .text((d) => d.name);
 
     simulation.nodes(nodes).on("tick", () => {

@@ -1,23 +1,48 @@
 "use client";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { useRef } from "react";
+import MultipleSelector from "@/components/ui/MultipleSelector";
+import { auth, db } from "@/lib/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const Page = () => {
+  const [departments, setDepartments] = useState([]);
+  const [selectedDepartments, setSelectedDepartments] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const departmentsCollection = collection(db, "departments");
+        const coursesCollection = collection(db, "courses");
+
+        const querySnapshotDepartments = await getDocs(departmentsCollection);
+        const querySnapshotCourses = await getDocs(coursesCollection);
+
+        const departmentsData = querySnapshotDepartments.docs.map((doc) =>
+          doc.data(),
+        );
+        const coursesData = querySnapshotCourses.docs.map((doc) => doc.data());
+
+        setDepartments(departmentsData);
+        setCourses(coursesData);
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+      }
+    };
+    fetchDepartments();
+  }, []);
+
   const router = useRouter();
 
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const firstNameRef = useRef();
-  const lastNameRef = useRef();
+  const nameRef = useRef();
   const phoneNumberRef = useRef();
-  // const departmentRef = useRef();
-  // const coursesRef = useRef();
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -41,11 +66,12 @@ const Page = () => {
 
       // Save attributes in Firestore
       await setDoc(doc(db, "users", user.uid), {
-        firstName: firstNameRef.current.value,
-        lastName: lastNameRef.current.value,
-        phoneNumber: phoneNumberRef.current.value,
-        // department: departmentRef.current.value,
-        // courses: coursesRef.current.value,
+        name: nameRef.current.value,
+        phone: phoneNumberRef.current.value,
+        email: emailRef.current.value,
+        role: "Lecturer",
+        // department: selectedDepartments,
+        // courses: selectedCourses,
       });
 
       router.push("/homepage");
@@ -58,7 +84,7 @@ const Page = () => {
     <div className="flex min-h-screen items-center justify-center bg-slate-100 lg:text-xl">
       <form
         onSubmit={handleSignUp}
-        className="mx-4 flex w-full flex-col rounded-md bg-white p-6 text-gray-500 shadow-md md:w-3/5 md:p-8"
+        className="mx-4 flex w-full flex-col rounded-md bg-white text-gray-500 shadow-md md:w-3/5 md:p-8"
       >
         <h1 className="m-2 mb-16 text-center text-3xl font-bold text-primary_purple sm:text-4xl">
           Create a new account
@@ -69,23 +95,15 @@ const Page = () => {
             Personal information
           </h2>
 
-          {/* First Name and Last Name */}
-          <div className="flex flex-col gap-3 md:flex-row">
-            <input
-              type="text"
-              placeholder="First Name"
-              className="flex-grow rounded-md border p-2 outline-none md:w-1/2"
-              ref={firstNameRef}
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              className="flex-grow rounded-md border p-2 outline-none md:w-1/2"
-              ref={lastNameRef}
-            />
-          </div>
-
           <div className="flex flex-col gap-4">
+            {/* Full name */}
+            <input
+              type="text"
+              placeholder="Full name"
+              className="w-full rounded-md border p-2 outline-none"
+              ref={nameRef}
+            />
+
             {/* Phone Number */}
             <input
               type="text"
@@ -95,16 +113,18 @@ const Page = () => {
             />
 
             {/* Department */}
-            <select
-              selected="select department"
-              className="rounded-md border p-2 outline-none"
-            >
-              <option value="" selected disabled hidden>
-                Choose Department
-              </option>
-              <option value="Software Engineering">Software Engineering</option>
-              <option value="Applied Mathematics">Applied Mathematics</option>
-            </select>
+            <MultipleSelector
+              options={departments}
+              onSelect={(selected) => setSelectedDepartments(selected)}
+              selection="departments"
+            />
+
+            {/* Courses */}
+            <MultipleSelector
+              options={courses}
+              onSelect={(selected) => setSelectedDepartments(selected)}
+              selection="courses"
+            />
           </div>
 
           <h2 className="pt-6 text-lg font-bold text-gray-500">

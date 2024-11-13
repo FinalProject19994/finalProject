@@ -7,24 +7,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 
 export const columns = [
-  {
-    accessorKey: "avatar",
-    header: "",
-    cell: ({ row }) => (
-      <Image
-        src={row.original.avatar}
-        alt={row.original.name}
-        width={40}
-        height={40}
-      />
-    ),
-  },
+  // TODO: Fix the avatars
+  // {
+  //   accessorKey: "avatar",
+  //   header: "",
+  //   cell: () => {
+  //     const avatar = `/avatars/${Math.floor(Math.random() * 10 + 1)}.png`;
+  //     return <Image src={avatar} alt="avatar" width={40} height={40} />;
+  //   },
+  // },
   {
     accessorKey: "name",
+
     header: ({ column }) => {
       return (
         <Button
@@ -68,7 +66,7 @@ export const columns = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
               <Image
                 src="/menuIcons/activities.png"
                 alt="icon"
@@ -76,6 +74,15 @@ export const columns = [
                 height={25}
               />
               View Activities
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Image
+                src="/menuIcons/courses.png"
+                alt="icon"
+                width={25}
+                height={25}
+              />
+              View Courses
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

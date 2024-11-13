@@ -11,14 +11,14 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 export const columns = [
   {
-    id: "questionnaireID",
+    id: "activity",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Code
+          Activity name
         </Button>
       );
     },
@@ -93,11 +93,6 @@ export const columns = [
       );
     },
     accessorKey: "creationDate",
-  },
-  {
-    id: "actions",
-    header: "",
-    accessor: "Edit",
   },
   {
     id: "actions",

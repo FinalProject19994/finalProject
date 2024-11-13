@@ -2,12 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { getAuth, signOut } from "firebase/auth";
 
 const ProfileMenu = ({ closeMenu }) => {
   const router = useRouter();
 
   const handleLogout = () => {
-    router.push("/");
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        router.push("/");
+      })
+      .catch((error) => {
+        console.error("Error logging out:", error.message);
+      });
   };
 
   useEffect(() => {

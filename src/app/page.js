@@ -24,7 +24,6 @@ const Page = () => {
       .catch((error) => {
         console.error("Error logging in:", error.message);
       });
-    console.log(emailRef.current.value, passwordRef.current.value);
   };
   return (
     <div className="flex h-screen bg-slate-100 lg:text-xl">
