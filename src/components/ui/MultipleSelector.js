@@ -89,7 +89,7 @@ export default function Component({ options, onSelect, selection }) {
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 mt-1 max-h-60 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <div className="absolute z-10 mt-1 max-h-60 w-full rounded-md bg-white shadow-lg focus:outline-none sm:text-sm">
             <div className="sticky top-0 z-10 bg-white p-2">
               <div className="relative">
                 <Search
@@ -116,7 +116,7 @@ export default function Component({ options, onSelect, selection }) {
               {filteredOptions.map((option) => (
                 <li
                   key={option.id}
-                  className={`relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-primary_purple_table hover:text-primary-foreground ${
+                  className={`relative mx-1 cursor-default select-none rounded-md px-3 py-2 hover:bg-primary_purple_table hover:text-primary-foreground ${
                     selectedOptions.some((item) => item.id === option.id)
                       ? "bg-primary_purple text-primary-foreground"
                       : ""
