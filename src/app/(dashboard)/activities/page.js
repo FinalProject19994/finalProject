@@ -5,6 +5,8 @@ import DataTable from "@/components/data-table";
 import ForceDirectedGraph from "@/components/ForceDirectedGraph";
 import Legend from "@/components/ui/Legend";
 import { links, nodes } from "@/lib/data";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const activities = [
   {
@@ -195,20 +197,24 @@ const activities = [
 ];
 
 const Page = () => {
+  const router = useRouter();
   return (
     <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
-      {/* ADD ACTIVITY MODAL */}
-
       {/* LEFT - ACTIVITIES TABLE */}
       <div className="w-3/5 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
-        {/* LEFT - ACTIVITIES TABLE */}
-
-        {/* <Dialog>
-          <DialogTrigger className="flex h-8 w-8 items-center justify-center rounded-full hover:border hover:border-gray-500">
-            <Image src="/menuIcons/plus.png" alt="add" width={14} height={14} />
-          </DialogTrigger>
-          <ActivityDialog />
-        </Dialog> */}
+        <div className="flex justify-between">
+          <h1 className="text-3xl font-bold text-gray-600">Activities</h1>
+          <button
+            onClick={() => {
+              router.push("/activities/new");
+            }}
+            className="flex gap-2 rounded-md border border-gray-200 p-2 duration-150 hover:bg-gray-100"
+          >
+            <Plus />
+            {/* TODO: Center the text vertically */}
+            <span className="text-sm text-gray-700">Create new Activity</span>
+          </button>
+        </div>
         <DataTable
           data={activities}
           columns={columns}
