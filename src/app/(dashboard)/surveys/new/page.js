@@ -18,7 +18,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -27,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { db } from "@/lib/firebase";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { Plus, Trash2, X } from "lucide-react";
@@ -200,7 +200,7 @@ export default function Component() {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="mx-auto max-w-2xl space-y-6 p-4">
+      <div className="mx-auto max-w-6xl space-y-6 p-4">
         <Card>
           <CardHeader className="rounded-t-md bg-gradient-to-r from-primary_purple from-10% to-primary_purple_table to-50% p-6">
             <CardTitle className="text-2xl font-semibold text-white">
@@ -208,13 +208,14 @@ export default function Component() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="my-2">
+            <div className="my-2 flex flex-col space-y-1">
               <Label htmlFor="title">Survey Title</Label>
-              <Input
+              <input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter Survey title"
+                className="w-full rounded-md border p-2 text-sm"
               />
             </div>
             {/* TODO: Add onSelect for activities and courses */}
@@ -227,10 +228,10 @@ export default function Component() {
               <Label htmlFor="course">Course</Label>
               <ComboBox options={courses} title="course" />
             </div>
-            <div>
+            <div className="flex flex-col space-y-1">
               <Label htmlFor="description">Description</Label>
-              <Input
-                id="title"
+              <Textarea
+                id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter Survey title"
@@ -252,12 +253,13 @@ export default function Component() {
               />
             </CardHeader>
             <CardContent className="space-y-4">
-              <Input
+              <input
                 value={question.text}
                 onChange={(e) =>
                   updateQuestionText(question.id, e.target.value)
                 }
                 placeholder="Enter question text"
+                className="w-full rounded-md border p-2 text-sm"
               />
               <Select
                 value={question.type}
@@ -279,7 +281,7 @@ export default function Component() {
                     {question.groups.map((group, groupIndex) => (
                       <AccordionItem value={`item-${group.id}`} key={group.id}>
                         <AccordionTrigger className="text-left">
-                          <Input
+                          <input
                             value={group.title}
                             onChange={(e) =>
                               updateGroupTitle(
@@ -289,7 +291,7 @@ export default function Component() {
                               )
                             }
                             onClick={(e) => e.stopPropagation()}
-                            className="w-full"
+                            className="w-full rounded-md border p-2 text-sm"
                           />
                         </AccordionTrigger>
                         <AccordionContent>
@@ -344,14 +346,12 @@ export default function Component() {
           <Plus className="mr-2" />
           Add Question
         </button>
-        <div className="flex gap-6">
-          <Button
-            onClick={handleSubmit}
-            className="mx-auto mt-10 w-1/3 bg-primary_purple"
-          >
-            Submit Survey
-          </Button>
-        </div>
+        <Button
+          onClick={handleSubmit}
+          className="mx-auto mt-10 flex w-1/3 bg-primary_purple"
+        >
+          Submit Survey
+        </Button>
       </div>
     </div>
   );
