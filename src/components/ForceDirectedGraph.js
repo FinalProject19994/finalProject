@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 
 const ForceDirectedGraph = ({ nodes, links, page }) => {
@@ -6,7 +6,8 @@ const ForceDirectedGraph = ({ nodes, links, page }) => {
   const containerRef = useRef();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  useEffect(() => {
+  // Use useLayoutEffect to update graph layout
+  useLayoutEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
         const { width, height } = containerRef.current.getBoundingClientRect();
@@ -24,7 +25,7 @@ const ForceDirectedGraph = ({ nodes, links, page }) => {
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
@@ -166,7 +167,7 @@ const ForceDirectedGraph = ({ nodes, links, page }) => {
             : o.type === "course"
               ? 10 // Default radius
               : o.type === "skill"
-                ? 8
+                ? 8 // Default radius
                 : o.type === "activity"
                   ? 6
                   : 4,
@@ -223,7 +224,7 @@ const ForceDirectedGraph = ({ nodes, links, page }) => {
 
       link.attr("stroke", "#999").attr("opacity", 1);
     }
-  }, [nodes, links, dimensions]);
+  }, [nodes, links, dimensions, page]);
 
   return (
     <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
