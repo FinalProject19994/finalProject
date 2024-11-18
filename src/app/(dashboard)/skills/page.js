@@ -4,7 +4,7 @@ import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Children, useEffect, useState } from "react";
 import { columns } from "./columns";
 import { useRouter } from "next/navigation";
 import SkillsGraph from "./SkillsGraph";
@@ -13,6 +13,8 @@ const Page = () => {
   const router = useRouter();
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [selectedSkill, setSelectedSkill] = useState(null);
 
   // Fetching the skills
   useEffect(() => {
@@ -26,21 +28,25 @@ const Page = () => {
       } catch (error) {
         console.error("Error fetching skills:", error);
         setLoading(false);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchSkills();
   }, []);
 
-  return (
-    <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
-      {/* LEFT */}
-      <SkillsGraph />
+  const handleRowSelect = (skill) => {
+    setSelectedSkill(skill);
+    // router.push(`/skills/${skill.name}`);
+    alert("Selected skill: " + skill.name + " " + skill.category);
+  };
 
-      {/* RIGHT */}
+  return (
+    <div>
       {!loading ? (
-        <div className="flex flex-col overflow-y-scroll rounded-md bg-white px-2 shadow-md md:w-1/4">
-          <div className="flex justify-between pt-2">
+        <div className="flex h-[90dvh] flex-col rounded-md bg-white p-2 shadow-md">
+          <div className="flex justify-between">
             <h1 className="text-3xl font-bold text-gray-600">Skills</h1>
             <button
               onClick={() => {
@@ -49,12 +55,17 @@ const Page = () => {
               className="flex gap-2 rounded-md border border-gray-200 p-2 duration-150 hover:bg-gray-100"
             >
               <Plus />
-              {/* TODO: Center the text vertically */}
               <span className="text-sm text-gray-700">Create new SKill</span>
             </button>
           </div>
-          {/* Scrollable activities list */}
-          <DataTable columns={columns} data={skills} />
+          <div className="overflow-y-scroll pr-2">
+            {/* Scrollable activities list */}
+            <DataTable
+              columns={columns}
+              data={skills}
+              handleRowSelect={handleRowSelect}
+            />
+          </div>
         </div>
       ) : (
         <div className="flex items-center justify-center">

@@ -24,10 +24,12 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-export default function DataTable({ data, columns }) {
+export default function DataTable({ data, columns, handleRowSelect }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
+
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const table = useReactTable({
     data,
@@ -48,11 +50,12 @@ export default function DataTable({ data, columns }) {
   return (
     <div className="rounded-md">
       <div className="flex items-center py-4">
-        {/* <Input
-          placeholder="Filter emails..."
-          value={table.getColumn("email")?.getFilterValue() ?? ""}
+        {/* TODO: Fix the filtering */}
+        {/* <input
+          placeholder="Filter by skill..."
+          value={table.getColumn("skill")?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("skill")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         /> */}
@@ -107,7 +110,13 @@ export default function DataTable({ data, columns }) {
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+                onClick={() => {
+                  setSelectedRow(row.id);
+                  console.log(row.id);
+                  handleRowSelect(row.original);
+                  // console.log(row.original.name);
+                  // console.log(row.original.category);
+                }}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
