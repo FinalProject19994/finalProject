@@ -38,7 +38,6 @@ export const columns = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>View Skill</DropdownMenuItem>
             <DropdownMenuItem>View Activities</DropdownMenuItem>
             <DropdownMenuItem>View Courses</DropdownMenuItem>
           </DropdownMenuContent>
