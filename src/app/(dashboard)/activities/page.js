@@ -199,9 +199,9 @@ const activities = [
 const Page = () => {
   const router = useRouter();
   return (
-    <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
+    <div className="flex h-[90dvh] flex-col gap-4 md:flex-row">
       {/* LEFT - ACTIVITIES TABLE */}
-      <div className="w-3/5 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
+      <div className="overflow-y-scroll rounded-md bg-white p-2 shadow-md">
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold text-gray-600">Activities</h1>
           <button
@@ -223,14 +223,6 @@ const Page = () => {
       </div>
 
       {/* RIGHT - GRAPH */}
-      <div className="flex w-2/5 gap-4 rounded-md text-3xl">
-        <div className="h-full w-full rounded-md bg-white shadow-md">
-          <div className="relative left-2 top-0 z-10">
-            <Legend />
-          </div>
-          <ForceDirectedGraph nodes={nodes} links={links} page="activity" />
-        </div>
-      </div>
     </div>
   );
 };
