@@ -2,16 +2,14 @@
 import SkillsGraph from "./SkillsGraph";
 
 const Page = ({ children }) => {
-  // const [skills, setSkills] = useState([]);
-
   return (
-    <div className="flex h-[90dvh] flex-col gap-4 overflow-hidden px-4 md:flex-row">
+    <div className="over flex h-[90dvh] flex-col gap-4 overflow-clip px-4 md:flex-row">
       {/* LEFT */}
-      <SkillsGraph />
+      <div className="w-[35%]">{children}</div>
       {/* <SkillsGraph nodes={skills} links={[]} /> */}
 
       {/* RIGHT */}
-      <div className="">{children}</div>
+      <SkillsGraph />
     </div>
   );
 };

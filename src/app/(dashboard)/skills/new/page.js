@@ -39,14 +39,11 @@ const Page = () => {
       category: "category",
     });
 
-    nameRef.current.value = null;
-    descriptionRef.current.value = null;
-
     router.push("/skills");
   };
 
   return (
-    <div className="mx-4 h-[90dvh] flex-col gap-4 rounded-md bg-white p-4 shadow-md">
+    <div className="h-[90dvh] flex-col rounded-md bg-white p-4 shadow-md">
       <div className="flex justify-between">
         <h1 className="text-2xl font-semibold text-gray-600">New Skill</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

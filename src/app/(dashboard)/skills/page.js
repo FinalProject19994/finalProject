@@ -8,6 +8,7 @@ import { Children, useEffect, useState } from "react";
 import { columns } from "./columns";
 import { useRouter } from "next/navigation";
 import SkillsGraph from "./SkillsGraph";
+import Modal from "@/components/Modal";
 
 const Page = () => {
   const router = useRouter();
@@ -38,8 +39,8 @@ const Page = () => {
 
   const handleRowSelect = (skill) => {
     setSelectedSkill(skill);
-    // router.push(`/skills/${skill.name}`);
-    alert("Selected skill: " + skill.name + " " + skill.category);
+    router.push(`/skills/${skill.name}`);
+    // alert("Selected skill: " + skill.name + " " + skill.category);
   };
 
   return (
@@ -48,7 +49,8 @@ const Page = () => {
         <div className="flex h-[90dvh] flex-col rounded-md bg-white p-2 shadow-md">
           <div className="flex justify-between">
             <h1 className="text-3xl font-bold text-gray-600">Skills</h1>
-            <button
+            <Modal table="skill" />
+            {/* <button
               onClick={() => {
                 router.push("/skills/new");
               }}
@@ -56,7 +58,7 @@ const Page = () => {
             >
               <Plus />
               <span className="text-sm text-gray-700">Create new SKill</span>
-            </button>
+            </button> */}
           </div>
           <div className="overflow-y-scroll pr-2">
             {/* Scrollable activities list */}
