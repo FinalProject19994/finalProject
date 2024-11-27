@@ -21,15 +21,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import MultipleSelectionComboBox from "@/components/ui/MultipleSelectionComboBox";
 
-const weekDays = [
-  { id: "1", label: "Sunday" },
-  { id: "2", label: "Monday" },
-  { id: "3", label: "Tuesday" },
-  { id: "4", label: "Wednesday" },
-  { id: "5", label: "Thursday" },
-  { id: "6", label: "Friday" },
-];
-
 export default function Component() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const router = useRouter();

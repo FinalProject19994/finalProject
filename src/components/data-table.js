@@ -112,10 +112,7 @@ export default function DataTable({ data, columns, handleRowSelect }) {
                 key={row.id}
                 onClick={() => {
                   setSelectedRow(row.id);
-                  console.log(row.id);
                   handleRowSelect(row.original);
-                  // console.log(row.original.name);
-                  // console.log(row.original.category);
                 }}
               >
                 {row.getVisibleCells().map((cell) => (
