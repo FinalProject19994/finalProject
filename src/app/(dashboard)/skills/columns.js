@@ -13,6 +13,16 @@ export const columns = [
   {
     accessorKey: "name",
     header: "Skill",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Skill
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "category",
@@ -23,6 +33,36 @@ export const columns = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Category
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "id",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Code
+        </Button>
+      );
+    },
+  },
+  // {
+  //   accessorKey: "description",
+  //   header: "Description",
+  // },
+  {
+    accessorKey: "properties",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          properties
         </Button>
       );
     },
