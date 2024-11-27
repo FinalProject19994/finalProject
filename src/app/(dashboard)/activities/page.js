@@ -2,10 +2,7 @@
 import { columns } from "@/app/(dashboard)/activities/columns";
 import ActivityDialog from "@/components/ActivityDialog";
 import DataTable from "@/components/data-table";
-import ForceDirectedGraph from "@/components/ForceDirectedGraph";
-import Legend from "@/components/ui/Legend";
-import { links, nodes } from "@/lib/data";
-import { Plus } from "lucide-react";
+import Modal from "@/components/Modal";
 import { useRouter } from "next/navigation";
 
 const activities = [
@@ -204,21 +201,15 @@ const Page = () => {
       <div className="overflow-y-scroll rounded-md bg-white p-2 shadow-md">
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold text-gray-600">Activities</h1>
-          <button
-            onClick={() => {
-              router.push("/activities/new");
-            }}
-            className="flex gap-2 rounded-md border border-gray-200 p-2 duration-150 hover:bg-gray-100"
-          >
-            <Plus />
-            {/* TODO: Center the text vertically */}
-            <span className="text-sm text-gray-700">Create new Activity</span>
-          </button>
+          <Modal table="activity" type="create" data={activities} />
         </div>
         <DataTable
           data={activities}
           columns={columns}
           dialog={<ActivityDialog />}
+          handleRowSelect={(activity) => {
+            router.push(`/activities/${activity.id}`);
+          }}
         />
       </div>
 

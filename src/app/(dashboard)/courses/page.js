@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Modal from "@/components/Modal";
 
 const Page = () => {
   const router = useRouter();
@@ -50,16 +51,7 @@ const Page = () => {
       <div className="w-3/5 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold text-gray-600">Courses</h1>
-          <button
-            onClick={() => {
-              router.push("/courses/new");
-            }}
-            className="flex gap-2 rounded-md border border-gray-200 p-2 duration-150 hover:bg-gray-100"
-          >
-            <Plus />
-            {/* TODO: Center the text vertically */}
-            <span className="text-sm text-gray-700">Create new course</span>
-          </button>
+          <Modal table="course" type="create" data={courses} />
         </div>
         {loading ? <Loader /> : <DataTable data={courses} columns={columns} />}
       </div>

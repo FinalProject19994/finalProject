@@ -1,47 +1,39 @@
 "use client";
 import DataTable from "@/components/data-table";
+import Modal from "@/components/Modal";
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
-import { Plus } from "lucide-react";
-import { Children, useEffect, useState } from "react";
-import { columns } from "./columns";
+import { collection, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import SkillsGraph from "./SkillsGraph";
-import Modal from "@/components/Modal";
+import { useEffect, useState } from "react";
+import { columns } from "./columns";
 
 const Page = () => {
   const router = useRouter();
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [selectedSkill, setSelectedSkill] = useState(null);
-
-  // Fetching the skills
+  // Fetching skills with Firestore real-time listener
   useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const skillsCollection = collection(db, "skills");
-        const querySnapshot = await getDocs(skillsCollection);
-        const skillsData = querySnapshot.docs.map((doc) => doc.data());
+    const skillsCollection = collection(db, "skills");
+
+    const unsubscribe = onSnapshot(
+      skillsCollection,
+      (snapshot) => {
+        const skillsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
         setSkills(skillsData);
         setLoading(false);
-      } catch (error) {
+      },
+      (error) => {
         console.error("Error fetching skills:", error);
         setLoading(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSkills();
+      },
+    );
+    return () => unsubscribe();
   }, []);
-
-  const handleRowSelect = (skill) => {
-    setSelectedSkill(skill);
-    router.push(`/skills/${skill.name}`);
-    // alert("Selected skill: " + skill.name + " " + skill.category);
-  };
 
   return (
     <div>
@@ -49,23 +41,15 @@ const Page = () => {
         <div className="flex h-[90dvh] flex-col rounded-md bg-white p-2 shadow-md">
           <div className="flex justify-between">
             <h1 className="text-3xl font-bold text-gray-600">Skills</h1>
-            <Modal table="skill" />
-            {/* <button
-              onClick={() => {
-                router.push("/skills/new");
-              }}
-              className="flex gap-2 rounded-md border border-gray-200 p-2 duration-150 hover:bg-gray-100"
-            >
-              <Plus />
-              <span className="text-sm text-gray-700">Create new SKill</span>
-            </button> */}
+            <Modal table="skill" type="create" data={[]} />
           </div>
           <div className="overflow-y-scroll pr-2">
-            {/* Scrollable activities list */}
             <DataTable
               columns={columns}
               data={skills}
-              handleRowSelect={handleRowSelect}
+              handleRowSelect={(skill) => {
+                router.push(`/skills/${skill.id}`);
+              }}
             />
           </div>
         </div>
