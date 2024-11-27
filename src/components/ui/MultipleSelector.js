@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, X, Search } from "lucide-react";
 
-// TODO: style this component
-export default function Component({ options, onSelect, selection }) {
+export default function MultipleSelector({ options, onSelect, selection }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
