@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { ChevronDown, X, Search } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export default function MultipleSelector({ options, onSelect, selection }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,21 +12,22 @@ export default function MultipleSelector({ options, onSelect, selection }) {
 
   const toggleOption = (option) => {
     setSelectedOptions((prev) => {
-      const updated = prev.includes(option.label)
-        ? prev.filter((item) => item !== option.label)
-        : [...prev, option];
-      onSelect(updated);
-      return updated;
+      const isAlreadySelected = prev.some((item) => item.id === option.id);
+      const newSelectedOptions = isAlreadySelected
+        ? prev.filter((item) => item.id !== option.id) // Remove the option
+        : [...prev, option]; // Add the option
+
+      // Pass the updated state to the parent callback
+      onSelect(newSelectedOptions);
+      return newSelectedOptions;
     });
   };
 
   const removeOption = (option, e) => {
     e.stopPropagation();
-    setSelectedOptions((prev) => {
-      const updated = prev.filter((item) => item !== option);
-      onSelect(updated);
-      return updated;
-    });
+    setSelectedOptions(
+      (prev) => prev.filter((item) => item.id !== option.id), // Remove based on `id`
+    );
   };
 
   const filteredOptions = options.filter((option) =>
@@ -115,7 +116,7 @@ export default function MultipleSelector({ options, onSelect, selection }) {
               {filteredOptions.map((option) => (
                 <li
                   key={option.id}
-                  className={`relative mx-1 cursor-default select-none rounded-md px-3 py-2 hover:bg-primary_purple_table hover:text-primary-foreground ${
+                  className={`relative m-1 select-none rounded-md px-3 py-2 hover:bg-primary_purple_table hover:text-primary-foreground ${
                     selectedOptions.some((item) => item.id === option.id)
                       ? "bg-primary_purple text-primary-foreground"
                       : ""
