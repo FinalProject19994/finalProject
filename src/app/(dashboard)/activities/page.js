@@ -1,9 +1,12 @@
 "use client";
+import { db } from "@/lib/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
 import { columns } from "@/app/(dashboard)/activities/columns";
 import ActivityDialog from "@/components/ActivityDialog";
 import DataTable from "@/components/data-table";
 import Modal from "@/components/Modal";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const activities = [
   {
@@ -194,6 +197,30 @@ const activities = [
 ];
 
 const Page = () => {
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const activitiesCollection = collection(db, "activities");
+
+    const unsubscribe = onSnapshot(
+      activitiesCollection,
+      (snapshot) => {
+        const activitiesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setActivities(activitiesData);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching activities:", error);
+        setLoading(false);
+      },
+    );
+    return () => unsubscribe();
+  }, []);
+
   const router = useRouter();
   return (
     <div className="flex h-[90dvh] flex-col gap-4 md:flex-row">
@@ -201,7 +228,7 @@ const Page = () => {
       <div className="overflow-y-scroll rounded-md bg-white p-2 shadow-md">
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold text-gray-600">Activities</h1>
-          <Modal table="activity" type="create" data={activities} />
+          <Modal table="activity" type="create" data={[]} />
         </div>
         <DataTable
           data={activities}

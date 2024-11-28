@@ -2,9 +2,10 @@
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 
 const Page = () => {
   const router = useRouter();
@@ -22,8 +23,9 @@ const Page = () => {
 
         if (activitySnapshot.exists()) {
           setActivity({ id: activitySnapshot.id, ...activitySnapshot.data() });
+          console.log(activitySnapshot.data());
         } else {
-          setError("activity not found");
+          setError("Activity not found");
         }
       } catch (err) {
         console.error("Error fetching activity:", err);
@@ -32,7 +34,6 @@ const Page = () => {
         setLoading(false);
       }
     };
-
     fetchActivity();
   }, [id]);
 
@@ -49,8 +50,8 @@ const Page = () => {
   };
 
   return (
-    <div className="h-full rounded-md bg-white text-center shadow-md">
-      <div className="flex justify-end p-2">
+    <div className="h-full space-y-4 rounded-md bg-white p-4 shadow-md">
+      <div className="flex justify-end">
         <button
           onClick={handleGoBack}
           className="cursor-pointer rounded-full p-2 hover:bg-gray-200"
@@ -58,10 +59,54 @@ const Page = () => {
           <X />
         </button>
       </div>
-      <div className="h-full">
-        <h1 className="text-2xl font-semibold">{activity.name}</h1>
-        <h2 className="text-lg">{activity.category}</h2>
-        <p className="text-justify text-sm">{activity.description}</p>
+      <div>
+        <h1 className="mb-2 text-center text-2xl font-semibold">
+          {activity.title}
+        </h1>
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+          Courses
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {activity.courses.map((course) => (
+            <Badge key={course} variant="secondary">
+              {course}
+            </Badge>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+          Skills
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {activity.skills.map((skill) => (
+            <Badge key={skill}>{skill}</Badge>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+          Lecturers
+        </h3>
+        <p>{activity.lecturers.join(", ")}</p>
+      </div>
+      <div>
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+          Week Number
+        </h3>
+        <p>{activity.weekNumber}</p>
+      </div>
+      <div>
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+          Description
+        </h3>
+        <p className="text-sm">{activity.description}</p>
+      </div>
+      <div>
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+          Reflection
+        </h3>
+        <p className="text-sm">{activity.reflection}</p>
       </div>
     </div>
   );
