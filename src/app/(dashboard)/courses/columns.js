@@ -1,12 +1,5 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export const columns = [
   {
@@ -60,10 +53,10 @@ export const columns = [
         </Button>
       );
     },
-    cell: ({ getValue }) => {
-      const lecturers = getValue();
-      return lecturers.join(", ");
-    },
+    // cell: ({ getValue }) => {
+    //   const lecturers = getValue();
+    //   return lecturers.join(", ");
+    // },
   },
   // {
   //   id: "actions",

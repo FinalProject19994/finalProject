@@ -1,25 +1,15 @@
 "use client";
 import DataTable from "@/components/data-table";
 import ForceDirectedGraph from "@/components/ForceDirectedGraph";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import Modal from "@/components/Modal";
 import Legend from "@/components/ui/Legend";
 import Loader from "@/components/ui/Loader";
-import MultipleSelector from "@/components/ui/MultipleSelector";
 import { links, nodes } from "@/lib/data";
 import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import Modal from "@/components/Modal";
 
 const Page = () => {
   const router = useRouter();
@@ -36,6 +26,7 @@ const Page = () => {
         const querySnapshot = await getDocs(coursesCollection);
         const coursesData = querySnapshot.docs.map((doc) => doc.data());
         setCourses(coursesData);
+        console.table(coursesData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching courses:", error);

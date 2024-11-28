@@ -3,12 +3,18 @@ import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { doc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputField from "../InputField";
 import MultipleSelector from "../ui/MultipleSelector";
 import { Textarea } from "../ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const schema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters" }),
@@ -17,48 +23,52 @@ const schema = z.object({
     .min(3, { message: "Description must be at least 3 characters" })
     .optional(),
   courses: z
+    .array(z.string())
+    .nonempty({ message: "At least one course must be selected" }),
+  weekNumber: z
     .string()
-    .min(3, { message: "Course must be at least 3 characters" }),
-  weekNumber: z.string().transform((val) => Number(val)),
-  skills: z
-    .string()
-    .min(3, { message: "Skills must be at least 3 characters" }),
-  lecturers: z
-    .string()
-    .min(3, { message: "Lecturers must be at least 3 characters" }),
+    .transform((val) => Number(val))
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "Week number must be a positive number",
+    }),
+  // skills: z.array(z.string()).min(1, { message: "Select at least one skill" }),
+  // lecturers: z
+  //   .array(z.string())
+  //   .nonempty({ message: "At least one lecturer must be selected" }),
   reflection: z
     .string()
     .min(3, { message: "Reflection must be at least 3 characters" })
     .optional(),
-  image: z.instanceof(File, { message: "Image format is invalid" }).optional(),
+  // image: z.any().optional(), // Modify to handle files manually
 });
 
-const ActivityForm = ({ type, data }) => {
+const ActivityForm = ({ type, data, closeModal }) => {
   const router = useRouter();
 
-  const [courses, setCourses] = useState([]);
-  const [skills, setSkills] = useState([]);
-  const [lecturers, setLecturers] = useState([]);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const submit = handleSubmit(async (data) => {
+  const submit = handleSubmit(async (formData) => {
+    console.log("Submit function triggered");
+    alert("Work in progress...");
     try {
-      const id = `${data.courses}-${courses.length + 1}`;
+      // const id = `${data.courses}${courses.length + 1}`;
+      const id = `${Math.floor(Math.random() * 1000)}`;
       await setDoc(doc(db, "activities", id), {
-        name: data.name,
-        description: data.description,
-        courses: data.courses,
-        weekNumber: data.weekNumber,
-        skills: data.skills,
-        lecturers: data.lecturers,
-        reflection: data.reflection,
-        image: data.image,
+        name: formData.name,
+        description: formData.description,
+        courses: formData.courses,
+        weekNumber: formData.weekNumber,
+        // skills: formData.skills,
+        // lecturers: formData.lecturers,
+        reflection: formData.reflection,
+        // image: imageUrl,
       });
     } catch (error) {
       console.error("Error adding activity:", error);
@@ -82,25 +92,34 @@ const ActivityForm = ({ type, data }) => {
       />
       <div>
         <label className="text-sm text-gray-400">Course</label>
-        <MultipleSelector
-          options={[
-            {
-              value: "Software Engineering",
-              label: "Software Engineering",
-            },
-            { value: "Computer Science", label: "Computer Science" },
-            { value: "Mathematics", label: "Mathematics" },
-            { value: "Physics", label: "Physics" },
-            { value: "Chemistry", label: "Chemistry" },
-            { value: "Biology", label: "Biology" },
-            { value: "Geography", label: "Geography" },
-            { value: "History", label: "History" },
-            { value: "Economics", label: "Economics" },
-            { value: "Psychology", label: "Psychology" },
-          ]}
-          selection="courses"
-          onSelect={setCourses}
-        />
+        <div className="flex flex-col gap-2">
+          <Select
+            onValueChange={(value) => {
+              setValue("category", value);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select question type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="emotional quotient">
+                Emotional quotient
+              </SelectItem>
+              <SelectItem value="thinking development">
+                Thinking development
+              </SelectItem>
+              <SelectItem value="mindset">Mindset</SelectItem>
+              <SelectItem value="professional self">
+                Professional self
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          {errors.category && (
+            <span className="text-sm text-red-500">
+              {errors.category.message}
+            </span>
+          )}
+        </div>
       </div>
       <InputField
         label="Week number"
@@ -113,54 +132,59 @@ const ActivityForm = ({ type, data }) => {
         <label className="text-sm text-gray-400">Skills</label>
         <MultipleSelector
           options={[
-            { value: "Teamwork", label: "Teamwork" },
-            { value: "Communication", label: "Communication" },
-            { value: "Time Management", label: "Time Management" },
-            { value: "Problem Solving", label: "Problem Solving" },
-            { value: "Leadership", label: "Leadership" },
-            { value: "Adaptability", label: "Adaptability" },
-            { value: "Creativity", label: "Creativity" },
-            { value: "Critical Thinking", label: "Critical Thinking" },
+            { id: 1, value: "Teamwork", label: "Teamwork" },
+            { id: 2, value: "Communication", label: "Communication" },
+            { id: 3, value: "Time Management", label: "Time Management" },
+            { id: 4, value: "Problem Solving", label: "Problem Solving" },
+            { id: 5, value: "Leadership", label: "Leadership" },
+            { id: 6, value: "Adaptability", label: "Adaptability" },
+            { id: 7, value: "Creativity", label: "Creativity" },
+            { id: 8, value: "Critical Thinking", label: "Critical Thinking" },
             {
+              id: 9,
               value: "Emotional Intelligence",
               label: "Emotional Intelligence",
             },
           ]}
+          name="skills"
           selection="skills"
-          onSelect={setSkills}
+          onSelect={(value) => {
+            console.log("Selected skills:", value);
+            setValue("skills", value);
+          }}
         />
       </div>
-
       <div>
         <label className="text-sm text-gray-400">Lecturers</label>
         <MultipleSelector
           options={[
-            { value: "lecturer1", label: "Lecturer 1" },
-            { value: "lecturer2", label: "Lecturer 2" },
-            { value: "lecturer3", label: "Lecturer 3" },
+            { id: 1, value: "lecturer1", label: "Lecturer 1" },
+            { id: 2, value: "lecturer2", label: "Lecturer 2" },
+            { id: 3, value: "lecturer3", label: "Lecturer 3" },
           ]}
-          onSelect={setLecturers}
           selection="lecturer"
+          onSelect={(value) => {
+            console.log("Selected lecturers:", value);
+            setValue("lecturers", value);
+          }}
         />
       </div>
-
       <div>
         <label className="text-sm text-gray-400">Reflection</label>
         <Textarea
           placeholder="Enter a Reflection..."
+          name="reflection"
           {...register("reflection")}
         />
       </div>
-
       <label className="text-sm text-gray-400">Upload Images</label>
-      <input
+      {/* <input
         type="file"
         multiple
         id="image"
         accept="image/*"
         {...register("image")}
-      />
-
+      /> */}
       <button className="w-max self-center rounded-md bg-primary_purple p-2 text-white">
         Create
       </button>
