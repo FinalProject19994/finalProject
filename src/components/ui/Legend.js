@@ -4,16 +4,16 @@ const Legend = () => {
   return (
     <div className="absolute left-2 top-10 bg-white">
       <div className="flex items-center gap-2 text-sm">
-        <div className="h-2 w-2 bg-primary_green"></div>
-        <p>Skills</p>
-      </div>
-      <div className="flex items-center gap-2 text-sm">
         <div className="h-2 w-2 bg-primary_purple_table"></div>
         <p>Courses</p>
       </div>
       <div className="flex items-center gap-2 text-sm">
-        <div className="h-2 w-2 bg-primary_yellow"></div>
+        <div className="h-2 w-2 bg-primary_lightblue"></div>
         <p>Activities</p>
+      </div>
+      <div className="flex items-center gap-2 text-sm">
+        <div className="h-2 w-2 bg-primary_green"></div>
+        <p>Skills</p>
       </div>
     </div>
   );
