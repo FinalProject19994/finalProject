@@ -1,8 +1,12 @@
 "use client";
 import DataTable from "@/components/data-table";
-import { Plus } from "lucide-react";
+import Modal from "@/components/Modal";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { columns } from "./columns";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import Loader from "@/components/ui/Loader";
 
 const questionnaires = [
   {
@@ -170,22 +174,49 @@ const questionnaires = [
 const Questionnaires = () => {
   const router = useRouter();
 
+  const [surveys, setSurveys] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetching surveys with Firestore real-time listener
+  useEffect(() => {
+    const surveysCollection = collection(db, "surveys");
+
+    const unsubscribe = onSnapshot(
+      surveysCollection,
+      (snapshot) => {
+        const surveysData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setSurveys(surveysData);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching surveys:", error);
+        setLoading(false);
+      },
+    );
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="m-4 mt-0 h-[90dvh] flex-1 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold text-gray-600">Surveys</h1>
-        <button
-          onClick={() => {
-            router.push("/surveys/new");
-          }}
-          className="flex gap-2 rounded-md border border-gray-200 p-2 duration-150 hover:bg-gray-100"
-        >
-          <Plus />
-          {/* TODO: Center the text vertically */}
-          <span className="text-sm text-gray-700">Create new survey</span>
-        </button>
+        <Modal table="survey" type="create" data={[]} />
       </div>
-      <DataTable columns={columns} data={questionnaires} />
+      {loading ? (
+        <Loader />
+      ) : (
+        <DataTable
+          data={questionnaires}
+          // data={surveys}
+          columns={columns}
+          handleRowSelect={(survey) => {
+            router.push(`/surveys/${survey.id}`);
+          }}
+        />
+      )}
     </div>
   );
 };
