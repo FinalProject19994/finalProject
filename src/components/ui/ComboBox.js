@@ -18,32 +18,22 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
-export default function ComboBox({ options, title }) {
+export default function ComboBox({ options, onSelect, title }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  const handleSelect = (currentValue) => {
+    const selectedOption = options.find(
+      (option) => option.value === currentValue,
+    );
+
+    setValue(currentValue === value ? "" : currentValue);
+
+    // Call onSelect with the selected option only
+    onSelect && onSelect(selectedOption);
+
+    setOpen(false);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -52,36 +42,33 @@ export default function ComboBox({ options, title }) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
           {value
-            ? options.find((data) => data.value === value)?.label
+            ? options.find((option) => option.value === value)?.label
             : `Select ${title}...`}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder={`Search ${title}...`} />
           <CommandList>
             <CommandEmpty>Nothing found.</CommandEmpty>
             <CommandGroup>
-              {options.map((framework) => (
+              {options.map((selection) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
+                  key={selection.value}
+                  value={selection.value}
+                  onSelect={handleSelect}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0",
+                      value === selection.value ? "opacity-100" : "opacity-0",
                     )}
                   />
-                  {framework.label}
+                  {selection.label}
                 </CommandItem>
               ))}
             </CommandGroup>
