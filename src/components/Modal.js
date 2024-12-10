@@ -1,10 +1,9 @@
 "use client";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useState } from "react";
-import { X } from "lucide-react";
-import SkillForm from "./forms/SkillForm";
 import ActivityForm from "./forms/ActivityForm";
 import CourseForm from "./forms/CourseForm";
+import SkillForm from "./forms/SkillForm";
 import SurveyForm from "./forms/SurveyForm";
 
 const forms = {
@@ -21,6 +20,15 @@ const forms = {
     <SurveyForm type={type} data={data} closeModal={closeModal} />
   ),
 };
+
+const buttonColors = {
+  skill: "bg-nyanza hover:brightness-90",
+  activity: "bg-primary_lightblue_table hover:brightness-90",
+  course: "bg-primary_purple_table_light hover:brightness-90",
+  survey: "bg-primary_lightyellow hover:brightness-90",
+  default: "bg-gray-200 text-black hover:bg-gray-300",
+};
+
 const Modal = ({ table, type, data, id }) => {
   const [open, setOpen] = useState(false);
 
@@ -46,11 +54,13 @@ const Modal = ({ table, type, data, id }) => {
     );
   };
 
+  const buttonStyle = buttonColors[table] || buttonColors.default;
+
   return (
     <div>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-md border border-gray-200 p-2 duration-150 hover:bg-gray-100"
+        className={`flex items-center gap-2 rounded-md border border-slate-200 p-2 duration-150 ${buttonStyle}`}
       >
         <Plus />
         Create new {table}
