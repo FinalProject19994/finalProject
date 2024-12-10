@@ -1,16 +1,14 @@
 "use client";
 
-import { MoreHorizontal } from "lucide-react";
-import { ArrowUpDown } from "lucide-react";
+import Modal from "@/components/Modal";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
 
 export const columns = [
   {
@@ -38,6 +36,7 @@ export const columns = [
         </Button>
       );
     },
+    cell: ({ getValue }) => getValue().join(", "),
   },
   {
     accessorKey: "course",
@@ -66,6 +65,7 @@ export const columns = [
     },
   },
   {
+    accessorKey: "Actions",
     id: "actions",
     cell: () => {
       return (
@@ -77,7 +77,10 @@ export const columns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>Edit Information</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Modal table="activity" type="edit" data={{}} />
+              Edit Information
+            </DropdownMenuItem>
             <DropdownMenuItem>Delete activity</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

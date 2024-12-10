@@ -1,7 +1,7 @@
 "use client";
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { Badge } from "@/components/ui/badge";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ const Page = () => {
   const { id } = useParams();
 
   const [activity, setActivity] = useState({});
+  const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -22,8 +23,40 @@ const Page = () => {
         const activitySnapshot = await getDoc(activityDoc);
 
         if (activitySnapshot.exists()) {
-          setActivity({ id: activitySnapshot.id, ...activitySnapshot.data() });
-          console.log(activitySnapshot.data());
+          const data = activitySnapshot.data();
+
+          // Resolve course reference
+          const courseSnapshot = await getDoc(data.course);
+          const course = courseSnapshot.exists()
+            ? { id: courseSnapshot.id, ...courseSnapshot.data() }
+            : null;
+
+          // Resolve skills references
+          const skills = await Promise.all(
+            data.skills.map(async (skillRef) => {
+              const skillSnapshot = await getDoc(skillRef);
+              return skillSnapshot.exists()
+                ? { id: skillSnapshot.id, ...skillSnapshot.data() }
+                : null;
+            }),
+          );
+
+          // Resolve lecturers references
+          const lecturers = await Promise.all(
+            data.lecturers.map(async (lecturerRef) => {
+              const lecturerSnapshot = await getDoc(lecturerRef);
+              return lecturerSnapshot.exists()
+                ? { id: lecturerSnapshot.id, ...lecturerSnapshot.data() }
+                : null;
+            }),
+          );
+
+          setActivity({
+            ...data,
+            course,
+            skills: skills.filter(Boolean), // Filter out null values
+            lecturers: lecturers.filter(Boolean), // Filter out null values
+          });
         } else {
           setError("Activity not found");
         }
@@ -34,6 +67,7 @@ const Page = () => {
         setLoading(false);
       }
     };
+
     fetchActivity();
   }, [id]);
 
@@ -41,6 +75,14 @@ const Page = () => {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-red-500">{error}</p>
       </div>
     );
   }
@@ -63,15 +105,12 @@ const Page = () => {
         <h1 className="mb-2 text-center text-2xl font-semibold">
           {activity.title}
         </h1>
+        <h5 className="text-center text-xs">{activity.date}</h5>
         <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
-          Courses
+          Course
         </h3>
         <div className="flex flex-wrap gap-2">
-          {activity.courses.map((course) => (
-            <Badge key={course} variant="secondary">
-              {course}
-            </Badge>
-          ))}
+          <Badge variant="secondary">{activity.course?.title}</Badge>
         </div>
       </div>
       <div>
@@ -79,8 +118,8 @@ const Page = () => {
           Skills
         </h3>
         <div className="flex flex-wrap gap-2">
-          {activity.skills.map((skill) => (
-            <Badge key={skill}>{skill}</Badge>
+          {activity.skills?.map((skill, index) => (
+            <Badge key={index}>{skill.name}</Badge>
           ))}
         </div>
       </div>
@@ -88,7 +127,13 @@ const Page = () => {
         <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
           Lecturers
         </h3>
-        <p>{activity.lecturers.join(", ")}</p>
+        <div className="flex flex-wrap gap-2">
+          {activity.lecturers?.map((lecturer, index) => (
+            <Badge key={index} variant={"third"}>
+              {lecturer.name}
+            </Badge>
+          ))}
+        </div>
       </div>
       <div>
         <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
@@ -107,6 +152,16 @@ const Page = () => {
           Reflection
         </h3>
         <p className="text-sm">{activity.reflection}</p>
+        <h3 className="my-2 text-sm font-semibold text-muted-foreground">
+          Images
+        </h3>
+        {/* {activity.images.length > 0 ? (
+          activity.images.map((image) => (
+            <img key={image} src={image} className="h-auto w-full" />
+          ))
+        ) : (
+          <p className="text-sm text-muted-foreground">No images available</p>
+        )} */}
       </div>
     </div>
   );
