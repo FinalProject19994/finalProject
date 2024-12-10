@@ -51,12 +51,6 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       activity: "#90DCF3",
     };
 
-    const linkColors = {
-      course: "#8dd3c7",
-      skill: "#fccde5",
-      activity: "#bebada",
-    };
-
     // Create links
     const link = zoomGroup
       .append("g")
@@ -65,7 +59,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .data(memoizedData.links)
       .enter()
       .append("line")
-      .attr("stroke", (d) => linkColors[d.type] || "#aaa")
+      .attr("stroke", "#aaa")
       .attr("stroke-width", 0.75);
 
     // Create nodes
@@ -85,7 +79,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
           case "skill":
             return 8;
           default:
-            return 8; // Default size
+            return 8;
         }
       })
       .attr("fill", (d) => typeColors[d.type] || "#ccc")
@@ -191,7 +185,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
         link
           .transition()
           .duration(200)
-          .attr("stroke", (d) => linkColors[d.type] || "#aaa") // Revert color
+          .attr("stroke", "#aaa") // Revert color
           .style("opacity", 1); // Fully opaque
       });
 
