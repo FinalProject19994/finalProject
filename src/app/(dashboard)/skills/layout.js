@@ -1,14 +1,13 @@
-"use client";
 import SkillsGraph from "./SkillsGraph";
 
 const Page = ({ children }) => {
   return (
-    <div className="flex h-[90dvh] flex-col gap-4 overflow-clip px-4 md:flex-row">
+    <div className="flex h-[90dvh] flex-col gap-4 px-4 md:flex-row">
       {/* LEFT */}
-      <div className="w-1/2">{children}</div>
+      <div className="w-full md:w-3/5">{children}</div>
 
       {/* RIGHT */}
-      <div className="flex w-1/2 gap-4 rounded-md bg-white text-3xl shadow-md">
+      <div className="flex h-full rounded-md bg-white shadow-md md:w-2/5">
         <SkillsGraph />
       </div>
     </div>

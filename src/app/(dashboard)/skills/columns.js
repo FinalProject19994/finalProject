@@ -50,10 +50,6 @@ export const columns = [
       );
     },
   },
-  // {
-  //   accessorKey: "description",
-  //   header: "Description",
-  // },
   {
     accessorKey: "properties",
     header: ({ column }) => {
@@ -62,7 +58,7 @@ export const columns = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          properties
+          Properties
         </Button>
       );
     },

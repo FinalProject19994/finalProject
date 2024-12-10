@@ -1,20 +1,33 @@
+"use client";
 import ForceDirectedGraph from "@/components/ForceDirectedGraph";
 import Legend from "@/components/ui/Legend";
-import { links, nodes } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
 
 const SkillsGraph = () => {
+  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const rawData = await fetchGraphData();
+      const processedData = prepareGraphData(rawData);
+      setGraphData(processedData);
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div className="flex gap-4 rounded-md text-3xl md:w-3/4">
-      <div className="h-full w-full rounded-md bg-white">
-        <div className="relative left-2 top-0 z-10 w-min">
-          <h1 className="w-max bg-transparent text-lg font-semibold">
-            Skills Graph
-          </h1>
-          <Legend />
-        </div>
-        <ForceDirectedGraph nodes={nodes} links={links} page="skill" />
+    <>
+      <div className="relative left-2 top-0 z-10 w-min">
+        <Legend />
       </div>
-    </div>
+      <ForceDirectedGraph
+        nodes={graphData.nodes}
+        links={graphData.links}
+        page="skill"
+      />
+    </>
   );
 };
 

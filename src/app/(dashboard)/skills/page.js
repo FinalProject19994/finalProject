@@ -15,10 +15,8 @@ const Page = () => {
 
   // Fetching skills with Firestore real-time listener
   useEffect(() => {
-    const skillsCollection = collection(db, "skills");
-
     const unsubscribe = onSnapshot(
-      skillsCollection,
+      collection(db, "skills"),
       (snapshot) => {
         const skillsData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -41,15 +39,17 @@ const Page = () => {
         <div className="flex h-[90dvh] flex-col rounded-md bg-white p-2 shadow-md">
           <div className="flex justify-between">
             <h1 className="text-3xl font-bold text-gray-600">Skills</h1>
+            {/* {user.role === "admin" && (
+              <Modal table="skill" type="create" data={[]} />
+              )} */}
             <Modal table="skill" type="create" data={[]} />
           </div>
           <div className="overflow-y-scroll pr-2">
             <DataTable
               columns={columns}
               data={skills}
-              handleRowSelect={(skill) => {
-                router.push(`/skills/${skill.id}`);
-              }}
+              handleRowSelect={() => {}} // An empty function so the table won't throw an error
+              page="skills"
             />
           </div>
         </div>
