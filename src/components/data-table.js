@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -24,11 +23,10 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-export default function DataTable({ data, columns, handleRowSelect }) {
+export default function DataTable({ data, columns, handleRowSelect, page }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
-
   const [selectedRow, setSelectedRow] = useState(null);
 
   const table = useReactTable({
@@ -47,18 +45,22 @@ export default function DataTable({ data, columns, handleRowSelect }) {
     },
   });
 
+  const getOddRowColor = (page) => {
+    switch (page) {
+      case "skills":
+        return "bg-nyanza";
+      case "activities":
+        return "bg-primary_lightblue_table";
+      case "courses":
+        return "bg-primary_purple_table_light";
+      default:
+        return "bg-primary_lightyellow";
+    }
+  };
+
   return (
     <div className="rounded-md">
       <div className="flex items-center py-4">
-        {/* TODO: Fix the filtering */}
-        {/* <input
-          placeholder="Filter by skill..."
-          value={table.getColumn("skill")?.getFilterValue() ?? ""}
-          onChange={(event) =>
-            table.getColumn("skill")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        /> */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -73,7 +75,7 @@ export default function DataTable({ data, columns, handleRowSelect }) {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
+                    className="text-lg capitalize md:text-sm"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) =>
                       column.toggleVisibility(!!value)
@@ -107,16 +109,20 @@ export default function DataTable({ data, columns, handleRowSelect }) {
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, index) => (
               <TableRow
                 key={row.id}
                 onClick={() => {
                   setSelectedRow(row.id);
                   handleRowSelect(row.original);
                 }}
+                className={index % 2 === 1 ? "" : getOddRowColor(page)}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={cell.column.columnDef.className}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
