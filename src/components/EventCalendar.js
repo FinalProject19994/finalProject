@@ -1,8 +1,4 @@
-"use client";
-import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-
-import { useState } from "react";
 
 const dummyActivities = [
   {
@@ -57,15 +53,8 @@ const dummyActivities = [
 ];
 
 const EventCalendar = () => {
-  const [date, setDate] = useState(new Date());
-
   return (
     <div className="flex h-full flex-col gap-4">
-      {/* Calendar component taking natural space */}
-      <div className="rounded-md bg-white p-4 shadow-md">
-        <Calendar value={date} onChange={setDate} />
-      </div>
-
       {/* Activities list taking remaining space and scrollable if needed */}
       <div className="flex h-[calc(100vh-27rem)] flex-grow flex-col overflow-hidden rounded-md bg-white p-4 shadow-md">
         {/* Activities Heading */}
