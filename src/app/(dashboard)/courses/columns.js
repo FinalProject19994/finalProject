@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export const columns = [
   {
-    accessorKey: "label",
+    accessorKey: "title",
     header: ({ column }) => {
       return (
         <Button
@@ -16,14 +16,14 @@ export const columns = [
     },
   },
   {
-    accessorKey: "department",
+    accessorKey: "departments",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Department
+          Departments
         </Button>
       );
     },
@@ -53,10 +53,6 @@ export const columns = [
         </Button>
       );
     },
-    // cell: ({ getValue }) => {
-    //   const lecturers = getValue();
-    //   return lecturers.join(", ");
-    // },
   },
   // {
   //   id: "actions",
