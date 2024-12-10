@@ -14,26 +14,31 @@ const Page = () => {
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   useEffect(() => {
-    const fetchDepartments = async () => {
+    const fetchDepartmentsAndCourses = async () => {
       try {
-        const departmentsCollection = collection(db, "departments");
-        const coursesCollection = collection(db, "courses");
+        // Fetch departments
+        const departmentSnapshot = await getDocs(collection(db, "departments"));
+        const fetchedDepartments = departmentSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          value: doc.id,
+          label: doc.data().title,
+        }));
+        setDepartments(fetchedDepartments);
 
-        const querySnapshotDepartments = await getDocs(departmentsCollection);
-        const querySnapshotCourses = await getDocs(coursesCollection);
-
-        const departmentsData = querySnapshotDepartments.docs.map((doc) =>
-          doc.data(),
-        );
-        const coursesData = querySnapshotCourses.docs.map((doc) => doc.data());
-
-        setDepartments(departmentsData);
-        setCourses(coursesData);
+        // Fetch courses
+        const coursesSnapshot = await getDocs(collection(db, "courses"));
+        const fetchedCourses = coursesSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          value: doc.id,
+          label: doc.data().title,
+        }));
+        setCourses(fetchedCourses);
       } catch (error) {
-        console.error("Error fetching departments:", error);
+        console.error("Error fetching departments or courses:", error);
       }
     };
-    fetchDepartments();
+
+    fetchDepartmentsAndCourses();
   }, []);
 
   const router = useRouter();
@@ -53,6 +58,10 @@ const Page = () => {
       return;
     }
 
+    console.log("Email:", emailRef.current.value);
+    console.log("Password:", passwordRef.current.value);
+    console.log("Confirm Password:", confirmPasswordRef.current.value);
+
     try {
       // Create the user with email and password
       const userCredential = await createUserWithEmailAndPassword(
@@ -61,7 +70,6 @@ const Page = () => {
         passwordRef.current.value,
       );
 
-      // Get the created user
       const user = userCredential.user;
 
       // Save attributes in Firestore
@@ -70,8 +78,10 @@ const Page = () => {
         phone: phoneNumberRef.current.value,
         email: emailRef.current.value,
         role: "Lecturer",
-        // department: selectedDepartments,
-        // courses: selectedCourses,
+        department: selectedDepartments.map((department) =>
+          doc(db, "departments", department.id),
+        ),
+        courses: selectedCourses.map((course) => doc(db, "courses", course.id)),
       });
 
       router.push("/homepage");
@@ -122,7 +132,7 @@ const Page = () => {
             {/* Courses */}
             <MultipleSelector
               options={courses}
-              onSelect={(selected) => setSelectedDepartments(selected)}
+              onSelect={(selected) => setSelectedCourses(selected)}
               selection="courses"
             />
           </div>
