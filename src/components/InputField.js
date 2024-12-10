@@ -4,7 +4,6 @@ const InputField = ({ label, type = "text", register, name, error }) => {
       <label className="text-sm text-gray-400">{label}</label>
       <input
         type={type}
-        max={13}
         min={1}
         {...register(name)}
         placeholder={`Enter a ${label}...`}

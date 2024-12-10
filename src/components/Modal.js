@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import SkillForm from "./forms/SkillForm";
 import ActivityForm from "./forms/ActivityForm";
 import CourseForm from "./forms/CourseForm";
+import SurveyForm from "./forms/SurveyForm";
 
 const forms = {
   skill: (type, data, closeModal) => (
@@ -15,6 +16,9 @@ const forms = {
   ),
   course: (type, data, closeModal) => (
     <CourseForm type={type} data={data} closeModal={closeModal} />
+  ),
+  survey: (type, data, closeModal) => (
+    <SurveyForm type={type} data={data} closeModal={closeModal} />
   ),
 };
 const Modal = ({ table, type, data, id }) => {
