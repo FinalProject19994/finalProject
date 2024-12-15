@@ -1,6 +1,5 @@
 "use client";
 
-import Modal from "@/components/Modal";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -77,10 +76,7 @@ export const columns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>View</DropdownMenuItem>
-            <DropdownMenuItem>
-              <Modal table="activity" type="edit" data={{}} />
-              Edit Information
-            </DropdownMenuItem>
+            <DropdownMenuItem>Edit Information</DropdownMenuItem>
             <DropdownMenuItem>Delete activity</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

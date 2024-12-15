@@ -67,21 +67,9 @@ export const columns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem className="cursor-pointer">
-              <Image
-                src="/menuIcons/activities.png"
-                alt="icon"
-                width={25}
-                height={25}
-              />
               View Activities
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
-              <Image
-                src="/menuIcons/courses.png"
-                alt="icon"
-                width={25}
-                height={25}
-              />
               View Courses
             </DropdownMenuItem>
           </DropdownMenuContent>
