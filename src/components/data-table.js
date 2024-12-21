@@ -1,5 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -36,7 +38,7 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
+    // getFilteredRowModel: getFilteredRowModel(), // Enable filtering
     onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
@@ -45,27 +47,17 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
     },
   });
 
-  const getOddRowColor = (page) => {
-    switch (page) {
-      case "skills":
-        return "bg-nyanza";
-      case "activities":
-        return "bg-primary_lightblue_table";
-      case "courses":
-        return "bg-primary_purple_table_light";
-      default:
-        return "bg-primary_lightyellow";
-    }
-  };
-
   return (
     <div className="rounded-md">
       <div className="flex items-center py-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <button
+              variant="outline"
+              className="ml-auto h-[42px] rounded-md border border-gray-200 p-2 text-sm"
+            >
               Columns
-            </Button>
+            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {table
@@ -88,10 +80,11 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="bg-slate-200">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
@@ -116,7 +109,7 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
                   setSelectedRow(row.id);
                   handleRowSelect(row.original);
                 }}
-                className={index % 2 === 1 ? "" : getOddRowColor(page)}
+                className={index % 2 === 1 ? "bg-gray-100" : ""}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
