@@ -19,31 +19,6 @@ body {
   }
 }
 
-.react-calendar {
-  width: 100% !important;
-  border: none !important;
-  font-family: "Inter", sans-serif !important;
-}
-
-.react-calendar__tile--active {
-  background: #5de000 !important;
-  color: #171717 !important;
-  border-radius: 8px !important;
-}
-
-.react-calendar__navigation__label__labelText {
-  font-weight: 700 !important;
-}
-
-.react-calendar__tile:hover {
-  border-radius: 8px !important;
-}
-
-.react-calendar__tile--now {
-  background-color: #5de00088 !important;
-  border-radius: 8px !important;
-}
-
 ::-webkit-scrollbar {
   border-radius: 5px;
   width: 8px;
