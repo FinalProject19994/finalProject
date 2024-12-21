@@ -1,4 +1,11 @@
 "use client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
@@ -7,8 +14,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputField from "../InputField";
-import DatePickerWithRange from "../ui/DateRangePicker";
-import MultipleSelectionComboBox from "../ui/MultipleSelectionComboBox";
 import MultipleSelector from "../ui/MultipleSelector";
 
 const schema = z.object({
@@ -20,6 +25,12 @@ const schema = z.object({
   lecturers: z
     .array(z.string())
     .nonempty({ message: "At least one lecturer must be selected" }),
+  semester: z
+    .string()
+    .nonempty({ message: "Semester is required" })
+    .refine((val) => ["winter", "spring", "summer"].includes(val), {
+      message: "Invalid semester selected",
+    }),
 });
 
 const weekDays = [
@@ -34,7 +45,6 @@ const weekDays = [
 const CourseForm = ({ type, data, closeModal }) => {
   const [departments, setDepartments] = useState([]);
   const [lecturers, setLecturers] = useState([]);
-  const [selectedDate, setSelectedDate] = useState({});
   const [selectedWeekdays, setSelectedWeekdays] = useState([]);
 
   const router = useRouter();
@@ -87,6 +97,7 @@ const CourseForm = ({ type, data, closeModal }) => {
         lecturers: formData.lecturers.map((lecturerId) =>
           doc(db, "users", lecturerId),
         ),
+        semester: formData.semester,
       });
       closeModal();
       router.refresh();
@@ -143,10 +154,37 @@ const CourseForm = ({ type, data, closeModal }) => {
           </p>
         )}
       </div>
+      <div>
+        <label className="text-sm text-gray-400">Semester</label>
+        <Select
+          onValueChange={(value) => {
+            setValue("semester", value);
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a Semester" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key={"Winter"} value="winter">
+              Winter
+            </SelectItem>
+            <SelectItem key={"Spring"} value="spring">
+              Spring
+            </SelectItem>
+            <SelectItem key={"Summer"} value="summer">
+              Summer
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        {errors.semester && (
+          <p className="text-xs text-red-500">
+            {errors.semester.message.toString()}
+          </p>
+        )}
+      </div>
 
       <div className="text-sm">
         <label className="text-sm text-gray-400">Date Range</label>
-        {/* <DatePickerWithRange onChange={setSelectedDate} /> */}
       </div>
 
       <div className="w-full text-sm">
