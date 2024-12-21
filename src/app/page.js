@@ -68,7 +68,9 @@ const Page = () => {
           <div className="h-px w-full bg-gray-300"></div>
 
           <div className="flex justify-center">
-            <p className="text-[16px] text-gray-500">Don't have an account? </p>
+            <p className="text-[16px] text-gray-500">
+              Don&apos;t have an account?
+            </p>
             <span className="text-[19px]">
               <Link
                 className="ml-1 text-primary_purple hover:underline"
