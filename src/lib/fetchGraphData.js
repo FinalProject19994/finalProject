@@ -55,7 +55,12 @@ const prepareGraphData = ({ courses, activities, skills }) => {
 
   // Add skills as nodes
   skills.forEach((skill) => {
-    nodes.push({ id: skill.id, name: skill.name, type: "skill" });
+    nodes.push({
+      id: skill.id,
+      name: skill.name,
+      type: "skill",
+      category: skill.category,
+    });
   });
 
   // Add activities as nodes and links
