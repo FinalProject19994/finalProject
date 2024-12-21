@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Profile from "./Profile";
 
 const menuItems = [
   { icon: "/menuIcons/home.png", label: "Home", href: "/homepage" },
@@ -53,6 +54,9 @@ const Menu = () => {
               </Tooltip>
             );
           })}
+        </div>
+        <div className="absolute bottom-0">
+          <Profile />
         </div>
       </div>
     </TooltipProvider>
