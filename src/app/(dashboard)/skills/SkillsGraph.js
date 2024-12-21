@@ -20,7 +20,7 @@ const SkillsGraph = () => {
   return (
     <>
       <div className="relative left-2 top-0 z-10 w-min">
-        <Legend />
+        <Legend header="Skills Graph" />
       </div>
       <ForceDirectedGraph
         nodes={graphData.nodes}
