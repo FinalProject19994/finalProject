@@ -40,7 +40,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
           .id((d) => d.id)
           .distance(50),
       )
-      .force("charge", d3.forceManyBody().strength(-20))
+      .force("charge", d3.forceManyBody().strength(-200))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .on("tick", ticked);
 
@@ -49,6 +49,15 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       course: "#D396FF",
       skill: "#5DE000",
       activity: "#90DCF3",
+    };
+
+    // Map of skill categories to colors
+    const categoryColors = {
+      Mindset: "#a7f9ab",
+      "Emotional quotient": "#FFC36D",
+      "Professional self": "#D396FF",
+      "Thinking development": "#c3ebfa",
+      default: "#AAAAAA", // Fallback color
     };
 
     // Create links
@@ -66,23 +75,29 @@ const ForceDirectedGraph = ({ nodes, links }) => {
     const node = zoomGroup
       .append("g")
       .attr("class", "nodes")
-      .selectAll("circle")
+      .selectAll("path")
       .data(memoizedData.nodes)
       .enter()
-      .append("circle")
-      .attr("r", (d) => {
+      .append("path")
+      .attr("d", (d) => {
         switch (d.type) {
-          case "course":
-            return 12;
-          case "activity":
-            return 10;
           case "skill":
-            return 8;
+            return d3.symbol().type(d3.symbolCircle).size(150)();
+          case "activity":
+            return d3.symbol().type(d3.symbolSquare).size(400)();
+          case "course":
+            return d3.symbol().type(d3.symbolDiamond2).size(400)();
           default:
-            return 8;
+            return null;
         }
       })
-      .attr("fill", (d) => typeColors[d.type] || "#ccc")
+      .attr("fill", (d) =>
+        d.type === "skill"
+          ? categoryColors[d.category]
+          : d.type === "course"
+            ? "black"
+            : "#666666",
+      )
       .call(
         d3
           .drag()
@@ -92,38 +107,36 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       )
       // Hover effects for nodes
       .on("mouseenter", (event, d) => {
-        const nodeColor = typeColors[d.type] || "#ccc";
+        if (d.fx !== null && d.fy !== null) return;
 
-        // Highlight hovered node
+        // Preserve current position from the force simulation
         d3.select(event.target)
           .transition()
           .duration(100)
-          .attr("r", 15) // Increase size
-          .style("opacity", 1); // Fully opaque
+          .attr("transform", `translate(${d.x},${d.y}) scale(1.5)`);
 
         // Dim unconnected nodes
         node
           .filter((n) => n.id !== d.id)
           .transition()
           .duration(100)
-          .style("opacity", 0.3); // Slightly transparent
+          .style("opacity", 0.3);
 
         // Dim unconnected links
         link
           .filter((l) => l.source.id !== d.id && l.target.id !== d.id)
           .transition()
           .duration(100)
-          .style("opacity", 0.3); // Slightly transparent
+          .style("opacity", 0.3);
 
-        // Highlight connected links and change color to match node
+        // Highlight connected links and connected nodes
         link
           .filter((l) => l.source.id === d.id || l.target.id === d.id)
           .transition()
           .duration(100)
-          .style("opacity", 1) // Fully opaque
-          .attr("stroke", nodeColor); // Match node color
+          .style("opacity", 1)
+          .attr("stroke", categoryColors[d.category] || "#aaa");
 
-        // Highlight connected nodes
         node
           .filter((n) => {
             return (
@@ -137,56 +150,23 @@ const ForceDirectedGraph = ({ nodes, links }) => {
           })
           .transition()
           .duration(100)
-          .style("opacity", 1) // Fully opaque
-          .attr("r", 15); // Increase size of connected nodes
+          .style("opacity", 1)
+          .attr("transform", (n) => `translate(${n.x},${n.y}) scale(1.5)`);
       })
       .on("mouseleave", (event, d) => {
-        const originalColor = typeColors[d.type] || "#ccc";
+        if (d.fx !== null || d.fy !== null) return;
 
-        // Reset hovered node
         d3.select(event.target)
           .transition()
           .duration(200)
-          .attr("r", (d) => {
-            switch (d.type) {
-              case "course":
-                return 12;
-              case "activity":
-                return 10;
-              case "skill":
-                return 8;
-              default:
-                return 8; // Default size
-            }
-          }) // Reset size dynamically
-          .attr("fill", originalColor) // Revert color
-          .style("opacity", 1); // Fully opaque
+          .attr("transform", `translate(${d.x},${d.y}) scale(1)`);
 
-        // Reset all nodes
-        node
-          .transition()
-          .duration(200)
-          .attr("fill", (d) => typeColors[d.type] || "#ccc") // Revert color
-          .attr("r", (d) => {
-            switch (d.type) {
-              case "course":
-                return 12;
-              case "activity":
-                return 10;
-              case "skill":
-                return 8;
-              default:
-                return 8; // Default size
-            }
-          }) // Reset size dynamically
-          .style("opacity", 1); // Fully opaque
-
-        // Reset all links
+        node.transition().duration(200).style("opacity", 1);
         link
           .transition()
           .duration(200)
-          .attr("stroke", "#aaa") // Revert color
-          .style("opacity", 1); // Fully opaque
+          .style("opacity", 1)
+          .attr("stroke", "#aaa");
       });
 
     // Add labels
@@ -201,7 +181,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .attr("x", 12)
       .attr("y", 4)
       .style("font-size", "10px")
-      .style("fill", (d) => typeColors[d.type] || "#333");
+      .style("fill", (d) => categoryColors[d.category] || "#333");
 
     function ticked() {
       link
@@ -210,7 +190,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y);
 
-      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+      node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
       labels.attr("x", (d) => d.x + 12).attr("y", (d) => d.y + 4);
     }
@@ -219,6 +199,10 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       if (!event.active) simulation.alphaTarget(0.03).restart();
       d.fx = d.x;
       d.fy = d.y;
+
+      // Disable hover transitions during drag
+      node.interrupt();
+      link.interrupt();
     }
 
     function dragged(event, d) {
@@ -227,9 +211,17 @@ const ForceDirectedGraph = ({ nodes, links }) => {
     }
 
     function dragEnded(event, d) {
-      if (!event.active) simulation.alphaTarget(0);
+      if (!event.active) simulation.alphaTarget(0); // Allow the simulation to settle naturally
+
+      // Smoothly release the node
       d.fx = null;
       d.fy = null;
+
+      // Ensure no transition is triggered during the physics reset
+      d3.select(event.target)
+        .interrupt() // Cancel any running transitions
+        .transition()
+        .duration(0); // Set duration to 0 to ensure immediate rendering
     }
 
     const resizeObserver = new ResizeObserver(() => {
