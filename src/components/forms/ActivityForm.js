@@ -111,8 +111,7 @@ const ActivityForm = ({ closeModal }) => {
         course: doc(db, "courses", formData.course),
         weekNumber: formData.weekNumber,
         skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
-        lecturers: formData.lecturers.map(
-          (lecturerId) => doc(db, "users", lecturerId),
+        lecturers: formData.lecturers.map((lecturerId) =>
           doc(db, "users", lecturerId),
         ),
         reflection: formData.reflection,
