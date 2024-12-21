@@ -108,7 +108,7 @@ const Page = ({ params }) => {
           Course
         </h3>
         <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary">{activity.course?.title}</Badge>
+          <Badge variant="outline">{activity.course?.title}</Badge>
         </div>
       </div>
       <div>
@@ -117,7 +117,9 @@ const Page = ({ params }) => {
         </h3>
         <div className="flex flex-wrap gap-2">
           {activity.skills?.map((skill, index) => (
-            <Badge key={index}>{skill.name}</Badge>
+            <Badge key={index} variant="outline">
+              {skill.name}
+            </Badge>
           ))}
         </div>
       </div>
@@ -127,7 +129,7 @@ const Page = ({ params }) => {
         </h3>
         <div className="flex flex-wrap gap-2">
           {activity.lecturers?.map((lecturer, index) => (
-            <Badge key={index} variant={"third"}>
+            <Badge key={index} variant="outline">
               {lecturer.name}
             </Badge>
           ))}

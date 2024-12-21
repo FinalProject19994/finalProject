@@ -110,6 +110,7 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
                   handleRowSelect(row.original);
                 }}
                 className={index % 2 === 1 ? "bg-gray-100" : ""}
+                style={{ cursor: "pointer" }}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
