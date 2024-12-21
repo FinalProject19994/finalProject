@@ -18,14 +18,14 @@ const Page = ({ children }) => {
   }, []);
 
   return (
-    <div className="flex h-[90dvh] flex-col gap-4 px-4 sm:flex-col md:flex-row">
+    <div className="flex h-full flex-col gap-4 px-4 py-4 sm:flex-col md:flex-row">
       {/* LEFT */}
       <div className="w-full md:w-1/2">{children}</div>
 
       {/* RIGHT */}
-      <div className="flex w-full rounded-md bg-white text-3xl shadow-md md:w-1/2">
+      <div className="flex w-full rounded-md bg-white shadow-md md:w-1/2">
         <div className="relative left-2 top-0 z-10 w-min">
-          <Legend />
+          <Legend header="Activities Graph" />
         </div>
         <ForceDirectedGraph
           nodes={graphData.nodes}

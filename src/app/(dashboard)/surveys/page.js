@@ -1,12 +1,12 @@
 "use client";
 import DataTable from "@/components/data-table";
 import Modal from "@/components/Modal";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { columns } from "./columns";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import Loader from "@/components/ui/Loader";
+import { db } from "@/lib/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { columns } from "./columns";
 
 const questionnaires = [
   {
@@ -208,6 +208,12 @@ const Questionnaires = () => {
       {loading ? (
         <Loader />
       ) : (
+        // <SearchableTable
+        //   data={surveys}
+        //   columns={columns}
+        //   handleRowSelect={() => {}}
+        //   page="surveys"
+        // />
         <DataTable
           data={questionnaires}
           // data={surveys}

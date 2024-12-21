@@ -1,25 +1,23 @@
 "use client";
+import { Badge } from "@/components/ui/badge";
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
-import { Badge } from "@/components/ui/badge";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
 import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const Page = () => {
+const Page = ({ params }) => {
   const router = useRouter();
-  const { id } = useParams();
 
   const [activity, setActivity] = useState({});
-  const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const activityDoc = doc(db, "activities", id);
+        const activityDoc = doc(db, "activities", params.id);
         const activitySnapshot = await getDoc(activityDoc);
 
         if (activitySnapshot.exists()) {
@@ -69,15 +67,15 @@ const Page = () => {
     };
 
     fetchActivity();
-  }, [id]);
+  }, [params.id]);
 
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex h-screen items-center justify-center">
+  //       <Loader />
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (
