@@ -21,14 +21,6 @@ const forms = {
   ),
 };
 
-const buttonColors = {
-  skill: "bg-nyanza hover:brightness-90",
-  activity: "bg-primary_lightblue_table hover:brightness-90",
-  course: "bg-primary_purple_table_light hover:brightness-90",
-  survey: "bg-primary_lightyellow hover:brightness-90",
-  default: "bg-gray-200 text-black hover:bg-gray-300",
-};
-
 const Modal = ({ table, type, data, id }) => {
   const [open, setOpen] = useState(false);
 
@@ -54,13 +46,11 @@ const Modal = ({ table, type, data, id }) => {
     );
   };
 
-  const buttonStyle = buttonColors[table] || buttonColors.default;
-
   return (
     <div>
       <button
         onClick={() => setOpen(true)}
-        className={`flex items-center gap-2 rounded-md border border-slate-200 p-2 duration-150 ${buttonStyle}`}
+        className="flex items-center gap-2 rounded-md border border-slate-200 p-2 duration-150 hover:bg-primary_purple_table_light"
       >
         <Plus />
         Create new {table}
