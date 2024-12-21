@@ -33,7 +33,7 @@ const ProfileMenu = ({ closeMenu }) => {
   }, [closeMenu]);
 
   return (
-    <div className="profile-menu absolute right-4 top-16 z-50 rounded-lg bg-white px-4 py-6 text-gray-600 shadow-md">
+    <div className="profile-menu absolute bottom-16 z-50 w-full rounded-lg px-4 py-6 text-gray-600">
       <div className="flex flex-col gap-4">
         <Link
           href={"/settings"}

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import ProfileMenu from "./ProfileMenu";
 
-const Navbar = () => {
+const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user] = useAuthState(auth);
   const [userData, setUserData] = useState(null);
@@ -38,14 +38,9 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex items-center justify-between p-4">
+    <div className="flex items-center justify-between p-2">
       {/* Avatar and user */}
-      <div className="ml-auto flex items-center gap-4">
-        <div className="flex flex-col text-gray-500">
-          {/* Display the user's name */}
-          <span className="text-black">{userData?.name}</span>
-          <span className="text-right text-xs leading-3">{userData?.role}</span>
-        </div>
+      <div className="flex items-center gap-4">
         <Image
           // TODO: Add random avatars
           src={user?.photoURL || "/avatars/dog.png"} // Use user's profile photo if available
@@ -55,6 +50,13 @@ const Navbar = () => {
           className="cursor-pointer rounded-full hover:brightness-90"
           onClick={handleProfileMenu}
         />
+        <div className="flex flex-col text-gray-500">
+          {/* Display the user's name */}
+          <span className="hidden text-black lg:block">{userData?.name}</span>
+          <span className="hidden text-xs leading-3 lg:block">
+            {userData?.role}
+          </span>
+        </div>
       </div>
 
       {isOpen && <ProfileMenu closeMenu={closeProfileMenu} />}
@@ -62,4 +64,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Profile;
