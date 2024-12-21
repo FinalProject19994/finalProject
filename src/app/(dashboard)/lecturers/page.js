@@ -5,6 +5,7 @@ import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
+import { SearchableTable } from "@/components/SearchableTable";
 
 const TeacherListPage = () => {
   const [lecturers, setLecturers] = useState([]);
@@ -54,10 +55,15 @@ const TeacherListPage = () => {
       {loading ? (
         <Loader />
       ) : (
-        <DataTable
+        // <DataTable
+        //   columns={columns}
+        //   data={lecturers}
+        //   handleRowSelect={() => {}} // An empty function so the table won't throw an error
+        // />
+        <SearchableTable
           columns={columns}
           data={lecturers}
-          handleRowSelect={() => {}} // An empty function so the table won't throw an error
+          handleRowSelect={() => {}}
         />
       )}
     </div>

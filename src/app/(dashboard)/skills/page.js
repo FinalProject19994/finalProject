@@ -7,6 +7,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
+import { SearchableTable } from "../../../components/SearchableTable";
 
 const Page = () => {
   const router = useRouter();
@@ -19,7 +20,7 @@ const Page = () => {
       collection(db, "skills"),
       (snapshot) => {
         const skillsData = snapshot.docs.map((doc) => ({
-          id: doc.id,
+          id: doc.id.toUpperCase(),
           ...doc.data(),
         }));
         setSkills(skillsData);
@@ -36,7 +37,7 @@ const Page = () => {
   return (
     <div>
       {!loading ? (
-        <div className="flex h-[90dvh] flex-col rounded-md bg-white p-2 shadow-md">
+        <div className="flex h-[98.2vh] flex-col overflow-y-scroll rounded-md bg-white p-2 shadow-md">
           <div className="flex justify-between">
             <h1 className="text-3xl font-bold text-gray-600">Skills</h1>
             {/* {user.role === "admin" && (
@@ -44,11 +45,11 @@ const Page = () => {
               )} */}
             <Modal table="skill" type="create" data={[]} />
           </div>
-          <div className="overflow-y-scroll pr-2">
-            <DataTable
+          <div className="pr-2">
+            <SearchableTable
               columns={columns}
               data={skills}
-              handleRowSelect={() => {}} // An empty function so the table won't throw an error
+              handleRowSelect={() => {}}
               page="skills"
             />
           </div>

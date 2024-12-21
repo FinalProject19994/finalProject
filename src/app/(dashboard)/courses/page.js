@@ -9,6 +9,8 @@ import { collection, getDoc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
+import { SearchableTable } from "@/components/SearchableTable";
+import ActivityDialog from "@/components/ActivityDialog";
 
 // TODO: change the lecturer ID to lecturer name
 const Page = () => {
@@ -86,19 +88,20 @@ const Page = () => {
         {loading ? (
           <Loader />
         ) : (
-          <DataTable
+          <SearchableTable
             data={courses}
             columns={columns}
-            handleRowSelect={() => {}} // An empty function so the table won't throw an error
-            page="courses"
+            dialog={<ActivityDialog />}
+            handleRowSelect={() => {}}
+            page="activities"
           />
         )}
       </div>
 
       {/* RIGHT - GRAPH */}
-      <div className="flex h-full rounded-md bg-white text-3xl shadow-md sm:w-full md:w-2/5">
+      <div className="flex h-full rounded-md bg-white shadow-md sm:w-full md:w-2/5">
         <div className="relative left-2 top-0 z-10">
-          <Legend />
+          <Legend header="Courses Graph" />
         </div>
         <ForceDirectedGraph
           nodes={graphData.nodes}

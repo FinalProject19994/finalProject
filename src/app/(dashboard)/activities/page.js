@@ -8,6 +8,7 @@ import Modal from "@/components/Modal";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getDoc } from "firebase/firestore";
+import { SearchableTable } from "@/components/SearchableTable";
 
 const Page = () => {
   const [activities, setActivities] = useState([]);
@@ -55,8 +56,8 @@ const Page = () => {
               return {
                 id: doc.id,
                 ...activity,
-                skills: resolvedSkills, // Replace Firestore references with resolved skill names
-                course: courseName, // Replace Firestore reference with resolved course name
+                skills: resolvedSkills,
+                course: courseName,
               };
             }),
           );
@@ -78,13 +79,13 @@ const Page = () => {
 
   const router = useRouter();
   return (
-    <div className="flex h-[90dvh] w-full flex-col rounded-md bg-white shadow-md">
+    <div className="flex h-[98.2vh] w-full flex-col rounded-md bg-white shadow-md">
       <div className="flex w-full justify-between gap-4 p-4">
         <h1 className="text-3xl font-bold text-gray-600">Activities</h1>
         <Modal table="activity" type="create" data={[]} />
       </div>
       <div className="px-4">
-        <DataTable
+        <SearchableTable
           data={activities}
           columns={columns}
           dialog={<ActivityDialog />}
