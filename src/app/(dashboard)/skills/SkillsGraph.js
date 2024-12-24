@@ -19,9 +19,7 @@ const SkillsGraph = () => {
 
   return (
     <>
-      <div className="relative left-2 top-0 z-10 w-min">
-        <Legend header="Skills Graph" />
-      </div>
+      <Legend header="Skills Graph" />
       <ForceDirectedGraph
         nodes={graphData.nodes}
         links={graphData.links}

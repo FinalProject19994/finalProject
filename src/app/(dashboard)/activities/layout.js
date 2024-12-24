@@ -24,9 +24,7 @@ const Page = ({ children }) => {
 
       {/* RIGHT */}
       <div className="flex w-full rounded-md bg-white shadow-md md:w-1/2">
-        <div className="relative left-2 top-0 z-10 w-min">
-          <Legend header="Activities Graph" />
-        </div>
+        <Legend header="Activities Graph" />
         <ForceDirectedGraph
           nodes={graphData.nodes}
           links={graphData.links}

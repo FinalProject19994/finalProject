@@ -100,9 +100,7 @@ const Page = () => {
 
       {/* RIGHT - GRAPH */}
       <div className="flex h-full rounded-md bg-white shadow-md sm:w-full md:w-2/5">
-        <div className="relative left-2 top-0 z-10">
-          <Legend header="Courses Graph" />
-        </div>
+        <Legend header="Courses Graph" />
         <ForceDirectedGraph
           nodes={graphData.nodes}
           links={graphData.links}
