@@ -74,7 +74,7 @@ const SkillForm = ({ type, data, closeModal }) => {
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select question type" />
+            <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="emotional quotient">
