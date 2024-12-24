@@ -154,12 +154,11 @@ const ForceDirectedGraph = ({ nodes, links }) => {
         );
 
       // Highlight labels
-      labels.style("opacity", (label) =>
-        label.id === d.id || connectedNodeIds.has(label.id) ? 1 : 0,
-      ); // Highlight labels
-      labels.style("opacity", (label) =>
-        label.id === d.id || connectedNodeIds.has(label.id) ? 1 : 0,
-      );
+      labels
+        .style("opacity", (label) =>
+          label.id === d.id || connectedNodeIds.has(label.id) ? 1 : 0,
+        )
+        .style("font-size", "16px");
     }
 
     function handleMouseOut() {
@@ -168,7 +167,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
         .style("opacity", 1)
         .style("stroke", "#aaa") // Reset to default color
         .style("stroke-width", 0.75); // Reset to default thickness
-      labels.style("opacity", 1);
+      labels.style("opacity", 1).style("font-size", "12px");
     }
 
     function ticked() {
