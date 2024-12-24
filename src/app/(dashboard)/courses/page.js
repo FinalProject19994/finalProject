@@ -78,35 +78,22 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="flex h-[90dvh] flex-col gap-4 px-4 sm:flex-col md:flex-row">
-      {/* LEFT - COURSES TABLE */}
-      <div className="rounded-md bg-white p-4 shadow-md md:w-3/5">
-        <div className="flex justify-between">
-          <h1 className="text-3xl font-bold text-gray-600">Courses</h1>
-          <Modal table="course" type="create" data={courses} />
-        </div>
-        {loading ? (
-          <Loader />
-        ) : (
-          <SearchableTable
-            data={courses}
-            columns={columns}
-            dialog={<ActivityDialog />}
-            handleRowSelect={() => {}}
-            page="activities"
-          />
-        )}
+    <div className="flex h-[98vh] w-full flex-col rounded-md bg-white px-2 shadow-md">
+      <div className="flex w-full justify-between gap-4 p-2">
+        <h1 className="text-3xl font-bold text-gray-600">Courses</h1>
+        <Modal table="course" type="create" data={courses} />
       </div>
-
-      {/* RIGHT - GRAPH */}
-      <div className="flex h-full rounded-md bg-white shadow-md sm:w-full md:w-2/5">
-        <Legend header="Courses Graph" />
-        <ForceDirectedGraph
-          nodes={graphData.nodes}
-          links={graphData.links}
-          page="course"
+      {loading ? (
+        <Loader />
+      ) : (
+        <SearchableTable
+          data={courses}
+          columns={columns}
+          dialog={<ActivityDialog />}
+          handleRowSelect={() => {}}
+          page="activities"
         />
-      </div>
+      )}
     </div>
   );
 };

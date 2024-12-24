@@ -4,7 +4,7 @@ import Menu from "../../components/Menu";
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       {/* LEFT - MENU */}
       <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[10%]">
         <Link

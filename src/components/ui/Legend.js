@@ -1,6 +1,6 @@
 const Legend = ({ header }) => {
   return (
-    <div className="absolute p-4">
+    <div className="absolute px-4">
       <p className="relative top-2 mb-2 bg-white text-3xl font-bold text-gray-600">
         {header}
       </p>

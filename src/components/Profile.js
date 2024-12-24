@@ -38,29 +38,29 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex items-center justify-between p-2">
+    <button
+      onClick={handleProfileMenu}
+      className="flex items-center gap-4 rounded-md p-2 hover:bg-slate-100"
+    >
       {/* Avatar and user */}
-      <div className="flex items-center gap-4">
-        <Image
-          // TODO: Add random avatars
-          src={user?.photoURL || "/avatars/dog.png"} // Use user's profile photo if available
-          width={40}
-          height={40}
-          alt="profile picture"
-          className="cursor-pointer rounded-full hover:brightness-90"
-          onClick={handleProfileMenu}
-        />
-        <div className="flex flex-col text-gray-500">
-          {/* Display the user's name */}
-          <span className="hidden text-black lg:block">{userData?.name}</span>
-          <span className="hidden text-xs leading-3 lg:block">
-            {userData?.role}
-          </span>
-        </div>
+      <Image
+        // TODO: Add random avatars
+        src={user?.photoURL || "/avatars/dog.png"}
+        width={40}
+        height={40}
+        alt="profile picture"
+        className="cursor-pointer rounded-full hover:brightness-90"
+      />
+      <div className="flex flex-col text-gray-500">
+        {/* Display the user's name */}
+        <span className="hidden text-black lg:block">{userData?.name}</span>
+        <span className="hidden text-start text-xs lg:block">
+          {userData?.role}
+        </span>
       </div>
 
       {isOpen && <ProfileMenu closeMenu={closeProfileMenu} />}
-    </div>
+    </button>
   );
 };
 

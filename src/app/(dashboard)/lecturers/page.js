@@ -50,7 +50,7 @@ const TeacherListPage = () => {
   }, []);
 
   return (
-    <div className="m-4 mt-0 h-[90dvh] flex-1 rounded-md bg-white p-4 shadow-md">
+    <div className="mx-4 mt-2 h-[98%] flex-1 rounded-md bg-white p-2 shadow-md">
       <h1 className="text-3xl font-bold text-gray-600">Lecturers</h1>
       {loading ? (
         <Loader />

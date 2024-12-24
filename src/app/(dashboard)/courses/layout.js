@@ -1,4 +1,4 @@
-import SkillsGraph from "./SkillsGraph";
+import CoursesGraph from "./CoursesGraph";
 
 const Page = ({ children }) => {
   return (
@@ -8,7 +8,7 @@ const Page = ({ children }) => {
 
       {/* RIGHT */}
       <div className="flex h-full rounded-md bg-white shadow-md md:w-1/2">
-        <SkillsGraph />
+        <CoursesGraph />
       </div>
     </div>
   );

@@ -200,7 +200,7 @@ const Questionnaires = () => {
   }, []);
 
   return (
-    <div className="m-4 mt-0 h-[90dvh] flex-1 overflow-y-scroll rounded-md bg-white p-4 shadow-md">
+    <div className="m-4 my-2 h-[98%] flex-1 overflow-y-scroll rounded-md bg-white p-2 shadow-md">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold text-gray-600">Surveys</h1>
         <Modal table="survey" type="create" data={[]} />

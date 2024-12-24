@@ -20,7 +20,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="ml-4 flex h-screen flex-col text-gray-500 md:flex-row">
+    <div className="my-2 ml-4 flex h-[98%] flex-col text-gray-500 md:flex-row">
       {/* LEFT */}
       <div className="flex w-full flex-col gap-2">
         {/* LEFT - UP */}
