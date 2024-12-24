@@ -4,7 +4,6 @@ import * as d3 from "d3";
 
 const ForceDirectedGraph = ({ nodes, links }) => {
   const containerRef = useRef(null);
-
   const memoizedData = useMemo(() => ({ nodes, links }), [nodes, links]);
 
   useEffect(() => {
@@ -44,23 +43,20 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .force("center", d3.forceCenter(width / 2, height / 2))
       .on("tick", ticked);
 
-    // Color map for types
     const typeColors = {
       course: "#D396FF",
       skill: "#5DE000",
       activity: "#90DCF3",
     };
 
-    // Map of skill categories to colors
     const categoryColors = {
       Mindset: "#a7f9ab",
       "Emotional quotient": "#FFC36D",
       "Professional self": "#D396FF",
       "Thinking development": "#c3ebfa",
-      default: "#AAAAAA", // Fallback color
+      default: "#AAAAAA",
     };
 
-    // Create links
     const link = zoomGroup
       .append("g")
       .attr("class", "links")
@@ -69,9 +65,10 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .enter()
       .append("line")
       .attr("stroke", "#aaa")
-      .attr("stroke-width", 0.75);
+      .attr("stroke-width", 0.75)
+      .style("opacity", 1)
+      .style("transition", "opacity 0.2s");
 
-    // Create nodes
     const node = zoomGroup
       .append("g")
       .attr("class", "nodes")
@@ -98,78 +95,18 @@ const ForceDirectedGraph = ({ nodes, links }) => {
             ? "black"
             : "#666666",
       )
+      .style("opacity", 1)
+      .style("transition", "opacity 0.2s")
+      .on("mouseover", handleMouseOver)
+      .on("mouseout", handleMouseOut)
       .call(
         d3
           .drag()
           .on("start", dragStarted)
           .on("drag", dragged)
           .on("end", dragEnded),
-      )
-      // Hover effects for nodes
-      .on("mouseenter", (event, d) => {
-        if (d.fx !== null && d.fy !== null) return;
+      );
 
-        // Preserve current position from the force simulation
-        d3.select(event.target)
-          .transition()
-          .duration(100)
-          .attr("transform", `translate(${d.x},${d.y}) scale(1.5)`);
-
-        // Dim unconnected nodes
-        node
-          .filter((n) => n.id !== d.id)
-          .transition()
-          .duration(100)
-          .style("opacity", 0.3);
-
-        // Dim unconnected links
-        link
-          .filter((l) => l.source.id !== d.id && l.target.id !== d.id)
-          .transition()
-          .duration(100)
-          .style("opacity", 0.3);
-
-        // Highlight connected links and connected nodes
-        link
-          .filter((l) => l.source.id === d.id || l.target.id === d.id)
-          .transition()
-          .duration(100)
-          .style("opacity", 1)
-          .attr("stroke", categoryColors[d.category] || "#aaa");
-
-        node
-          .filter((n) => {
-            return (
-              n.id === d.id ||
-              memoizedData.links.some(
-                (l) =>
-                  (l.source.id === n.id || l.target.id === n.id) &&
-                  (l.source.id === d.id || l.target.id === d.id),
-              )
-            );
-          })
-          .transition()
-          .duration(100)
-          .style("opacity", 1)
-          .attr("transform", (n) => `translate(${n.x},${n.y}) scale(1.5)`);
-      })
-      .on("mouseleave", (event, d) => {
-        if (d.fx !== null || d.fy !== null) return;
-
-        d3.select(event.target)
-          .transition()
-          .duration(200)
-          .attr("transform", `translate(${d.x},${d.y}) scale(1)`);
-
-        node.transition().duration(200).style("opacity", 1);
-        link
-          .transition()
-          .duration(200)
-          .style("opacity", 1)
-          .attr("stroke", "#aaa");
-      });
-
-    // Add labels
     const labels = zoomGroup
       .append("g")
       .attr("class", "labels")
@@ -181,7 +118,58 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .attr("x", 12)
       .attr("y", 4)
       .style("font-size", "10px")
-      .style("fill", (d) => categoryColors[d.category] || "#333");
+      .style("fill", (d) => categoryColors[d.category] || "#333")
+      .style("opacity", 1)
+      .style("transition", "opacity 0.2s");
+
+    function handleMouseOver(event, d) {
+      const connectedNodeIds = new Set();
+      const connectedLinks = memoizedData.links.filter((link) => {
+        if (link.source.id === d.id) {
+          connectedNodeIds.add(link.target.id);
+          return true;
+        }
+        if (link.target.id === d.id) {
+          connectedNodeIds.add(link.source.id);
+          return true;
+        }
+        return false;
+      });
+
+      // Highlight connected nodes
+      node
+        .style("opacity", (node) =>
+          node.id === d.id || connectedNodeIds.has(node.id) ? 1 : 0.4,
+        )
+        .style("cursor", "pointer");
+
+      // Highlight connected links
+      link
+        .style("opacity", (link) => (connectedLinks.includes(link) ? 1 : 0.4))
+        .style("stroke", (link) =>
+          connectedLinks.includes(link) ? categoryColors[d.category] : "#aaa",
+        )
+        .style("stroke-width", (link) =>
+          connectedLinks.includes(link) ? 2 : 0.75,
+        );
+
+      // Highlight labels
+      labels.style("opacity", (label) =>
+        label.id === d.id || connectedNodeIds.has(label.id) ? 1 : 0,
+      ); // Highlight labels
+      labels.style("opacity", (label) =>
+        label.id === d.id || connectedNodeIds.has(label.id) ? 1 : 0,
+      );
+    }
+
+    function handleMouseOut() {
+      node.style("opacity", 1);
+      link
+        .style("opacity", 1)
+        .style("stroke", "#aaa") // Reset to default color
+        .style("stroke-width", 0.75); // Reset to default thickness
+      labels.style("opacity", 1);
+    }
 
     function ticked() {
       link
@@ -199,8 +187,6 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       if (!event.active) simulation.alphaTarget(0.03).restart();
       d.fx = d.x;
       d.fy = d.y;
-
-      // Disable hover transitions during drag
       node.interrupt();
       link.interrupt();
     }
@@ -211,17 +197,10 @@ const ForceDirectedGraph = ({ nodes, links }) => {
     }
 
     function dragEnded(event, d) {
-      if (!event.active) simulation.alphaTarget(0); // Allow the simulation to settle naturally
-
-      // Smoothly release the node
+      if (!event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
-
-      // Ensure no transition is triggered during the physics reset
-      d3.select(event.target)
-        .interrupt() // Cancel any running transitions
-        .transition()
-        .duration(0); // Set duration to 0 to ensure immediate rendering
+      d3.select(event.target).interrupt().transition().duration(0);
     }
 
     const resizeObserver = new ResizeObserver(() => {
