@@ -19,7 +19,7 @@ import MultipleSelector from "../ui/MultipleSelector";
 const schema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
   id: z.string().min(5, { message: "ID must be at least 5 characters" }),
-  department: z
+  departments: z
     .array(z.string())
     .min(1, { message: "Select at least one department" }),
   lecturers: z
@@ -91,7 +91,7 @@ const CourseForm = ({ type, data, closeModal }) => {
       await setDoc(doc(db, "courses", formData.id), {
         title: formData.title,
         id: formData.id,
-        departments: formData.department.map((departmentId) =>
+        departments: formData.departments.map((departmentId) =>
           doc(db, "departments", departmentId),
         ),
         lecturers: formData.lecturers.map((lecturerId) =>

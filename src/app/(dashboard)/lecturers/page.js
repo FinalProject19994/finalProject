@@ -2,7 +2,7 @@
 import DataTable from "@/components/data-table";
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { SearchableTable } from "@/components/SearchableTable";
@@ -11,7 +11,6 @@ const TeacherListPage = () => {
   const [lecturers, setLecturers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetching the lecturers
   useEffect(() => {
     setLoading(true);
     const fetchLecturers = async () => {
@@ -24,16 +23,20 @@ const TeacherListPage = () => {
             const lecturer = doc.data();
 
             const departments = await Promise.all(
-              (lecturer.departments || []).map(async (ref) => {
-                const departmentDoc = await getDoc(ref);
-                return departmentDoc.data()?.title || "Unknown Department";
+              lecturer.departments.map(async (ref) => {
+                try {
+                  const departmentDoc = await getDoc(ref);
+                  return departmentDoc.data()?.title;
+                } catch (e) {
+                  return e.message;
+                }
               }),
             );
 
             return {
               ...lecturer,
               id: doc.id,
-              departments,
+              departments: departments.join(", "), // Join the titles into a single string
             };
           }),
         );
@@ -55,11 +58,6 @@ const TeacherListPage = () => {
       {loading ? (
         <Loader />
       ) : (
-        // <DataTable
-        //   columns={columns}
-        //   data={lecturers}
-        //   handleRowSelect={() => {}} // An empty function so the table won't throw an error
-        // />
         <SearchableTable
           columns={columns}
           data={lecturers}

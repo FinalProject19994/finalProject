@@ -78,7 +78,7 @@ const Page = () => {
         phone: phoneNumberRef.current.value,
         email: emailRef.current.value,
         role: "Lecturer",
-        department: selectedDepartments.map((department) =>
+        departments: selectedDepartments.map((department) =>
           doc(db, "departments", department.id),
         ),
         courses: selectedCourses.map((course) => doc(db, "courses", course.id)),

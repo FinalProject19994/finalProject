@@ -35,14 +35,14 @@ export const columns = [
     },
   },
   {
-    accessorKey: "department",
+    accessorKey: "departments",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Department
+          Departments
         </Button>
       );
     },
