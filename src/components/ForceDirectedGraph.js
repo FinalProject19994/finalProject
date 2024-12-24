@@ -147,7 +147,9 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       link
         .style("opacity", (link) => (connectedLinks.includes(link) ? 1 : 0.4))
         .style("stroke", (link) =>
-          connectedLinks.includes(link) ? categoryColors[d.category] : "#aaa",
+          connectedLinks.includes(link)
+            ? categoryColors[link.target.category]
+            : "#aaa",
         )
         .style("stroke-width", (link) =>
           connectedLinks.includes(link) ? 2 : 0.75,
