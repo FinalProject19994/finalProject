@@ -75,7 +75,6 @@ export const columns = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>View</DropdownMenuItem>
             <DropdownMenuItem>Edit Information</DropdownMenuItem>
             <DropdownMenuItem>Delete activity</DropdownMenuItem>
           </DropdownMenuContent>
