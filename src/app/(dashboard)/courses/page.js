@@ -1,16 +1,12 @@
 "use client";
-import DataTable from "@/components/data-table";
-import ForceDirectedGraph from "@/components/ForceDirectedGraph";
 import Modal from "@/components/Modal";
-import Legend from "@/components/ui/Legend";
+import { SearchableTable } from "@/components/SearchableTable";
 import Loader from "@/components/ui/Loader";
+import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
 import { db } from "@/lib/firebase";
 import { collection, getDoc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
-import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
-import { SearchableTable } from "@/components/SearchableTable";
-import ActivityDialog from "@/components/ActivityDialog";
 
 // TODO: change the lecturer ID to lecturer name
 const Page = () => {
@@ -43,7 +39,7 @@ const Page = () => {
             // Resolve department references
             const departments = await Promise.all(
               data.departments.map(async (ref) => {
-                const departmentDoc = await getDoc(ref); // Use getDoc to fetch the document
+                const departmentDoc = await getDoc(ref);
                 return departmentDoc.data()?.title || "Unknown Department";
               }),
             );
@@ -51,7 +47,7 @@ const Page = () => {
             // Resolve lecturer references
             const lecturers = await Promise.all(
               data.lecturers.map(async (ref) => {
-                const lecturerDoc = await getDoc(ref); // Use getDoc to fetch the document
+                const lecturerDoc = await getDoc(ref);
                 return lecturerDoc.data()?.name || "Unknown Lecturer";
               }),
             );
@@ -59,8 +55,8 @@ const Page = () => {
             return {
               id: doc.id,
               ...data,
-              departments,
-              lecturers,
+              departments: departments.join(", "),
+              lecturers: lecturers.join(", "),
             };
           }),
         );
@@ -89,7 +85,6 @@ const Page = () => {
         <SearchableTable
           data={courses}
           columns={columns}
-          dialog={<ActivityDialog />}
           handleRowSelect={() => {}}
           page="activities"
         />

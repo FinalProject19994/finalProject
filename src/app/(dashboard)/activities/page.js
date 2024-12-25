@@ -1,14 +1,11 @@
 "use client";
-import { db } from "@/lib/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
 import { columns } from "@/app/(dashboard)/activities/columns";
-import ActivityDialog from "@/components/ActivityDialog";
-import DataTable from "@/components/data-table";
 import Modal from "@/components/Modal";
+import { SearchableTable } from "@/components/SearchableTable";
+import { db } from "@/lib/firebase";
+import { collection, getDoc, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getDoc } from "firebase/firestore";
-import { SearchableTable } from "@/components/SearchableTable";
 
 const Page = () => {
   const [activities, setActivities] = useState([]);
@@ -88,7 +85,6 @@ const Page = () => {
         <SearchableTable
           data={activities}
           columns={columns}
-          dialog={<ActivityDialog />}
           handleRowSelect={(activity) => {
             router.push(`/activities/${activity.id}`);
           }}

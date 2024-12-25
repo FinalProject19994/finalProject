@@ -45,7 +45,7 @@ const Page = () => {
               )} */}
             <Modal table="skill" type="create" data={[]} />
           </div>
-          <div className="overflow-y-scroll pr-2">
+          <div className="overflow-y-scroll pr-1">
             <SearchableTable
               columns={columns}
               data={skills}

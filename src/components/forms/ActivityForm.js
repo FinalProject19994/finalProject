@@ -1,5 +1,5 @@
 "use client";
-import currentDate from "@/components/currentDate";
+import currentDate from "@/lib/currentDate";
 import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";

@@ -40,7 +40,7 @@ const Profile = () => {
   return (
     <button
       onClick={handleProfileMenu}
-      className="flex items-center gap-4 rounded-md p-2 hover:bg-slate-100"
+      className="flex items-center gap-4 rounded-md p-2"
     >
       {/* Avatar and user */}
       <Image

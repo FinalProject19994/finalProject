@@ -25,7 +25,7 @@ const fetchGraphData = async () => {
 
       // Resolve skill references
       const resolvedSkills = await Promise.all(
-        (activityData.skills || []).map(async (skillRef) => {
+        activityData.skills.map(async (skillRef) => {
           const skillDoc = await getDoc(skillRef);
           return skillDoc.exists()
             ? { id: skillDoc.id, ...skillDoc.data() }
@@ -36,7 +36,7 @@ const fetchGraphData = async () => {
       return {
         id: doc.id,
         ...activityData,
-        skills: resolvedSkills.filter(Boolean), // Remove nulls from unresolved references
+        skills: resolvedSkills.filter(Boolean), // Remove nulls from unresolved references so unused skills are not included
       };
     }),
   );

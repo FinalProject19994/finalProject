@@ -36,6 +36,7 @@ const Page = () => {
         </p>
         <Image src="/logo.png" alt="signup" width={400} height={400} />
       </div>
+
       <div className="flex w-1/2 items-center justify-center lg:justify-start">
         <div className="flex w-3/4 flex-col gap-4 rounded-md bg-white p-4 shadow-md lg:w-1/2">
           {/* Email */}
@@ -45,7 +46,6 @@ const Page = () => {
             className="rounded-md border p-2 outline-none"
             ref={emailRef}
           />
-
           {/* Password */}
           <input
             type="Password"
@@ -61,12 +61,11 @@ const Page = () => {
           </button>
           <Link
             href="/forgotPassword"
-            className="text-center text-primary_purple hover:underline"
+            className="text-center text-sm text-primary_purple hover:underline"
           >
             Forgot Password?
           </Link>
-          <div className="h-px w-full bg-gray-300"></div>
-
+          <div className="h-px w-full bg-gray-300" />
           <div className="flex justify-center">
             <p className="text-[16px] text-gray-500">
               Don&apos;t have an account?

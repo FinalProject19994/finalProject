@@ -28,7 +28,6 @@ export function SearchableTable({ columns, data, handleRowSelect, page }) {
       <div className="relative top-14 flex w-1/2 rounded-md border border-gray-200 p-2 text-sm">
         <Search className="mr-2 opacity-50" />
         <input
-          type="search"
           placeholder={`Search ${page}...`}
           onChange={handleSearch}
           className="w-full outline-none"
