@@ -43,12 +43,6 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .force("center", d3.forceCenter(width / 2, height / 2))
       .on("tick", ticked);
 
-    const typeColors = {
-      course: "#D396FF",
-      skill: "#5DE000",
-      activity: "#90DCF3",
-    };
-
     const categoryColors = {
       Mindset: "#a7f9ab",
       "Emotional quotient": "#FFC36D",
