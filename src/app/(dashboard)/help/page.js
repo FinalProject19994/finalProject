@@ -207,7 +207,7 @@ const SunburstChart = () => {
   }, [data]);
 
   return (
-    <div className="mx-4 rounded-md bg-white shadow-md">
+    <div className="mx-4 my-2 h-[98%] rounded-md bg-white shadow-md">
       <div className="mx-14 flex items-center justify-between">
         <div className="flex w-2/5 flex-col">
           <h1 className="py-2 text-4xl font-semibold italic text-primary_purple">
@@ -226,7 +226,7 @@ const SunburstChart = () => {
             support more advanced competencies.
           </p>
         </div>
-        <div ref={chartRef} className="h-[88dvh] w-3/5 max-w-[1000px] p-2" />
+        <div ref={chartRef} className="w-3/5 max-w-[1000px] p-2" />
       </div>
     </div>
   );

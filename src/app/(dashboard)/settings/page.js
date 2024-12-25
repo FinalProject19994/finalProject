@@ -2,7 +2,7 @@ import MultipleSelector from "@/components/ui/MultipleSelector";
 
 const page = () => {
   return (
-    <form className="mx-4 flex h-[90dvh] max-h-screen flex-col gap-4 rounded-md bg-white p-4 text-gray-500 shadow-md">
+    <form className="mx-4 my-2 flex h-[98%] max-h-screen flex-col gap-4 rounded-md bg-white p-4 text-gray-500 shadow-md">
       <h1 className="mb-8 text-center text-3xl font-bold text-primary_purple">
         Profile Settings
       </h1>

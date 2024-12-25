@@ -1,6 +1,6 @@
 const Page = () => {
   return (
-    <div className="mx-4 h-[90dvh] rounded-lg bg-white p-4 shadow-md lg:px-[352px]">
+    <div className="mx-4 my-2 h-[98%] overflow-auto rounded-lg bg-white p-4 shadow-md lg:px-[352px]">
       <h1 className="mb-6 text-center text-4xl font-bold text-primary_purple">
         Welcome to Core Skills Hub
       </h1>
