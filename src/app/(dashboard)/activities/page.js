@@ -84,7 +84,7 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-gray-600">Activities</h1>
         <Modal table="activity" type="create" data={[]} />
       </div>
-      <div className="px-4">
+      <div className="overflow-auto">
         <SearchableTable
           data={activities}
           columns={columns}
