@@ -9,29 +9,29 @@ import {
 } from "@/components/ui/chart";
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  Activities: {
+    label: "Activities",
     color: "#5DE000",
   },
-  mobile: {
-    label: "Mobile",
-    color: "#8300E0",
+  Skills: {
+    label: "Skills",
+    color: "#FFE4AD",
   },
 };
 
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "July", desktop: 186, mobile: 80 },
-  { month: "August", desktop: 305, mobile: 200 },
-  { month: "September", desktop: 237, mobile: 120 },
-  { month: "October", desktop: 73, mobile: 190 },
-  { month: "November", desktop: 209, mobile: 130 },
-  { month: "December", desktop: 214, mobile: 140 },
+  { month: "January", Activities: 186, Skills: 80 },
+  { month: "February", Activities: 305, Skills: 200 },
+  { month: "March", Activities: 237, Skills: 120 },
+  { month: "April", Activities: 73, mSkills: 190 },
+  { month: "May", Activities: 209, Skills: 130 },
+  { month: "June", Activities: 214, Skills: 140 },
+  { month: "July", Activities: 186, Skills: 80 },
+  { month: "August", Activities: 305, Skills: 200 },
+  { month: "September", Activities: 237, Skills: 120 },
+  { month: "October", Activities: 73, mSkills: 190 },
+  { month: "November", Activities: 209, Skills: 130 },
+  { month: "December", Activities: 214, Skills: 140 },
 ];
 
 export default function Chart() {
@@ -51,8 +51,8 @@ export default function Chart() {
         />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} verticalAlign="top" />
-        <Bar dataKey="desktop" fill="#5DE000" radius={4} />
-        <Bar dataKey="mobile" fill="#d396ff" radius={4} />
+        <Bar dataKey="Activities" fill="#d396ff" radius={4} />
+        <Bar dataKey="Skills" fill="#FFE4AD" radius={4} />
       </BarChart>
     </ChartContainer>
   );
