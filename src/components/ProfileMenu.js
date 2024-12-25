@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { getAuth, signOut } from "firebase/auth";
+import { CircleHelp, CircleUserRound, Info, LogOut } from "lucide-react";
 
 const ProfileMenu = ({ closeMenu }) => {
   const router = useRouter();
@@ -33,33 +34,35 @@ const ProfileMenu = ({ closeMenu }) => {
   }, [closeMenu]);
 
   return (
-    <div className="profile-menu absolute bottom-16 z-50 w-full rounded-lg px-4 py-6 text-gray-600">
+    <div className="profile-menu absolute bottom-16 z-50 mx-2 my-4 text-gray-600">
       <div className="flex flex-col gap-4">
         <Link
           href={"/settings"}
           className="flex hover:brightness-0"
           onClick={closeMenu}
         >
-          <Image
+          {/* <Image
             src="/menuIcons/profile.png"
             alt="profile"
             width={25}
             height={20}
-          />
-          <button className="px-2 hover:text-black">Profile settings</button>
+          /> */}
+          <CircleUserRound size={30} />
+          <button className="px-2 hover:text-black">Profile</button>
         </Link>
         <Link
           href={"/help"}
           className="flex hover:brightness-0"
           onClick={closeMenu}
         >
-          <Image
+          {/* <Image
             src="/menuIcons/help.png"
             alt="help"
             width={25}
             height={20}
             className="cursor-pointer"
-          />
+          /> */}
+          <CircleHelp size={30} />
           <button className="px-2 hover:text-black">Help</button>
         </Link>
         <Link
@@ -67,24 +70,26 @@ const ProfileMenu = ({ closeMenu }) => {
           className="flex hover:brightness-0"
           onClick={closeMenu}
         >
-          <Image
+          {/* <Image
             src="/menuIcons/info.png"
             alt="info"
             width={25}
             height={20}
             className="cursor-pointer"
-          />
+          /> */}
+          <Info size={30} />
           <button className="px-2 hover:text-black">About</button>
         </Link>
         <div className="flex hover:brightness-0">
-          <Image
+          {/* <Image
             onClick={handleLogout}
             src="/menuIcons/logout.png"
             alt="logout"
             width={25}
             height={20}
             className="cursor-pointer"
-          />
+          /> */}
+          <LogOut size={30} onClick={handleLogout} />
           <button className="px-2 hover:text-black" onClick={handleLogout}>
             Log out
           </button>
