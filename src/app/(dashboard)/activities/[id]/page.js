@@ -2,6 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
+import skillsCategories from "@/lib/skillsCategories";
 import { doc, getDoc } from "firebase/firestore";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -90,7 +91,7 @@ const Page = ({ params }) => {
   };
 
   return (
-    <div className="h-full space-y-4 rounded-md bg-white p-4 shadow-md">
+    <div className="h-full space-y-4 rounded-md bg-white p-4 px-6 shadow-md">
       <div className="flex justify-end">
         <button
           onClick={handleGoBack}
@@ -117,7 +118,12 @@ const Page = ({ params }) => {
         </h3>
         <div className="flex flex-wrap gap-2">
           {activity.skills?.map((skill, index) => (
-            <Badge key={index} variant="outline">
+            <Badge
+              key={index}
+              style={{
+                backgroundColor: skillsCategories[skill.category],
+              }}
+            >
               {skill.name}
             </Badge>
           ))}
