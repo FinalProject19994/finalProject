@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Core skills
 
-## Getting Started
+## Overview
 
-First, run the development server:
+Core skills is a web-based platform designed to help lecturers monitor and manage teaching progress in core skills for engineering students. The platform provides an intuitive interface to store, view, and analyze data related to courses, activities, lecturers, and skills, empowering educators to track and enhance student outcomes.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Core Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- **Dynamic Skills-Activities Graph**: Visualize relationships between skills and activities using a nodes-edges graph.
+- **User Authentication**: Secure user login with Firebase authentication.
+- **Search Functionality**: Quickly find information on courses, skills, and activities.
+- **Activity Management**: Create, update, and manage teaching activities.
+- **Questionnaire Management**: Support for storing and analyzing activity-related reflections and feedback.
+- **Course and Skill Information Display**: Access detailed views of courses, skills, and their properties.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Non-Functional Requirements
 
-## Learn More
+- **Usability**: Intuitive and user-friendly design.
+- **Performance**: Optimized to handle multiple concurrent users efficiently.
+- **Reliability**: Ensures accurate data storage and retrieval.
+- **Scalability**: Supports growth in user base and data volume.
+- **Maintainability**: Designed for easy updates and modifications.
+- **Interoperability**: Seamless integration with Firebase and other relevant tools.
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend**: Next.js, Tailwind CSS, Framer Motion, D3.js
+- **Backend**: Firebase
+- **Database**: Firebase Firestore
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Installation
 
-## Deploy on Vercel
+### Prerequisites
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Node.js (version 16 or later)
+- Firebase project set up with authentication and database rules
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Steps
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/FinalProject19994/finalProject.git
+   cd finalProject
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables:
+
+   - Create a `.env.local` file in the project root.
+   - Add Firebase configuration keys and MongoDB connection string.
+
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+5. Open your browser and navigate to `http://localhost:3000`.
+
+## Usage
+
+1. **Login**: Use your credentials to log into the system.
+2. **Navigate**: Explore the dashboard for course, activity, and skills management.
+3. **Visualize**: Use the graph view to see the relationships between skills and activities.
+4. **Manage Data**: Add or update courses, activities, and skills through intuitive forms.
+
+## Project Objectives
+
+- Provide a clear and organized platform for lecturers to manage teaching data.
+- Ensure the system is maintainable and extendable for future use.
+- Enable real-time updates and visualization for enhanced decision-making.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`feature/new-feature-name`).
+3. Commit your changes.
+4. Push the branch and create a pull request.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Acknowledgments
+
+Special thanks to our academic mentors and peers for their support and guidance throughout this project.
+
