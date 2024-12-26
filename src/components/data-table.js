@@ -106,10 +106,16 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
               <TableRow
                 key={row.id}
                 onClick={() => {
-                  setSelectedRow(row.id);
+                  if (selectedRow === row.id) {
+                    setSelectedRow(null);
+                  } else {
+                    setSelectedRow(row.id);
+                  }
                   handleRowSelect(row.original);
                 }}
-                className={index % 2 === 1 ? "bg-gray-100" : ""}
+                className={`${index % 2 === 1 ? "bg-gray-100" : ""} ${
+                  selectedRow === row.id ? "bg-primary_purple_table" : ""
+                }`}
                 style={{ cursor: "pointer" }}
               >
                 {row.getVisibleCells().map((cell) => (

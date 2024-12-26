@@ -1,11 +1,13 @@
 "use client";
 import ForceDirectedGraph from "@/components/ForceDirectedGraph";
 import Legend from "@/components/ui/Legend";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
+import { SelectedNodeIdContext } from "./SelectedNodeIdContext";
 
 const SkillsGraph = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+  const { selectedNodeId } = useContext(SelectedNodeIdContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +26,7 @@ const SkillsGraph = () => {
         nodes={graphData.nodes}
         links={graphData.links}
         page="skill"
+        selectedNodeId={selectedNodeId}
       />
     </>
   );

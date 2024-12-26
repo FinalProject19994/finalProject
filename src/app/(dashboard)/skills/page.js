@@ -1,18 +1,22 @@
 "use client";
-import DataTable from "@/components/data-table";
 import Modal from "@/components/Modal";
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { columns } from "./columns";
+import { useContext, useEffect, useState } from "react";
 import { SearchableTable } from "../../../components/SearchableTable";
+import { columns } from "./columns";
+import { SelectedNodeIdContext } from "./SelectedNodeIdContext";
+import { usePathname } from "next/navigation";
 
 const Page = () => {
-  const router = useRouter();
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
+  const pathname = usePathname();
+
+  const { selectedNodeId, setSelectedNodeId } = useContext(
+    SelectedNodeIdContext,
+  );
 
   // Fetching skills with Firestore real-time listener
   useEffect(() => {
@@ -20,7 +24,7 @@ const Page = () => {
       collection(db, "skills"),
       (snapshot) => {
         const skillsData = snapshot.docs.map((doc) => ({
-          id: doc.id.toUpperCase(),
+          id: doc.id,
           ...doc.data(),
         }));
         setSkills(skillsData);
@@ -33,6 +37,14 @@ const Page = () => {
     );
     return () => unsubscribe();
   }, []);
+
+  const handleRowSelect = (row) => {
+    if (selectedNodeId === row.id) {
+      setSelectedNodeId(null);
+      return;
+    }
+    setSelectedNodeId(row.id);
+  };
 
   return (
     <div>
@@ -49,7 +61,7 @@ const Page = () => {
             <SearchableTable
               columns={columns}
               data={skills}
-              handleRowSelect={() => {}}
+              handleRowSelect={handleRowSelect}
               page="skills"
             />
           </div>

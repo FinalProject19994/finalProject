@@ -1,8 +1,7 @@
 "use client";
 import DataTable from "@/components/data-table";
-import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function SearchableTable({ columns, data, handleRowSelect, page }) {
   const [filteredData, setFilteredData] = useState([]);

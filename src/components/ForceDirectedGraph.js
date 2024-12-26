@@ -3,9 +3,12 @@ import * as d3 from "d3";
 import { useEffect, useMemo, useRef } from "react";
 import skillsCategories from "@/lib/skillsCategories";
 
-const ForceDirectedGraph = ({ nodes, links }) => {
+const ForceDirectedGraph = ({ nodes, links, selectedNodeId }) => {
   const containerRef = useRef(null);
   const memoizedData = useMemo(() => ({ nodes, links }), [nodes, links]);
+  const nodeRef = useRef(null);
+  const linkRef = useRef(null);
+  const labelRef = useRef(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -61,6 +64,8 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .style("opacity", 1)
       .style("transition", "opacity 0.2s");
 
+    linkRef.current = link;
+
     // Create nodes
     const node = zoomGroup
       .append("g")
@@ -100,6 +105,8 @@ const ForceDirectedGraph = ({ nodes, links }) => {
           .on("end", dragEnded),
       );
 
+    nodeRef.current = node;
+
     // Create labels
     const labels = zoomGroup
       .append("g")
@@ -116,15 +123,17 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       .style("opacity", 1)
       .style("transition", "opacity 0.2s");
 
-    // Handle mouse over event
-    function handleMouseOver(event, d) {
+    labelRef.current = labels;
+
+    // Function to highlight nodes by ID
+    const highlightNodeById = (nodeId) => {
       const connectedNodeIds = new Set();
       const connectedLinks = memoizedData.links.filter((link) => {
-        if (link.source.id === d.id) {
+        if (link.source.id === nodeId) {
           connectedNodeIds.add(link.target.id);
           return true;
         }
-        if (link.target.id === d.id) {
+        if (link.target.id === nodeId) {
           connectedNodeIds.add(link.source.id);
           return true;
         }
@@ -134,7 +143,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       // Highlight connected nodes
       node
         .style("opacity", (node) =>
-          node.id === d.id || connectedNodeIds.has(node.id) ? 1 : 0.4,
+          node.id === nodeId || connectedNodeIds.has(node.id) ? 1 : 0.4,
         )
         .style("cursor", "pointer");
 
@@ -153,19 +162,65 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       // Highlight labels
       labels
         .style("opacity", (label) =>
-          label.id === d.id || connectedNodeIds.has(label.id) ? 1 : 0,
+          label.id === nodeId || connectedNodeIds.has(label.id) ? 1 : 0,
         )
         .style("font-size", "14px");
+    };
+
+    // Handle mouse over event
+    function handleMouseOver(event, d) {
+      if (!selectedNodeId) {
+        const connectedNodeIds = new Set();
+        const connectedLinks = memoizedData.links.filter((link) => {
+          if (link.source.id === d.id) {
+            connectedNodeIds.add(link.target.id);
+            return true;
+          }
+          if (link.target.id === d.id) {
+            connectedNodeIds.add(link.source.id);
+            return true;
+          }
+          return false;
+        });
+
+        // Highlight connected nodes
+        node
+          .style("opacity", (node) =>
+            node.id === d.id || connectedNodeIds.has(node.id) ? 1 : 0.4,
+          )
+          .style("cursor", "pointer");
+
+        // Highlight connected links
+        link
+          .style("opacity", (link) => (connectedLinks.includes(link) ? 1 : 0.4))
+          .style("stroke", (link) =>
+            connectedLinks.includes(link)
+              ? skillsCategories[link.target.category]
+              : "#aaa",
+          )
+          .style("stroke-width", (link) =>
+            connectedLinks.includes(link) ? 2 : 0.75,
+          );
+
+        // Highlight labels
+        labels
+          .style("opacity", (label) =>
+            label.id === d.id || connectedNodeIds.has(label.id) ? 1 : 0,
+          )
+          .style("font-size", "14px");
+      }
     }
 
     // Handle mouse out event
-    function handleMouseOut() {
-      node.style("opacity", 1);
-      link
-        .style("opacity", 1)
-        .style("stroke", "#aaa") // Reset to default color
-        .style("stroke-width", 0.75); // Reset to default thickness
-      labels.style("opacity", 1).style("font-size", "12px");
+    function handleMouseOut(event) {
+      if (!selectedNodeId) {
+        node.style("opacity", 1).style("cursor", "default");
+        link
+          .style("opacity", 1)
+          .style("stroke", "#aaa") // Reset to default color
+          .style("stroke-width", 0.75); // Reset to default thickness
+        labels.style("opacity", 1).style("font-size", "10px");
+      }
     }
 
     // Update positions on each tick
@@ -203,6 +258,9 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       d.fy = null;
       d3.select(event.target).interrupt().transition().duration(0);
     }
+    if (selectedNodeId) {
+      highlightNodeById(selectedNodeId);
+    }
 
     // Observe container size changes
     const resizeObserver = new ResizeObserver(() => {
@@ -221,7 +279,7 @@ const ForceDirectedGraph = ({ nodes, links }) => {
       simulation.stop();
       svg.remove();
     };
-  }, [memoizedData]);
+  }, [memoizedData, selectedNodeId]);
 
   return (
     <div
