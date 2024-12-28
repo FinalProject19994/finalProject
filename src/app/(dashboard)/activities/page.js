@@ -5,11 +5,15 @@ import { SearchableTable } from "@/components/SearchableTable";
 import { db } from "@/lib/firebase";
 import { collection, getDoc, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { SelectedActivityIdContext } from "./SelectedActivityIdContext";
 
 const Page = () => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { selectedActivityId, setSelectedActivityId } = useContext(
+    SelectedActivityIdContext,
+  );
 
   useEffect(() => {
     const fetchSkillsAndActivities = async () => {
@@ -75,6 +79,17 @@ const Page = () => {
   }, []);
 
   const router = useRouter();
+
+  const handleRowSelect = (activity) => {
+    if (selectedActivityId === activity.id) {
+      setSelectedActivityId(null);
+      router.push(`/activities/${activity.id}`);
+      return;
+    }
+    setSelectedActivityId(activity.id);
+    router.push(`/activities/${activity.id}`);
+  };
+
   return (
     <div className="flex h-[98vh] w-full flex-col rounded-md bg-white px-2 shadow-md">
       <div className="flex w-full justify-between gap-4 p-2">
@@ -85,9 +100,7 @@ const Page = () => {
         <SearchableTable
           data={activities}
           columns={columns}
-          handleRowSelect={(activity) => {
-            router.push(`/activities/${activity.id}`);
-          }}
+          handleRowSelect={handleRowSelect}
           page="activities"
         />
       </div>

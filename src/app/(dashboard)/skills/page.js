@@ -6,7 +6,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { SearchableTable } from "../../../components/SearchableTable";
 import { columns } from "./columns";
-import { SelectedNodeIdContext } from "./SelectedNodeIdContext";
+import { SelectedNodeIdContext } from "../../../context/SkillsContext";
 import { usePathname } from "next/navigation";
 
 const Page = () => {

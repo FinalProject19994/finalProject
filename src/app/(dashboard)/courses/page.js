@@ -5,10 +5,10 @@ import Loader from "@/components/ui/Loader";
 import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
 import { db } from "@/lib/firebase";
 import { collection, getDoc, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { columns } from "./columns";
+import { SelectedCourseIdContext } from "../../../context/CoursesContext";
 
-// TODO: change the lecturer ID to lecturer name
 const Page = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
 
@@ -25,6 +25,9 @@ const Page = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { selectedCourseId, setSelectedCourseId } = useContext(
+    SelectedCourseIdContext,
+  );
   // Fetching the courses
   useEffect(() => {
     const coursesCollection = collection(db, "courses");
@@ -73,6 +76,14 @@ const Page = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleRowSelect = (course) => {
+    if (selectedCourseId === course.id) {
+      setSelectedCourseId(null);
+      return;
+    }
+    setSelectedCourseId(course.id);
+  };
+
   return (
     <div className="flex h-[98vh] w-full flex-col rounded-md bg-white px-2 shadow-md">
       <div className="flex w-full justify-between gap-4 p-2">
@@ -85,7 +96,7 @@ const Page = () => {
         <SearchableTable
           data={courses}
           columns={columns}
-          handleRowSelect={() => {}}
+          handleRowSelect={handleRowSelect}
           page="activities"
         />
       )}

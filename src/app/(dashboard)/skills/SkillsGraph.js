@@ -3,7 +3,7 @@ import ForceDirectedGraph from "@/components/ForceDirectedGraph";
 import Legend from "@/components/ui/Legend";
 import { useContext, useEffect, useState } from "react";
 import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
-import { SelectedNodeIdContext } from "./SelectedNodeIdContext";
+import { SelectedNodeIdContext } from "../../../context/SkillsContext";
 
 const SkillsGraph = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });

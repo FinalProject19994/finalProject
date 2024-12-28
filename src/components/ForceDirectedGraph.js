@@ -2,13 +2,15 @@
 import * as d3 from "d3";
 import { useEffect, useMemo, useRef } from "react";
 import skillsCategories from "@/lib/skillsCategories";
+import { useRouter } from "next/navigation";
 
-const ForceDirectedGraph = ({ nodes, links, selectedNodeId }) => {
+const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
   const containerRef = useRef(null);
   const memoizedData = useMemo(() => ({ nodes, links }), [nodes, links]);
   const nodeRef = useRef(null);
   const linkRef = useRef(null);
   const labelRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -97,6 +99,11 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId }) => {
       .style("transition", "opacity 0.2s")
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
+      .on("click", (event, d) => {
+        if (page === "activity") {
+          router.push(`/activities/${d.id}`);
+        }
+      })
       .call(
         d3
           .drag()
@@ -279,7 +286,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId }) => {
       simulation.stop();
       svg.remove();
     };
-  }, [memoizedData, selectedNodeId]);
+  }, [memoizedData, selectedNodeId, page]);
 
   return (
     <div

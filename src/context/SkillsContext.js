@@ -1,4 +1,3 @@
-// skills/SelectedNodeIdContext.js
 import { createContext, useState } from "react";
 
 export const SelectedNodeIdContext = createContext();
