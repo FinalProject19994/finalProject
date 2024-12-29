@@ -34,8 +34,9 @@ const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f5f5f5;
 
   .wheel-and-hamster {
     --dur: 1s;
