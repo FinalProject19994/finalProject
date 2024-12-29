@@ -1,8 +1,33 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import Menu from "../../components/Menu";
-
+import Loader from "@/components/ui/Loader";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 const DashboardLayout = ({ children }) => {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
+  if (!user) {
+    router.push("/");
+  }
+
   return (
     <div className="flex h-screen">
       {/* LEFT - MENU */}
