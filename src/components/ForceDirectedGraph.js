@@ -1,8 +1,8 @@
 "use client";
-import * as d3 from "d3";
-import { useEffect, useMemo, useRef } from "react";
 import skillsCategories from "@/lib/skillsCategories";
+import * as d3 from "d3";
 import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef } from "react";
 
 const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
   const containerRef = useRef(null);
@@ -32,7 +32,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
     // Define zoom behavior
     const zoom = d3
       .zoom()
-      .scaleExtent([0.5, 6])
+      .scaleExtent([0.1, 10])
       .on("zoom", (event) => {
         zoomGroup.attr("transform", event.transform);
       });
@@ -47,9 +47,9 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
         d3
           .forceLink(memoizedData.links)
           .id((d) => d.id)
-          .distance(50),
+          .distance(100),
       )
-      .force("charge", d3.forceManyBody().strength(-200))
+      .force("charge", d3.forceManyBody().strength(-150))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .on("tick", ticked);
 
@@ -99,7 +99,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       .style("transition", "opacity 0.2s")
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
-      .on("click", (event, d) => {
+      .on("click", (_, d) => {
         if (page === "activity") {
           router.push(`/activities/${d.id}`);
         }
@@ -219,7 +219,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
     }
 
     // Handle mouse out event
-    function handleMouseOut(event) {
+    function handleMouseOut(_) {
       if (!selectedNodeId) {
         node.style("opacity", 1).style("cursor", "default");
         link
@@ -286,7 +286,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       simulation.stop();
       svg.remove();
     };
-  }, [memoizedData, selectedNodeId, page]);
+  }, [memoizedData, selectedNodeId, page, router]);
 
   return (
     <div
