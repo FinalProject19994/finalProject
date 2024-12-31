@@ -73,7 +73,7 @@ export default function MultipleSelector({ options, onSelect, selection }) {
                   {option.label}
                   <button
                     type="button"
-                    className="ml-1 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-primary-foreground hover:bg-primary_purple_table hover:text-primary focus:bg-primary_purple focus:text-primary focus:outline-none"
+                    className="ml-1 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-primary-foreground hover:bg-primary_purple_table_light hover:text-primary focus:bg-primary_purple focus:text-primary focus:outline-none"
                     onClick={(e) => removeOption(option, e)}
                     aria-label={`Remove ${option.label}`}
                   >
@@ -99,7 +99,7 @@ export default function MultipleSelector({ options, onSelect, selection }) {
                 <input
                   type="text"
                   className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-3 text-sm leading-5 text-gray-900 focus:outline-none"
-                  placeholder="Search options..."
+                  placeholder={`Search ${selection}s...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   ref={searchInputRef}
@@ -107,7 +107,7 @@ export default function MultipleSelector({ options, onSelect, selection }) {
               </div>
             </div>
             <ul
-              className="max-h-48 overflow-auto py-1 text-base"
+              className="max-h-48 overflow-auto py-2 text-base"
               tabIndex={-1}
               role="listbox"
               aria-labelledby="listbox-label"
