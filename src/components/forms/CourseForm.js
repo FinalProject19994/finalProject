@@ -33,19 +33,9 @@ const schema = z.object({
     }),
 });
 
-const weekDays = [
-  { id: "1", label: "Sunday" },
-  { id: "2", label: "Monday" },
-  { id: "3", label: "Tuesday" },
-  { id: "4", label: "Wednesday" },
-  { id: "5", label: "Thursday" },
-  { id: "6", label: "Friday" },
-];
-
 const CourseForm = ({ type, data, closeModal }) => {
   const [departments, setDepartments] = useState([]);
   const [lecturers, setLecturers] = useState([]);
-  const [selectedWeekdays, setSelectedWeekdays] = useState([]);
 
   const router = useRouter();
   const {
@@ -98,6 +88,7 @@ const CourseForm = ({ type, data, closeModal }) => {
           doc(db, "users", lecturerId),
         ),
         semester: formData.semester,
+        year: new Date().getFullYear(),
       });
       closeModal();
       router.refresh();
@@ -121,10 +112,10 @@ const CourseForm = ({ type, data, closeModal }) => {
         <label className="text-sm text-gray-400">Department</label>
         <MultipleSelector
           options={departments}
-          selection="department"
+          selection="departments"
           onSelect={(selected) => {
             setValue(
-              "department",
+              "departments",
               selected.map((department) => department.value),
             );
           }}
@@ -181,20 +172,6 @@ const CourseForm = ({ type, data, closeModal }) => {
             {errors.semester.message.toString()}
           </p>
         )}
-      </div>
-
-      <div className="text-sm">
-        <label className="text-sm text-gray-400">Date Range</label>
-      </div>
-
-      <div className="w-full text-sm">
-        <label className="text-sm text-gray-400">Weekdays</label>
-        {/* <MultipleSelectionComboBox
-          options={weekDays}
-          onSelect={(selected) => {
-            setSelectedWeekdays(selected.map((day) => day.id));
-          }}
-        /> */}
       </div>
 
       <button className="w-1/4 self-center rounded-md bg-primary_purple p-2 text-white">
