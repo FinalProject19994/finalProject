@@ -7,6 +7,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
+import { SearchableTable } from "@/components/SearchableTable";
 
 const questionnaires = [
   {
@@ -208,19 +209,13 @@ const Questionnaires = () => {
       {loading ? (
         <Loader />
       ) : (
-        // <SearchableTable
-        //   data={surveys}
-        //   columns={columns}
-        //   handleRowSelect={() => {}}
-        //   page="surveys"
-        // />
-        <DataTable
+        <SearchableTable
           data={questionnaires}
-          // data={surveys}
           columns={columns}
           handleRowSelect={(survey) => {
             router.push(`/surveys/${survey.id}`);
           }}
+          page="surveys"
         />
       )}
     </div>

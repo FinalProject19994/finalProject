@@ -36,7 +36,7 @@ const TeacherListPage = () => {
             return {
               ...lecturer,
               id: doc.id,
-              departments: departments.join(", "), // Join the titles into a single string
+              departments: departments.join(", "),
             };
           }),
         );
@@ -62,6 +62,7 @@ const TeacherListPage = () => {
           columns={columns}
           data={lecturers}
           handleRowSelect={() => {}}
+          page="lecturers"
         />
       )}
     </div>

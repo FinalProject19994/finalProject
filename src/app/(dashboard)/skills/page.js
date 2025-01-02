@@ -2,12 +2,11 @@
 import Modal from "@/components/Modal";
 import Loader from "@/components/ui/Loader";
 import { auth, db } from "@/lib/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
-import { SearchableTable } from "../../../components/SearchableTable";
-import { SelectedNodeIdContext } from "../../../context/SkillsContext";
+import { SearchableTable } from "@/components/SearchableTable";
+import { SelectedNodeIdContext } from "@/context/SkillsContext";
 import { columns } from "./columns";
-import { doc, getDoc } from "firebase/firestore";
 
 const Page = () => {
   const [skills, setSkills] = useState([]);
@@ -28,7 +27,7 @@ const Page = () => {
           const docSnap = await getDoc(userDocRef);
 
           if (docSnap.exists()) {
-            setRole(docSnap.data()?.role);
+            setRole(docSnap.data().role.toLowerCase());
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -70,7 +69,7 @@ const Page = () => {
         <div className="flex h-[98vh] w-full flex-col rounded-md bg-white px-2 shadow-md">
           <div className="flex w-full justify-between gap-4 p-2">
             <h1 className="text-3xl font-bold text-gray-600">Skills</h1>
-            {(role === "Admin" || role === "admin") && (
+            {role === "admin" && (
               <Modal table="skill" type="create" data={[]} />
             )}
           </div>
