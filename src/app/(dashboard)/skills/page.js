@@ -1,18 +1,18 @@
 "use client";
 import Modal from "@/components/Modal";
 import Loader from "@/components/ui/Loader";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { SearchableTable } from "../../../components/SearchableTable";
-import { columns } from "./columns";
 import { SelectedNodeIdContext } from "../../../context/SkillsContext";
-import { usePathname } from "next/navigation";
+import { columns } from "./columns";
+import { doc, getDoc } from "firebase/firestore";
 
 const Page = () => {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
-  const pathname = usePathname();
+  const [role, setRole] = useState();
 
   const { selectedNodeId, setSelectedNodeId } = useContext(
     SelectedNodeIdContext,
@@ -20,6 +20,23 @@ const Page = () => {
 
   // Fetching skills with Firestore real-time listener
   useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(userDocRef);
+
+          if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data().role);
+            setRole(docSnap.data()?.role);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
     const unsubscribe = onSnapshot(
       collection(db, "skills"),
       (snapshot) => {
@@ -35,6 +52,8 @@ const Page = () => {
         setLoading(false);
       },
     );
+
+    fetchUserData();
     return () => unsubscribe();
   }, []);
 
@@ -52,10 +71,9 @@ const Page = () => {
         <div className="flex h-[98vh] w-full flex-col rounded-md bg-white px-2 shadow-md">
           <div className="flex w-full justify-between gap-4 p-2">
             <h1 className="text-3xl font-bold text-gray-600">Skills</h1>
-            {/* {user.role === "admin" && (
+            {(role === "Admin" || role === "admin") && (
               <Modal table="skill" type="create" data={[]} />
-              )} */}
-            <Modal table="skill" type="create" data={[]} />
+            )}
           </div>
           <div className="overflow-y-scroll pr-1">
             <SearchableTable
