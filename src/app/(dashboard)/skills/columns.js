@@ -1,5 +1,4 @@
 "use client";
-import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,6 +6,36 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+const ActionCell = ({ row }) => {
+  const router = useRouter();
+  const skillName = row.original.name;
+
+  const handleNavigation = (path) => {
+    const encodedSkill = encodeURIComponent(skillName);
+    router.push(`${path}?search=${encodedSkill}`);
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => handleNavigation("/activities")}>
+          View Activities
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleNavigation("/courses")}>
+          View Courses
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 export const columns = [
   {
@@ -59,18 +88,6 @@ export const columns = [
   },
   {
     id: "actions",
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem>View Activities</DropdownMenuItem>
-          <DropdownMenuItem>View Courses</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    cell: ({ row }) => <ActionCell row={row} />,
   },
 ];

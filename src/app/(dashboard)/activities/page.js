@@ -96,10 +96,10 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-gray-600">Activities</h1>
         <Modal table="activity" type="create" data={[]} />
       </div>
-      <div className="overflow-auto">
+      <div className="overflow-y-scroll pr-1">
         <SearchableTable
-          data={activities}
           columns={columns}
+          data={activities}
           handleRowSelect={handleRowSelect}
           page="activities"
         />
