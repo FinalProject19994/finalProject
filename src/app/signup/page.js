@@ -58,10 +58,6 @@ const Page = () => {
       return;
     }
 
-    console.log("Email:", emailRef.current.value);
-    console.log("Password:", passwordRef.current.value);
-    console.log("Confirm Password:", confirmPasswordRef.current.value);
-
     try {
       // Create the user with email and password
       const userCredential = await createUserWithEmailAndPassword(

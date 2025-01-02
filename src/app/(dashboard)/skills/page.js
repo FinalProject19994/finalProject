@@ -28,7 +28,6 @@ const Page = () => {
           const docSnap = await getDoc(userDocRef);
 
           if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data().role);
             setRole(docSnap.data()?.role);
           }
         } catch (error) {
