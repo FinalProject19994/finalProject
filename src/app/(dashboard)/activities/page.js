@@ -1,5 +1,5 @@
 "use client";
-import { Columns } from "./Columns";
+import { Columns } from "./TempColumns";
 import Modal from "@/components/Modal";
 import { SearchableTable } from "@/components/SearchableTable";
 import { auth, db } from "@/lib/firebase";
