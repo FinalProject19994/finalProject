@@ -15,7 +15,7 @@ const DashboardLayout = ({ children }) => {
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user && user.emailVerified) {
         setUser(user);
       } else {
         router.push("/");

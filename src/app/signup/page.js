@@ -58,6 +58,11 @@ const Page = () => {
       return;
     }
 
+    if (!emailRef.current.value.endsWith("@braude.ac.il")) {
+      console.error("Email must be from Braude domain");
+      return;
+    }
+
     try {
       // Create the user with email and password
       const userCredential = await createUserWithEmailAndPassword(
@@ -67,6 +72,9 @@ const Page = () => {
       );
 
       const user = userCredential.user;
+
+      // Send email verification to the lecturer
+      await user.sendEmailVerification(user);
 
       // Save attributes in Firestore
       await setDoc(doc(db, "users", user.uid), {
@@ -80,7 +88,8 @@ const Page = () => {
         courses: selectedCourses.map((course) => doc(db, "courses", course.id)),
       });
 
-      router.push("/homepage");
+      alert("Please verify your email address to continue");
+      router.push("/");
     } catch (error) {
       console.error("Error creating user:", error.message);
     }
