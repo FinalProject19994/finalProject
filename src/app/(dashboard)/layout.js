@@ -15,8 +15,11 @@ const DashboardLayout = ({ children }) => {
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.emailVerified) {
+      // Revert when in production
+      const isDevelopment = process.env.NODE_ENV === "development";
+      if (user && (user.emailVerified || isDevelopment)) {
         setUser(user);
+        setLoading(false);
       } else {
         router.push("/");
       }
@@ -24,7 +27,7 @@ const DashboardLayout = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, [router, user]);
 
   if (loading || !user) {
     return <Loader />;

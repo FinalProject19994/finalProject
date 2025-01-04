@@ -1,7 +1,10 @@
 "use client";
 import MultipleSelector from "@/components/ui/MultipleSelector";
 import { auth, db } from "@/lib/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -58,7 +61,8 @@ const Page = () => {
       return;
     }
 
-    if (!emailRef.current.value.endsWith("@braude.ac.il")) {
+    if (!emailRef.current.value.endsWith("@gmail.com")) {
+      // if (!emailRef.current.value.endsWith("@braude.ac.il")) {
       console.error("Email must be from Braude domain");
       return;
     }
@@ -74,7 +78,7 @@ const Page = () => {
       const user = userCredential.user;
 
       // Send email verification to the lecturer
-      await user.sendEmailVerification(user);
+      await sendEmailVerification(user);
 
       // Save attributes in Firestore
       await setDoc(doc(db, "users", user.uid), {
