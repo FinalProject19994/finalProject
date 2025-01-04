@@ -1,7 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -19,7 +16,6 @@ import {
 import {
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -105,13 +101,18 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
             table.getRowModel().rows.map((row, index) => (
               <TableRow
                 key={row.id}
-                onClick={() => {
-                  if (selectedRow === row.id) {
-                    setSelectedRow(null);
-                  } else {
-                    setSelectedRow(row.id);
+                onClick={(event) => {
+                  // Check if the click originated from the dropdown menu
+                  if (
+                    !event.target.closest("[data-radix-popper-content-wrapper]")
+                  ) {
+                    if (selectedRow === row.id) {
+                      setSelectedRow(null);
+                    } else {
+                      setSelectedRow(row.id);
+                    }
+                    handleRowSelect(row.original);
                   }
-                  handleRowSelect(row.original);
                 }}
                 className={`${index % 2 === 1 ? "bg-gray-100" : ""} ${
                   selectedRow === row.id ? "bg-primary_purple_table" : ""
