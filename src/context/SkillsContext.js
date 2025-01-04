@@ -1,15 +1,16 @@
+"use client";
 import { createContext, useState } from "react";
 
-export const SelectedNodeIdContext = createContext();
+export const SelectedSkillIdContext = createContext();
 
 export const SelectedNodeIdProvider = ({ children }) => {
-  const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const [selectedSkillId, setSelectedSkillId] = useState(null);
 
   return (
-    <SelectedNodeIdContext.Provider
-      value={{ selectedNodeId, setSelectedNodeId }}
+    <SelectedSkillIdContext.Provider
+      value={{ selectedSkillId, setSelectedSkillId }}
     >
       {children}
-    </SelectedNodeIdContext.Provider>
+    </SelectedSkillIdContext.Provider>
   );
 };

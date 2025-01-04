@@ -1,7 +1,6 @@
-// activities/layout.js
 "use client";
-import ActivitesGraph from "./ActivitiesGraph";
-import { SelectedActivityIdProvider } from "./SelectedActivityIdContext";
+import ActivitiesGraph from "./ActivitiesGraph";
+import { SelectedActivityIdProvider } from "@/context/ActivitiesContext";
 
 const Page = ({ children }) => {
   return (
@@ -12,7 +11,7 @@ const Page = ({ children }) => {
 
         {/* RIGHT */}
         <div className="flex h-full rounded-md bg-white shadow-md md:w-1/2">
-          <ActivitesGraph />
+          <ActivitiesGraph />
         </div>
       </div>
     </SelectedActivityIdProvider>

@@ -1,14 +1,15 @@
 "use client";
-import { columns } from "@/app/(dashboard)/activities/columns";
+import { Columns } from "@/app/(dashboard)/activities/Columns";
 import Modal from "@/components/Modal";
 import { SearchableTable } from "@/components/SearchableTable";
-import { db } from "@/lib/firebase";
-import { collection, getDoc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { SelectedActivityIdContext } from "./SelectedActivityIdContext";
+import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
 
 const Page = () => {
+  const [userData, setUserData] = useState(null);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const { selectedActivityId, setSelectedActivityId } = useContext(
@@ -16,6 +17,22 @@ const Page = () => {
   );
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(userDocRef);
+
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
     const fetchSkillsAndActivities = async () => {
       const unsubscribeSkills = onSnapshot(
         collection(db, "skills"),
@@ -63,6 +80,7 @@ const Page = () => {
             }),
           );
 
+          fetchUserData();
           setActivities(activitiesData);
           setLoading(false);
         },
@@ -83,11 +101,9 @@ const Page = () => {
   const handleRowSelect = (activity) => {
     if (selectedActivityId === activity.id) {
       setSelectedActivityId(null);
-      router.push(`/activities/${activity.id}`);
       return;
     }
     setSelectedActivityId(activity.id);
-    router.push(`/activities/${activity.id}`);
   };
 
   return (
@@ -98,7 +114,7 @@ const Page = () => {
       </div>
       <div className="overflow-y-scroll pr-1">
         <SearchableTable
-          columns={columns}
+          columns={Columns()}
           data={activities}
           handleRowSelect={handleRowSelect}
           page="activities"

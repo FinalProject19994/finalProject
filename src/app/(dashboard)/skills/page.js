@@ -1,11 +1,11 @@
 "use client";
 import Modal from "@/components/Modal";
+import { SearchableTable } from "@/components/SearchableTable";
 import Loader from "@/components/ui/Loader";
+import { SelectedSkillIdContext } from "@/context/SkillsContext";
 import { auth, db } from "@/lib/firebase";
 import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
-import { SearchableTable } from "@/components/SearchableTable";
-import { SelectedNodeIdContext } from "@/context/SkillsContext";
 import { columns } from "./columns";
 
 const Page = () => {
@@ -13,8 +13,8 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState();
 
-  const { selectedNodeId, setSelectedNodeId } = useContext(
-    SelectedNodeIdContext,
+  const { selectedSkillId, setSelectedSkillId } = useContext(
+    SelectedSkillIdContext,
   );
 
   // Fetching skills with Firestore real-time listener
@@ -56,11 +56,11 @@ const Page = () => {
   }, []);
 
   const handleRowSelect = (row) => {
-    if (selectedNodeId === row.id) {
-      setSelectedNodeId(null);
+    if (selectedSkillId === row.id) {
+      setSelectedSkillId(null);
       return;
     }
-    setSelectedNodeId(row.id);
+    setSelectedSkillId(row.id);
   };
 
   return (

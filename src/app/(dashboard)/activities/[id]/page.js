@@ -122,7 +122,9 @@ const Page = ({ params }) => {
               key={index}
               style={{
                 backgroundColor: skillsCategories[skill.category],
+                cursor: "pointer",
               }}
+              onClick={() => router.push(`/skills/${skill.id}`)}
             >
               {skill.name}
             </Badge>

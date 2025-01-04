@@ -1,4 +1,3 @@
-// courses/SelectedCourseIdContext.js
 "use client";
 import { createContext, useState } from "react";
 

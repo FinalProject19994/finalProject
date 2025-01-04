@@ -1,4 +1,3 @@
-// courses/layout.js
 "use client";
 import CoursesGraph from "./CoursesGraph";
 import { SelectedCourseIdProvider } from "../../../context/CoursesContext";
