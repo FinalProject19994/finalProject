@@ -56,7 +56,7 @@ const EventCalendar = () => {
   return (
     <div className="mx-4 flex h-full flex-col">
       {/* Activities list taking remaining space and scrollable if needed */}
-      <div className="flex h-[calc(100vh-27rem)] flex-grow flex-col overflow-hidden rounded-md bg-white p-4 shadow-md">
+      <div className="flex h-[calc(100vh-27rem)] flex-grow flex-col overflow-hidden rounded-md bg-white p-4 shadow-md dark:bg-gray-300">
         {/* Activities Heading */}
         <div className="sticky top-0 z-10 bg-white">
           <div className="flex items-center justify-between">

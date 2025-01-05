@@ -112,8 +112,6 @@ const SunburstChart = () => {
       .style("cursor", "pointer")
       .on("click", clicked);
 
-    // TODO: Create a line break in the label to fit it inside the circle
-
     const label = svg
       .append("g")
       .attr("pointer-events", "none")

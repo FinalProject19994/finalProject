@@ -24,12 +24,12 @@ const HomePage = () => {
       {/* LEFT */}
       <div className="flex w-full flex-col gap-2">
         {/* LEFT - UP */}
-        <div className="flex h-2/3 rounded-md bg-white shadow-md">
+        <div className="flex h-2/3 rounded-md bg-white shadow-md dark:bg-gray-300">
           <Legend header="Overview" />
           <ForceDirectedGraph nodes={graphData.nodes} links={graphData.links} />
         </div>
         {/* LEFT - DOWN */}
-        <div className="h-1/3 w-full rounded-md bg-white shadow-md">
+        <div className="h-1/3 w-full rounded-md bg-white shadow-md dark:bg-gray-300">
           <Chart />
         </div>
       </div>

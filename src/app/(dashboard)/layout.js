@@ -50,7 +50,7 @@ const DashboardLayout = ({ children }) => {
       </div>
 
       {/* RIGHT - MAIN SECTION */}
-      <div className="w-[86%] bg-[#efeff0] md:w-[92%] lg:w-[84%] xl:w-[90%]">
+      <div className="w-[86%] bg-[#efeff0] dark:bg-gray-600 md:w-[92%] lg:w-[84%] xl:w-[90%]">
         {children}
       </div>
     </div>

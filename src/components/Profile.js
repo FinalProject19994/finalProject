@@ -51,9 +51,9 @@ const Profile = () => {
         alt="profile picture"
         className="cursor-pointer rounded-full hover:brightness-90"
       />
-      <div className="flex flex-col text-gray-500">
+      <div className="flex flex-col text-gray-500 dark:text-gray-300">
         {/* Display the user's name */}
-        <span className="hidden text-black lg:block">{userData?.name}</span>
+        <span className="hidden lg:block">{userData?.name}</span>
         <span className="hidden text-start text-xs lg:block">
           {userData?.role}
         </span>

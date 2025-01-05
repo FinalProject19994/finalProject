@@ -1,9 +1,9 @@
-import Image from "next/image";
+import { getAuth, signOut } from "firebase/auth";
+import { CircleHelp, CircleUserRound, Info, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { getAuth, signOut } from "firebase/auth";
-import { CircleHelp, CircleUserRound, Info, LogOut } from "lucide-react";
+import ThemeToggle from "./theme/ThemeToggle";
 
 const ProfileMenu = ({ closeMenu }) => {
   const router = useRouter();
@@ -34,8 +34,9 @@ const ProfileMenu = ({ closeMenu }) => {
   }, [closeMenu]);
 
   return (
-    <div className="profile-menu absolute bottom-16 z-50 mx-2 my-4 text-gray-600">
+    <div className="profile-menu absolute bottom-16 z-50 mx-2 my-4 text-gray-600 dark:text-gray-300">
       <div className="flex flex-col gap-4">
+        <ThemeToggle />
         <Link
           href={"/settings"}
           className="flex hover:brightness-0"

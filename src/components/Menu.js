@@ -40,11 +40,17 @@ const Menu = () => {
                   <Link
                     href={item.href}
                     className={
-                      `group relative flex justify-center gap-4 py-3 pl-1 text-gray-500 transition hover:brightness-0 lg:justify-start lg:pl-3` +
+                      `group relative flex justify-center gap-4 py-3 pl-1 text-gray-500 transition hover:brightness-0 dark:text-gray-300 lg:justify-start lg:pl-3` +
                       (isActive ? " brightness-0" : "")
                     }
                   >
-                    <Image src={item.icon} alt="icon" width={25} height={25} />
+                    <Image
+                      src={item.icon}
+                      alt="icon"
+                      width={25}
+                      height={25}
+                      className="dark:brightness-200"
+                    />
                     <span className="hidden lg:block">{item.label}</span>
                   </Link>
                 </TooltipTrigger>

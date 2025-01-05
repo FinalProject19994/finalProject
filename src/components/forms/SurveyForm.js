@@ -185,7 +185,6 @@ export default function SurveyForm({ closeModal }) {
   };
 
   // const handleSubmit = () => {
-  //   // TODO: Create an ID from course code
   //   setDoc(doc(db, "surveys", Date.now().toString()), {
   //     title,
   //     description,
@@ -216,7 +215,6 @@ export default function SurveyForm({ closeModal }) {
                 className="w-full rounded-md border p-2 text-sm"
               />
             </div>
-            {/* TODO: Add onSelect for activities and courses */}
             <div className="flex flex-col space-y-1">
               <Label htmlFor="activity">Activity</Label>
               <ComboBox
