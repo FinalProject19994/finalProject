@@ -101,9 +101,11 @@ const Page = () => {
   const handleRowSelect = (activity) => {
     if (selectedActivityId === activity.id) {
       setSelectedActivityId(null);
+      router.push(`/activities/${activity.id}`);
       return;
     }
     setSelectedActivityId(activity.id);
+    router.push(`/activities/${activity.id}`);
   };
 
   return (

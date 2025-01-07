@@ -93,7 +93,7 @@ export const Columns = () => {
     {
       accessorKey: "Actions",
       id: "actions",
-      cell: ({ row }) => {
+      cell: () => {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -102,11 +102,6 @@ export const Columns = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => router.push(`/activities/${row.original.id}`)}
-              >
-                View Activity
-              </DropdownMenuItem>
               <DropdownMenuItem>Edit Information</DropdownMenuItem>
               {role === "admin" && (
                 <DropdownMenuItem>Delete activity</DropdownMenuItem>

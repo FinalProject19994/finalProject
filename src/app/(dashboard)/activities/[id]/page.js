@@ -1,15 +1,18 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import Loader from "@/components/ui/Loader";
+import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
 import { db } from "@/lib/firebase";
 import skillsCategories from "@/lib/skillsCategories";
 import { doc, getDoc } from "firebase/firestore";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 const Page = ({ params }) => {
   const router = useRouter();
+  const { selectedActivityId, setSelectedActivityId } = useContext(
+    SelectedActivityIdContext,
+  );
 
   const [activity, setActivity] = useState({});
   const [loading, setLoading] = useState(true);
@@ -87,6 +90,7 @@ const Page = ({ params }) => {
   }
 
   const handleGoBack = () => {
+    setSelectedActivityId(null);
     router.push("/activities");
   };
 
