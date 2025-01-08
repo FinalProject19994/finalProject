@@ -1,10 +1,10 @@
 const Legend = ({ header }) => {
   return (
     <div className="absolute px-4">
-      <p className="relative top-2 mb-2 bg-white text-3xl font-bold text-gray-600">
+      <p className="relative top-2 mb-2 bg-white text-3xl font-bold text-gray-600 dark:bg-gray-500 dark:text-gray-300">
         {header}
       </p>
-      <div className="my-4 bg-white text-xs">
+      <div className="my-4 bg-white text-xs dark:bg-gray-500 dark:text-gray-300">
         <h6 className="underline">Node types</h6>
         <div className="flex items-center gap-2">
           <svg
@@ -36,7 +36,7 @@ const Legend = ({ header }) => {
         </div>
       </div>
 
-      <div className="bg-white text-xs">
+      <div className="bg-white text-xs dark:bg-gray-500 dark:text-gray-300">
         <h6 className="underline">Skill categories</h6>
         <div className="flex items-center gap-2">
           <div className="h-2 w-2 bg-primary_purple_table"></div>

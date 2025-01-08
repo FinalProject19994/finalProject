@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
 import { db } from "@/lib/firebase";
-import skillsCategories from "@/lib/skillsCategories";
+import { skillsCategories } from "@/lib/skillsCategories";
 import { doc, getDoc } from "firebase/firestore";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
