@@ -6,4 +6,12 @@ const skillsCategories = {
   default: "#AAAAAA",
 };
 
-export default skillsCategories;
+const darkSkillsCategories = {
+  Mindset: "#0B9912",
+  "Emotional quotient": "#B86B00",
+  "Professional self": "#7700CC",
+  "Thinking development": "#119DD0",
+  default: "#AAAAAA",
+};
+
+export { skillsCategories, darkSkillsCategories };

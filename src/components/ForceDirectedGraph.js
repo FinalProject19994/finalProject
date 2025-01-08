@@ -1,10 +1,12 @@
 "use client";
-import skillsCategories from "@/lib/skillsCategories";
+import { skillsCategories, darkSkillsCategories } from "@/lib/skillsCategories";
 import * as d3 from "d3";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
+import { useTheme } from "next-themes";
 
 const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
+  const { theme } = useTheme();
   const containerRef = useRef(null);
   const memoizedData = useMemo(() => ({ nodes, links }), [nodes, links]);
   const nodeRef = useRef(null);
@@ -49,7 +51,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
           .id((d) => d.id)
           .distance(100),
       )
-      .force("charge", d3.forceManyBody().strength(-150))
+      .force("charge", d3.forceManyBody().strength(-300))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .on("tick", ticked);
 
@@ -88,22 +90,19 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
             return null;
         }
       })
-      .attr("fill", (d) =>
-        d.type === "skill"
-          ? skillsCategories[d.category]
+      .attr("fill", (d) => {
+        const categories =
+          theme === "dark" ? darkSkillsCategories : skillsCategories;
+        return d.type === "skill"
+          ? categories[d.category]
           : d.type === "course"
             ? "black"
-            : "#666666",
-      )
+            : "#666666";
+      })
       .style("opacity", 1)
       .style("transition", "opacity 0.2s")
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
-      .on("click", (_, d) => {
-        if (page === "activity") {
-          router.push(`/activities/${d.id}`);
-        }
-      })
       .call(
         d3
           .drag()
@@ -126,7 +125,15 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       .attr("x", 12)
       .attr("y", 4)
       .style("font-size", "10px")
-      .style("fill", (d) => skillsCategories[d.category] || "#333")
+      .style("fill", (d) => {
+        const categories =
+          theme === "dark" ? darkSkillsCategories : skillsCategories;
+        return d.type === "skill"
+          ? categories[d.category]
+          : d.type === "course"
+            ? "black"
+            : "#222222";
+      })
       .style("opacity", 1)
       .style("transition", "opacity 0.2s");
 
@@ -175,7 +182,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
     };
 
     // Handle mouse over event
-    function handleMouseOver(event, d) {
+    function handleMouseOver(_, d) {
       if (!selectedNodeId) {
         const connectedNodeIds = new Set();
         const connectedLinks = memoizedData.links.filter((link) => {
@@ -245,7 +252,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
 
     // Handle drag start event
     function dragStarted(event, d) {
-      if (!event.active) simulation.alphaTarget(0.03).restart();
+      if (!event.active) simulation.alphaTarget(0.009).restart();
       d.fx = d.x;
       d.fy = d.y;
       node.interrupt();
@@ -286,7 +293,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       simulation.stop();
       svg.remove();
     };
-  }, [memoizedData, selectedNodeId, page, router]);
+  }, [memoizedData, selectedNodeId, page, router, theme]);
 
   return (
     <div
