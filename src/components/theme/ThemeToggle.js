@@ -1,6 +1,6 @@
 "use client";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Sun, Moon } from "lucide-react";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -10,9 +10,16 @@ function ThemeToggle() {
   };
 
   return (
-    <button onClick={toggleTheme} className="flex items-center">
-      {theme === "dark" ? <Moon /> : <Sun />}
-      <span className="">Toggle theme</span>
+    <button
+      onClick={toggleTheme}
+      className="flex items-center hover:text-black dark:hover:text-white"
+    >
+      {theme === "dark" ? (
+        <Moon className="size-7" />
+      ) : (
+        <Sun className="size-7" />
+      )}
+      <span className="ml-2">Toggle theme</span>
     </button>
   );
 }

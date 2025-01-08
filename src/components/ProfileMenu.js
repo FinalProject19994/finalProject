@@ -34,64 +34,36 @@ const ProfileMenu = ({ closeMenu }) => {
   }, [closeMenu]);
 
   return (
-    <div className="profile-menu absolute bottom-16 z-50 mx-2 my-4 text-gray-600 dark:text-gray-300">
+    <div className="profile-menu absolute bottom-16 z-50 mx-2 my-4 rounded-md bg-gray-200 px-2 py-4 text-gray-600 shadow-md dark:bg-gray-600 dark:text-gray-300 lg:bg-transparent lg:shadow-none dark:lg:bg-transparent">
       <div className="flex flex-col gap-4">
         <ThemeToggle />
         <Link
           href={"/settings"}
-          className="flex hover:brightness-0"
+          className="flex hover:text-black dark:hover:text-white"
           onClick={closeMenu}
         >
-          {/* <Image
-            src="/menuIcons/profile.png"
-            alt="profile"
-            width={25}
-            height={20}
-          /> */}
           <CircleUserRound size={30} />
-          <button className="px-2 hover:text-black">Profile</button>
+          <button className="px-2">Profile</button>
         </Link>
         <Link
           href={"/help"}
-          className="flex hover:brightness-0"
+          className="flex hover:text-black dark:hover:text-white"
           onClick={closeMenu}
         >
-          {/* <Image
-            src="/menuIcons/help.png"
-            alt="help"
-            width={25}
-            height={20}
-            className="cursor-pointer"
-          /> */}
           <CircleHelp size={30} />
-          <button className="px-2 hover:text-black">Help</button>
+          <button className="px-2">Help</button>
         </Link>
         <Link
           href={"/about"}
-          className="flex hover:brightness-0"
+          className="flex hover:text-black dark:hover:text-white"
           onClick={closeMenu}
         >
-          {/* <Image
-            src="/menuIcons/info.png"
-            alt="info"
-            width={25}
-            height={20}
-            className="cursor-pointer"
-          /> */}
           <Info size={30} />
-          <button className="px-2 hover:text-black">About</button>
+          <button className="px-2">About</button>
         </Link>
-        <div className="flex hover:brightness-0">
-          {/* <Image
-            onClick={handleLogout}
-            src="/menuIcons/logout.png"
-            alt="logout"
-            width={25}
-            height={20}
-            className="cursor-pointer"
-          /> */}
+        <div className="flex hover:text-black dark:hover:text-white">
           <LogOut size={30} onClick={handleLogout} />
-          <button className="px-2 hover:text-black" onClick={handleLogout}>
+          <button className="px-2" onClick={handleLogout}>
             Log out
           </button>
         </div>
