@@ -28,6 +28,12 @@ const Modal = ({ table, type, data, id }) => {
     setOpen(false);
   };
 
+  const handleBackdropClick = (event) => {
+    if (event.target === event.currentTarget) {
+      closeModal();
+    }
+  };
+
   const Form = () => {
     return type === "delete" && id ? (
       <form action="" className="flex flex-col gap-4 p-4">
@@ -50,18 +56,21 @@ const Modal = ({ table, type, data, id }) => {
     <div>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-md border border-slate-200 p-2 duration-150 hover:bg-primary_purple_table_light"
+        className="flex items-center gap-2 rounded-md border border-slate-200 p-2 duration-150 hover:bg-primary_purple_table_light dark:hover:bg-primary_purple"
       >
         <Plus />
         Create new {table}
       </button>
       {open && (
-        <div className="absolute left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60">
-          <div className="relative w-11/12 rounded-md bg-white p-4 md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+        <div
+          onClick={handleBackdropClick}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
+        >
+          <div className="relative w-11/12 rounded-md bg-white p-4 dark:bg-gray-500 md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
             <Form />
             <button
               onClick={closeModal}
-              className="absolute right-4 top-4 cursor-pointer rounded-full p-2 hover:bg-gray-200"
+              className="absolute right-4 top-4 cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-600"
             >
               <X />
             </button>
