@@ -40,8 +40,8 @@ const Menu = () => {
                   <Link
                     href={item.href}
                     className={
-                      `group relative flex justify-center gap-4 py-3 pl-1 text-gray-500 transition hover:brightness-0 dark:text-gray-300 lg:justify-start lg:pl-3` +
-                      (isActive ? " brightness-0" : "")
+                      `group relative flex justify-center gap-4 py-3 pl-1 text-gray-500 transition hover:brightness-0 dark:text-gray-300 dark:hover:brightness-200 lg:justify-start lg:pl-3` +
+                      (isActive ? " brightness-0 dark:brightness-200" : "")
                     }
                   >
                     <Image

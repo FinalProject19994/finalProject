@@ -96,8 +96,12 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
         return d.type === "skill"
           ? categories[d.category]
           : d.type === "course"
-            ? "black"
-            : "#666666";
+            ? theme === "dark"
+              ? "white"
+              : "black"
+            : theme === "dark"
+              ? "#AAAAAA"
+              : "#666666";
       })
       .style("opacity", 1)
       .style("transition", "opacity 0.2s")
@@ -131,8 +135,12 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
         return d.type === "skill"
           ? categories[d.category]
           : d.type === "course"
-            ? "black"
-            : "#222222";
+            ? theme === "dark"
+              ? "#CCCCCC"
+              : "black"
+            : theme === "dark"
+              ? "#AAAAAA"
+              : "#666666";
       })
       .style("opacity", 1)
       .style("transition", "opacity 0.2s");

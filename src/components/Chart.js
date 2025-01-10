@@ -11,7 +11,7 @@ import {
 const chartConfig = {
   Activities: {
     label: "Activities",
-    color: "#5DE000",
+    color: "#d396ff",
   },
   Skills: {
     label: "Skills",

@@ -7,10 +7,10 @@ const skillsCategories = {
 };
 
 const darkSkillsCategories = {
-  Mindset: "#0B9912",
-  "Emotional quotient": "#B86B00",
-  "Professional self": "#7700CC",
-  "Thinking development": "#119DD0",
+  Mindset: "#C6FBC8",
+  "Emotional quotient": "#FFE4AD",
+  "Professional self": "#d396ff",
+  "Thinking development": "#D9F3FC",
   default: "#AAAAAA",
 };
 

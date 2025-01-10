@@ -36,13 +36,13 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="flex h-screen">
       {/* LEFT - MENU */}
-      <div className="w-[14%] md:w-[8%] lg:w-[16%] xl:w-[10%]">
+      <div className="w-[14%] dark:bg-gray-700 md:w-[8%] lg:w-[16%] xl:w-[10%]">
         <Link
           href="/homepage"
           className="flex items-center justify-center lg:justify-start"
         >
           <Image src="/logo.png" priority alt="logo" width={60} height={60} />
-          <span className="hidden text-lg text-gray-500 lg:block">
+          <span className="hidden text-lg text-gray-500 dark:text-gray-300 lg:block">
             Core Skills
           </span>
         </Link>
