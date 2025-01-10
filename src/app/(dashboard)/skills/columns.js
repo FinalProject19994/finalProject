@@ -29,9 +29,6 @@ const ActionCell = ({ row }) => {
         <DropdownMenuItem onClick={() => handleNavigation("/activities")}>
           View Activities
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleNavigation("/courses")}>
-          View Courses
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
