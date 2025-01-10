@@ -21,7 +21,7 @@ const menuItems = [
   },
   { icon: "/menuIcons/courses.png", label: "Courses", href: "/courses" },
   { icon: "/menuIcons/lecturers.png", label: "Lecturers", href: "/lecturers" },
-  { icon: "/menuIcons/questionnaire.png", label: "Surveys", href: "/surveys" },
+  // { icon: "/menuIcons/questionnaire.png", label: "Surveys", href: "/surveys" }, // Future feature
 ];
 
 const Menu = () => {
