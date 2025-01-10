@@ -10,9 +10,7 @@ import { useContext, useEffect, useState } from "react";
 
 const Page = ({ params }) => {
   const router = useRouter();
-  const { selectedActivityId, setSelectedActivityId } = useContext(
-    SelectedActivityIdContext,
-  );
+  const { setSelectedActivityId } = useContext(SelectedActivityIdContext);
 
   const [activity, setActivity] = useState({});
   const [loading, setLoading] = useState(true);
@@ -52,12 +50,11 @@ const Page = ({ params }) => {
                 : null;
             }),
           );
-
           setActivity({
             ...data,
             course,
-            skills: skills.filter(Boolean), // Filter out null values
-            lecturers: lecturers.filter(Boolean), // Filter out null values
+            skills: skills.filter(Boolean),
+            lecturers: lecturers.filter(Boolean),
           });
         } else {
           setError("Activity not found");
@@ -73,14 +70,6 @@ const Page = ({ params }) => {
     fetchActivity();
   }, [params.id]);
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex h-screen items-center justify-center">
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
-
   if (error) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -95,11 +84,11 @@ const Page = ({ params }) => {
   };
 
   return (
-    <div className="h-full space-y-4 rounded-md bg-white p-4 px-6 shadow-md">
+    <div className="h-full space-y-4 rounded-md bg-white p-4 px-6 shadow-md dark:bg-gray-500">
       <div className="flex justify-end">
         <button
           onClick={handleGoBack}
-          className="cursor-pointer rounded-full p-2 hover:bg-gray-200"
+          className="cursor-pointer rounded-full p-2 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600"
         >
           <X />
         </button>
@@ -109,7 +98,7 @@ const Page = ({ params }) => {
           {activity.title}
         </h1>
         <h5 className="text-center text-xs">{activity.date}</h5>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
           Course
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -117,18 +106,18 @@ const Page = ({ params }) => {
         </div>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
           Skills
         </h3>
         <div className="flex flex-wrap gap-2">
-          {activity.skills?.map((skill, index) => (
+          {activity.skills?.map((skill) => (
             <Badge
-              key={index}
+              key={skill.id}
               style={{
                 backgroundColor: skillsCategories[skill.category],
                 cursor: "pointer",
               }}
-              onClick={() => router.push(`/skills/${skill.id}`)}
+              // onClick={() => router.push(`/skills/${skill.id}`)}
             >
               {skill.name}
             </Badge>
@@ -136,35 +125,35 @@ const Page = ({ params }) => {
         </div>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
           Lecturers
         </h3>
         <div className="flex flex-wrap gap-2">
-          {activity.lecturers?.map((lecturer, index) => (
-            <Badge key={index} variant="outline">
+          {activity.lecturers?.map((lecturer) => (
+            <Badge key={lecturer.id} variant="outline">
               {lecturer.name}
             </Badge>
           ))}
         </div>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
           Week Number
         </h3>
         <p>{activity.weekNumber}</p>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
           Description
         </h3>
         <p className="text-sm">{activity.description}</p>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
           Reflection
         </h3>
         <p className="text-sm">{activity.reflection}</p>
-        <h3 className="my-2 text-sm font-semibold text-muted-foreground">
+        <h3 className="my-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
           Images
         </h3>
         {/* {activity.images.length > 0 ? (

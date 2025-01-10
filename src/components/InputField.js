@@ -7,7 +7,7 @@ const InputField = ({ label, type = "text", register, name, error }) => {
         min={1}
         {...register(name)}
         placeholder={`Enter a ${label}...`}
-        className="rounded-md border p-2 text-sm text-gray-700 outline-none"
+        className="rounded-md border p-2 text-sm text-gray-700 outline-none dark:bg-gray-400 dark:placeholder-slate-700"
       />
       {error?.message && (
         <p className="text-xs text-red-500">{error.message.toString()}</p>

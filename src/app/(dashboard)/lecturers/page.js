@@ -53,8 +53,10 @@ const TeacherListPage = () => {
   }, []);
 
   return (
-    <div className="mx-4 mt-2 h-[98%] flex-1 rounded-md bg-white p-2 shadow-md">
-      <h1 className="text-3xl font-bold text-gray-600">Lecturers</h1>
+    <div className="mx-4 mt-2 h-[98%] flex-1 rounded-md bg-white p-2 shadow-md dark:bg-gray-500">
+      <h1 className="text-3xl font-bold text-gray-600 dark:text-gray-300">
+        Lecturers
+      </h1>
       {loading ? (
         <Loader />
       ) : (

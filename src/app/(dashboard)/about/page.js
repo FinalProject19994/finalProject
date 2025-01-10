@@ -1,10 +1,10 @@
 const Page = () => {
   return (
-    <div className="mx-4 my-2 h-[98%] overflow-auto rounded-lg bg-white p-4 shadow-md lg:px-[352px]">
-      <h1 className="mb-6 text-center text-4xl font-bold text-primary_purple">
+    <div className="mx-4 my-2 h-[98%] overflow-auto rounded-lg bg-white p-4 shadow-md dark:bg-gray-500 lg:px-[352px]">
+      <h1 className="dark: mb-6 text-center text-4xl font-bold text-primary_purple dark:text-primary_purple_table">
         Welcome to Core Skills Hub
       </h1>
-      <p className="text-md mb-6 text-justify leading-relaxed text-gray-700">
+      <p className="text-md mb-6 text-justify leading-relaxed text-gray-700 dark:text-gray-300">
         Core Skills Hub is dedicated to transforming how core skills are
         tracked, managed, and cultivated in engineering education. Whether
         you&apos;re a lecturer or student, our platform seamlessly integrates
@@ -15,10 +15,10 @@ const Page = () => {
       </p>
 
       <section className="my-8">
-        <h2 className="mb-4 text-2xl font-semibold text-primary_purple">
+        <h2 className="mb-4 text-2xl font-semibold text-primary_purple dark:text-primary_purple_table">
           Why Core Skills Matter
         </h2>
-        <p className="text-md mb-4 text-justify leading-relaxed text-gray-700">
+        <p className="text-md mb-4 text-justify leading-relaxed text-gray-700 dark:text-gray-300">
           In today&apos;s workforce, possessing technical knowledge alone
           isn&apos;t enough. Core skills such as adaptability, collaboration,
           and creativity are critical for success in dynamic and
@@ -29,10 +29,10 @@ const Page = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="mb-4 text-2xl font-semibold text-primary_purple">
+        <h2 className="mb-4 text-2xl font-semibold text-primary_purple dark:text-primary_purple_table">
           Our Mission
         </h2>
-        <p className="text-md mb-4 text-justify leading-relaxed text-gray-700">
+        <p className="text-md mb-4 text-justify leading-relaxed text-gray-700 dark:text-gray-300">
           We strive to empower educators with a flexible, user-friendly system
           that integrates into their teaching workflow. Our goal is to ensure
           that students graduate with both technical expertise and critical soft
@@ -43,10 +43,10 @@ const Page = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="mb-4 text-2xl font-semibold text-primary_purple">
+        <h2 className="mb-4 text-2xl font-semibold text-primary_purple dark:text-primary_purple_table">
           Join Us in Transforming Education
         </h2>
-        <p className="text-md mb-4 text-justify leading-relaxed text-gray-700">
+        <p className="text-md mb-4 text-justify leading-relaxed text-gray-700 dark:text-gray-300">
           Core Skills Hub envisions a future where education not only imparts
           knowledge but also nurtures the soft skills essential for professional
           success. We are dedicated to reshaping engineering education, ensuring
@@ -56,14 +56,14 @@ const Page = () => {
       </section>
 
       <section className="my-8">
-        <h3 className="mb-4 text-2xl font-semibold text-primary_purple">
+        <h3 className="mb-4 text-2xl font-semibold text-primary_purple dark:text-primary_purple_table">
           Contact Us
         </h3>
-        <p className="text-md text-justify leading-relaxed text-gray-700">
-          Interested in learning more? Feel free to reach out to us at{" "}
+        <p className="text-md text-justify leading-relaxed text-gray-700 dark:text-gray-300">
+          Interested in learning more? Feel free to reach out to us at&nbsp;
           <a
             href="mailto:finalprojectcoreskills@gmail.com"
-            className="text-blue-500 underline"
+            className="text-blue-500 underline dark:text-primary_purple"
           >
             contact@coreskillshub.com
           </a>

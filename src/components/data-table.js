@@ -50,7 +50,7 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
           <DropdownMenuTrigger asChild>
             <button
               variant="outline"
-              className="ml-auto h-[42px] rounded-md border border-gray-200 p-2 text-sm"
+              className="ml-auto h-[42px] rounded-md border border-gray-200 p-2 text-sm hover:bg-primary_purple_table_light dark:hover:bg-primary_purple"
             >
               Columns
             </button>

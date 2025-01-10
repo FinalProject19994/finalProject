@@ -10,7 +10,7 @@ const Page = ({ children }) => {
         <div className="h-[98%] w-full md:w-1/2">{children}</div>
 
         {/* RIGHT */}
-        <div className="flex h-full rounded-md bg-white shadow-md md:w-1/2">
+        <div className="flex h-full rounded-md bg-white shadow-md dark:bg-gray-500 md:w-1/2">
           <ActivitiesGraph />
         </div>
       </div>

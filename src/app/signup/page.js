@@ -100,17 +100,17 @@ const Page = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 lg:text-xl">
+    <div className="flex min-h-screen items-center justify-center bg-slate-100 dark:bg-gray-800 lg:text-xl">
       <form
         onSubmit={handleSignUp}
-        className="mx-4 flex w-full flex-col rounded-md bg-white text-gray-500 shadow-md md:w-3/5 md:p-8"
+        className="mx-4 flex w-full flex-col rounded-md bg-white text-gray-500 shadow-md dark:bg-gray-400 md:w-3/5 md:p-8"
       >
-        <h1 className="m-2 mb-16 text-center text-3xl font-bold text-primary_purple sm:text-4xl">
+        <h1 className="m-2 mb-16 text-center text-3xl font-bold text-primary_purple dark:text-primary_purple sm:text-4xl">
           Create a new account
         </h1>
 
         <div className="mx-auto w-full space-y-6 md:w-3/4 lg:w-2/3">
-          <h2 className="text-lg font-bold text-gray-500">
+          <h2 className="text-lg font-bold text-gray-500 dark:text-gray-300">
             Personal information
           </h2>
 
@@ -119,7 +119,7 @@ const Page = () => {
             <input
               type="text"
               placeholder="Full name"
-              className="w-full rounded-md border p-2 outline-none"
+              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={nameRef}
             />
 
@@ -127,7 +127,7 @@ const Page = () => {
             <input
               type="text"
               placeholder="Phone Number"
-              className="rounded-md border p-2 outline-none"
+              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={phoneNumberRef}
             />
 
@@ -146,7 +146,7 @@ const Page = () => {
             />
           </div>
 
-          <h2 className="pt-6 text-lg font-bold text-gray-500">
+          <h2 className="pt-6 text-lg font-bold text-gray-500 dark:text-gray-300">
             Privacy information
           </h2>
           <div className="flex flex-col gap-4">
@@ -154,7 +154,7 @@ const Page = () => {
             <input
               type="email"
               placeholder="Email Address"
-              className="rounded-md border p-2 outline-none"
+              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={emailRef}
             />
 
@@ -162,7 +162,7 @@ const Page = () => {
             <input
               type="password"
               placeholder="Password"
-              className="rounded-md border p-2 outline-none"
+              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={passwordRef}
             />
 
@@ -170,7 +170,7 @@ const Page = () => {
             <input
               type="password"
               placeholder="Confirm Password"
-              className="rounded-md border p-2 outline-none"
+              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={confirmPasswordRef}
             />
           </div>

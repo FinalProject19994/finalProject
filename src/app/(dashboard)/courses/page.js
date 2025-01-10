@@ -6,8 +6,8 @@ import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
 import { db } from "@/lib/firebase";
 import { collection, getDoc, onSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
-import { columns } from "./columns";
 import { SelectedCourseIdContext } from "../../../context/CoursesContext";
+import { columns } from "./columns";
 
 const Page = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
@@ -85,9 +85,11 @@ const Page = () => {
   };
 
   return (
-    <div className="flex h-[98vh] w-full flex-col rounded-md bg-white px-2 shadow-md">
+    <div className="flex h-[98vh] w-full flex-col rounded-md bg-white px-2 shadow-md dark:bg-gray-500">
       <div className="flex w-full justify-between gap-4 p-2">
-        <h1 className="text-3xl font-bold text-gray-600">Courses</h1>
+        <h1 className="text-3xl font-bold text-gray-600 dark:text-gray-300">
+          Courses
+        </h1>
         <Modal table="course" type="create" data={courses} />
       </div>
       {loading ? (

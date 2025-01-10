@@ -40,12 +40,12 @@ export function SearchableTable({ columns, data, handleRowSelect, page }) {
   return (
     <div>
       <div className="relative top-14 flex w-1/2 rounded-md border border-gray-200 p-2 text-sm">
-        <Search className="mr-2 opacity-50" />
+        <Search className="mr-2 opacity-50 dark:text-gray-200" />
         <input
           ref={searchInputRef}
           placeholder={`Search ${page}...`}
           onChange={handleSearch}
-          className="w-full outline-none"
+          className="w-full bg-white outline-none dark:bg-gray-500"
         />
       </div>
       <DataTable

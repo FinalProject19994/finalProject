@@ -205,13 +205,13 @@ const SunburstChart = () => {
   }, [data]);
 
   return (
-    <div className="mx-4 my-2 h-[98%] rounded-md bg-white shadow-md">
+    <div className="mx-4 my-2 h-[98%] rounded-md bg-white shadow-md dark:bg-gray-500">
       <div className="mx-14 flex items-center justify-between">
         <div className="flex w-2/5 flex-col">
-          <h1 className="py-2 text-4xl font-semibold italic text-primary_purple">
+          <h1 className="py-2 text-4xl font-semibold italic text-primary_purple dark:text-primary_purple_table">
             Core skills Sunburst
           </h1>
-          <p className="text-lg text-gray-700">
+          <p className="text-lg text-gray-700 dark:text-gray-300">
             Core skills are essential competencies that empower individuals to
             navigate various personal and professional challenges effectively.
             In the context of a sunburst diagram, these skills are visually

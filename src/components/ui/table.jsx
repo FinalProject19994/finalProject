@@ -46,7 +46,7 @@ const TableRow = React.forwardRef(({ className, ...props }, ref) => (
   <tr
     ref={ref}
     className={cn(
-      "[&:nth-child(even):bg-slate-100] transition-colors [&:nth-child(even):hover]:bg-primary_purple_table_light [&:nth-child(odd):hover]:bg-primary_purple_table_light",
+      "transition-colors [&:nth-child(even):hover]:bg-primary_purple_table_light dark:[&:nth-child(even):hover]:bg-primary_purple_table dark:[&:nth-child(even)]:bg-gray-400 [&:nth-child(odd):hover]:bg-primary_purple_table_light dark:[&:nth-child(odd):hover]:bg-primary_purple_table dark:[&:nth-child(odd)]:bg-gray-500 dark:[&_nth-child(even):hover]:bg-primary_purple_table dark:[&_nth-child(odd):hover]:bg-primary_purple_table",
       className,
     )}
     {...props}
@@ -58,7 +58,7 @@ const TableHead = React.forwardRef(({ className, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
-      "h-12 border-x border-gray-200 px-4 text-center align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      "h-12 border-x border-gray-200 px-4 text-center align-middle font-medium text-muted-foreground dark:border-gray-700 dark:bg-slate-300 dark:text-gray-700 [&:has([role=checkbox])]:pr-0",
       className,
     )}
     {...props}
@@ -70,7 +70,7 @@ const TableCell = React.forwardRef(({ className, ...props }, ref) => (
   <td
     ref={ref}
     className={cn(
-      "border-x border-gray-200 p-4 text-center align-middle [&:has([role=checkbox])]:pr-0",
+      "border-x border-gray-200 p-4 text-center align-middle dark:border-gray-700 [&:has([role=checkbox])]:pr-0",
       className,
     )}
     {...props}

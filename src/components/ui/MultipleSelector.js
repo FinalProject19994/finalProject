@@ -58,7 +58,7 @@ export default function MultipleSelector({ options, onSelect, selection }) {
       <div className="relative">
         <button
           type="button"
-          className="flex w-full items-center justify-between rounded-md border border-gray-200 bg-white p-2 text-left text-sm focus:outline-none"
+          className="flex w-full items-center justify-between rounded-md border border-gray-200 bg-white p-2 text-left text-sm focus:outline-none dark:border-gray-800 dark:bg-gray-400 dark:placeholder-slate-700"
           onClick={() => setIsOpen(!isOpen)}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -89,8 +89,8 @@ export default function MultipleSelector({ options, onSelect, selection }) {
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 mt-1 max-h-60 w-full rounded-md bg-white shadow-lg focus:outline-none sm:text-sm">
-            <div className="sticky top-0 z-10 bg-white p-2">
+          <div className="absolute z-10 mt-1 max-h-60 w-full rounded-md bg-white shadow-lg focus:outline-none dark:bg-gray-400 sm:text-sm">
+            <div className="sticky top-0 z-10 rounded-md bg-white p-2 dark:bg-gray-400">
               <div className="relative">
                 <Search
                   className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400"
@@ -98,8 +98,8 @@ export default function MultipleSelector({ options, onSelect, selection }) {
                 />
                 <input
                   type="text"
-                  className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-3 text-sm leading-5 text-gray-900 focus:outline-none"
-                  placeholder={`Search ${selection}s...`}
+                  className="w-full rounded-md border border-gray-300 py-2 pl-10 pr-3 text-sm leading-5 text-gray-900 focus:outline-none dark:text-white"
+                  placeholder={`Search ${selection}...`}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   ref={searchInputRef}

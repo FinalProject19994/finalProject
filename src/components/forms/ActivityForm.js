@@ -142,6 +142,7 @@ const ActivityForm = ({ closeModal }) => {
       <div>
         <label className="text-sm text-gray-400">Description</label>
         <Textarea
+          className="rounded-md border p-2 text-sm text-gray-700 outline-none dark:bg-gray-400 dark:placeholder-slate-700"
           placeholder="Enter a Description..."
           {...register("description")}
         />
@@ -230,6 +231,7 @@ const ActivityForm = ({ closeModal }) => {
         <label className="text-sm text-gray-400">Reflection</label>
         <Textarea
           placeholder="Enter a Reflection..."
+          className="rounded-md border p-2 text-sm text-gray-700 outline-none dark:bg-gray-400 dark:placeholder-slate-700"
           {...register("reflection")}
         />
         {errors.reflection && (

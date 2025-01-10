@@ -38,6 +38,10 @@ const StyledWrapper = styled.div`
   width: 100vw;
   background-color: #f5f5f5;
 
+  @media (prefers-color-scheme: dark) {
+    background-color: #6b7280;
+  }
+
   .wheel-and-hamster {
     --dur: 1s;
     position: relative;
