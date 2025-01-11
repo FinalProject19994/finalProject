@@ -60,6 +60,7 @@ const Page = () => {
               ...data,
               departments: departments.join(", "),
               lecturers: lecturers.join(", "),
+              semester: data.semester + " - " + data.year,
             };
           }),
         );

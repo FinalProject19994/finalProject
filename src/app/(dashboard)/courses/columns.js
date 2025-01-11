@@ -16,19 +16,6 @@ export const columns = [
     },
   },
   {
-    accessorKey: "departments",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Departments
-        </Button>
-      );
-    },
-  },
-  {
     accessorKey: "id",
     header: ({ column }) => {
       return (
@@ -42,6 +29,19 @@ export const columns = [
     },
   },
   {
+    accessorKey: "semester",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Semester
+        </Button>
+      );
+    },
+  },
+  {
     accessorKey: "lecturers",
     header: ({ column }) => {
       return (
@@ -50,6 +50,19 @@ export const columns = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Lecturers
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "departments",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Departments
         </Button>
       );
     },
