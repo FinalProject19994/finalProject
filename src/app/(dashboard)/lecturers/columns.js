@@ -8,7 +8,41 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+const ActionCell = ({ row }) => {
+  const router = useRouter();
+  const rowName = row.original.name;
+
+  const handleNavigation = (path) => {
+    const encodedPath = encodeURIComponent(rowName);
+    router.push(`${path}?search=${encodedPath}`);
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem
+          onClick={() => handleNavigation("/activities")}
+          className="cursor-pointer"
+        >
+          View Activities
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => handleNavigation("/courses")}
+          className="cursor-pointer"
+        >
+          View Courses
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 export const columns = [
   // TODO: Fix the avatars
@@ -57,24 +91,6 @@ export const columns = [
   },
   {
     id: "actions",
-    cell: () => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem className="cursor-pointer">
-              View Activities
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
-              View Courses
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <ActionCell row={row} />,
   },
 ];
