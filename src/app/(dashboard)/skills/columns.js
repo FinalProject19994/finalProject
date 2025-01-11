@@ -6,16 +6,50 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { auth, db } from "@/lib/firebase";
+import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const ActionCell = ({ row }) => {
   const router = useRouter();
+  const [role, setRole] = useState();
   const skillName = row.original.name;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(userDocRef);
+
+          if (docSnap.exists()) {
+            setRole(docSnap.data().role.toLowerCase());
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleNavigation = (path) => {
     const encodedSkill = encodeURIComponent(skillName);
     router.push(`${path}?search=${encodedSkill}`);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const skillDocRef = doc(db, "skills", row.original.id);
+      await deleteDoc(skillDocRef);
+      console.log("Skill deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting skill:", error);
+    }
   };
 
   return (
@@ -29,6 +63,14 @@ const ActionCell = ({ row }) => {
         <DropdownMenuItem onClick={() => handleNavigation("/activities")}>
           View Activities
         </DropdownMenuItem>
+        {role === "admin" && (
+          <>
+            <DropdownMenuItem onClick={() => {}}>Edit Skill</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDelete}>
+              Delete Skill
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
