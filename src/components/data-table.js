@@ -114,8 +114,10 @@ export default function DataTable({ data, columns, handleRowSelect, page }) {
                     handleRowSelect(row.original);
                   }
                 }}
-                className={`${index % 2 === 1 ? "bg-gray-100" : ""} ${
-                  selectedRow === row.id ? "bg-primary_purple_table" : ""
+                className={` ${index % 2 === 1 ? "bg-gray-100 hover:bg-primary_purple_table dark:bg-gray-500 dark:hover:bg-primary_purple_table" : "bg-white hover:bg-primary_purple_table dark:bg-gray-400 dark:hover:bg-primary_purple_table"} ${
+                  selectedRow === row.id
+                    ? "bg-primary_purple_table dark:bg-primary_purple"
+                    : ""
                 }`}
                 style={{ cursor: "pointer" }}
               >

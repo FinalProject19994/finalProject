@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
 
 const Table = React.forwardRef(({ className, ...props }, ref) => (
@@ -21,10 +20,7 @@ TableHeader.displayName = "TableHeader";
 const TableBody = React.forwardRef(({ className, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={cn(
-      "border-b [&_tr:hover]:bg-muted/50 [&_tr:last-child]:border-0",
-      className,
-    )}
+    className={cn("[&_tr:last-child]:border-0", className)}
     {...props}
   />
 ));
@@ -46,7 +42,7 @@ const TableRow = React.forwardRef(({ className, ...props }, ref) => (
   <tr
     ref={ref}
     className={cn(
-      "transition-colors [&:nth-child(even):hover]:bg-primary_purple_table_light dark:[&:nth-child(even):hover]:bg-primary_purple_table dark:[&:nth-child(even)]:bg-gray-400 [&:nth-child(odd):hover]:bg-primary_purple_table_light dark:[&:nth-child(odd):hover]:bg-primary_purple_table dark:[&:nth-child(odd)]:bg-gray-500 dark:[&_nth-child(even):hover]:bg-primary_purple_table dark:[&_nth-child(odd):hover]:bg-primary_purple_table",
+      "transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
       className,
     )}
     {...props}
