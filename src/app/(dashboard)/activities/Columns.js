@@ -9,7 +9,6 @@ import {
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { MoreHorizontal } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const Columns = () => {
@@ -35,7 +34,6 @@ export const Columns = () => {
     fetchUserData();
   }, []);
 
-  const router = useRouter();
   return [
     {
       accessorKey: "title",
@@ -49,6 +47,20 @@ export const Columns = () => {
           </Button>
         );
       },
+    },
+    {
+      accessorKey: "lecturers",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Lecturers
+          </Button>
+        );
+      },
+      cell: ({ getValue }) => getValue().join(", "),
     },
     {
       accessorKey: "skills",

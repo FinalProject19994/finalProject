@@ -71,11 +71,22 @@ const Page = () => {
                 ? courseSnapshot.data().title
                 : "Unknown Course";
 
+              // Resolve lecturer names from Firestore references
+              const resolvedLecturers = await Promise.all(
+                activity.lecturers.map(async (lecturerRef) => {
+                  const lecturerSnapshot = await getDoc(lecturerRef);
+                  return lecturerSnapshot.exists()
+                    ? lecturerSnapshot.data().name
+                    : "Unknown Lecturer";
+                }),
+              );
+
               return {
                 id: doc.id,
                 ...activity,
                 skills: resolvedSkills,
                 course: courseName,
+                lecturers: resolvedLecturers,
               };
             }),
           );

@@ -2,13 +2,15 @@
 import { Badge } from "@/components/ui/badge";
 import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
 import { db } from "@/lib/firebase";
-import { skillsCategories } from "@/lib/skillsCategories";
+import { skillsCategories, darkSkillsCategories } from "@/lib/skillsCategories";
 import { doc, getDoc } from "firebase/firestore";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 const Page = ({ params }) => {
+  const { theme } = useTheme();
   const router = useRouter();
   const { setSelectedActivityId } = useContext(SelectedActivityIdContext);
 
@@ -114,7 +116,10 @@ const Page = ({ params }) => {
             <Badge
               key={skill.id}
               style={{
-                backgroundColor: skillsCategories[skill.category],
+                backgroundColor:
+                  theme === "dark"
+                    ? darkSkillsCategories[skill.category]
+                    : skillsCategories[skill.category],
                 cursor: "pointer",
               }}
               // onClick={() => router.push(`/skills/${skill.id}`)}
