@@ -24,20 +24,20 @@ const HomePage = () => {
       {/* LEFT */}
       <div className="flex w-full flex-col gap-2">
         {/* LEFT - UP */}
-        <div className="flex h-2/3 rounded-md bg-white shadow-md dark:bg-gray-500">
+        <div className="flex h-full w-[99%] rounded-md bg-white shadow-md dark:bg-gray-500">
           <Legend header="Overview" />
           <ForceDirectedGraph nodes={graphData.nodes} links={graphData.links} />
         </div>
         {/* LEFT - DOWN */}
-        <div className="h-1/3 w-full rounded-md bg-white shadow-md dark:bg-gray-500 dark:text-gray-300">
+        {/* <div className="h-1/3 w-full rounded-md bg-white shadow-md dark:bg-gray-500 dark:text-gray-300">
           <Chart />
-        </div>
+        </div> */}
       </div>
 
       {/* RIGHT */}
-      <div className="md:w-1/5">
+      {/* <div className="md:w-1/5">
         <EventCalendar />
-      </div>
+      </div> */}
     </div>
   );
 };
