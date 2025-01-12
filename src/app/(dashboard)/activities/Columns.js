@@ -11,29 +11,66 @@ import { doc, getDoc } from "firebase/firestore";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export const Columns = () => {
-  const [role, setRole] = useState(null);
+const ActionCell = ({ row, onActivityDelete }) => {
+  const activityId = row.original.id;
+  const activityLecturerIds = row.original.lecturers.map(
+    (lecturer) => lecturer.id,
+  );
+  const currentUserId = auth.currentUser?.uid;
+
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
+    const fetchUserRole = async () => {
+      if (currentUserId) {
         try {
-          const userDocRef = doc(db, "users", user.uid);
-          const docSnap = await getDoc(userDocRef);
-
-          if (docSnap.exists()) {
-            setRole(docSnap.data().role.toLowerCase());
+          const userDocRef = doc(db, "users", currentUserId);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            setUserRole(userDoc.data().role.toLowerCase());
           }
         } catch (error) {
-          console.error("Error fetching user data:", error);
+          console.error("Error fetching user role:", error);
         }
       }
     };
 
-    fetchUserData();
-  }, []);
+    fetchUserRole();
+  }, [currentUserId]);
 
+  const isAuthorizedToDelete =
+    userRole === "admin" || activityLecturerIds.includes(currentUserId);
+
+  const handleDelete = async () => {
+    try {
+      await onActivityDelete(activityId);
+    } catch (error) {
+      console.error("Error deleting activity:", error);
+      toast.error("Failed to delete activity");
+    }
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => {}}>Edit Activity</DropdownMenuItem>
+        {/* Check for admin or if current user is a lecturer of the activity */}
+        {isAuthorizedToDelete && (
+          <DropdownMenuItem onClick={handleDelete}>
+            Delete Activity
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+export const Columns = ({ onActivityDelete }) => {
   return [
     {
       accessorKey: "title",
@@ -105,23 +142,9 @@ export const Columns = () => {
     {
       accessorKey: "Actions",
       id: "actions",
-      cell: () => {
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Edit Information</DropdownMenuItem>
-              {role === "admin" && (
-                <DropdownMenuItem>Delete activity</DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+      cell: ({ row }) => (
+        <ActionCell row={row} onActivityDelete={onActivityDelete} />
+      ),
     },
   ];
 };

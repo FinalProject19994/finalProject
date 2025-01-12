@@ -1,12 +1,18 @@
 "use client";
-import { Columns } from "./Columns";
 import Modal from "@/components/Modal";
 import { SearchableTable } from "@/components/SearchableTable";
+import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
 import { auth, db } from "@/lib/firebase";
-import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
+import { Columns } from "./Columns";
 
 const Page = () => {
   const [userData, setUserData] = useState(null);
@@ -119,6 +125,16 @@ const Page = () => {
     router.push(`/activities/${activity.id}`);
   };
 
+  const handleActivityDelete = async (activityId) => {
+    try {
+      const activityDocRef = doc(db, "activities", activityId);
+      await deleteDoc(activityDocRef);
+      // router.refresh();
+    } catch (error) {
+      console.error("Error deleting activity:", error);
+    }
+  };
+
   return (
     <div className="flex h-[98vh] w-full flex-col rounded-md bg-white px-2 shadow-md dark:bg-gray-500">
       <div className="flex w-full justify-between gap-4 p-2">
@@ -129,7 +145,7 @@ const Page = () => {
       </div>
       <div className="overflow-y-scroll pr-1">
         <SearchableTable
-          columns={Columns()}
+          columns={Columns({ onActivityDelete: handleActivityDelete })}
           data={activities}
           handleRowSelect={handleRowSelect}
           page="activities"
