@@ -152,7 +152,12 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-gray-600 dark:text-gray-300">
           Activities
         </h1>
-        <button onClick={handleCreateActivity}>Create New Activity</button>
+        <button
+          onClick={handleCreateActivity}
+          className="rounded-md border p-2 hover:bg-primary_purple_table dark:border-white dark:hover:bg-primary_purple"
+        >
+          Create New Activity
+        </button>
       </div>
       <div className="overflow-y-scroll pr-1">
         <SearchableTable

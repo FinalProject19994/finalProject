@@ -12,7 +12,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
-import { Columns } from "./columns";
+import { Columns } from "./Columns";
 
 const Page = () => {
   const [skills, setSkills] = useState([]);
