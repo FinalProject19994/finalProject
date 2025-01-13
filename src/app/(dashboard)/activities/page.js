@@ -21,6 +21,9 @@ const Page = () => {
   const { selectedActivityId, setSelectedActivityId } = useContext(
     SelectedActivityIdContext,
   );
+  const [modalType, setModalType] = useState(null); // "create" | "edit" | null
+  const [selectedActivity, setSelectedActivity] = useState(null); // To store data for editing
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -43,7 +46,6 @@ const Page = () => {
       const unsubscribeSkills = onSnapshot(
         collection(db, "skills"),
         (snapshot) => {
-          // Populate skillMap with skill ID-to-name mapping
           const skillMap = snapshot.docs.reduce((map, doc) => {
             const data = doc.data();
             map[doc.id] = data.name;
@@ -60,10 +62,13 @@ const Page = () => {
             snapshot.docs.map(async (doc) => {
               const activity = doc.data();
 
-              // Resolve skill names from Firestore references
+              const courseSnapshot = await getDoc(activity.course);
+              const courseName = courseSnapshot.exists()
+                ? courseSnapshot.data().title
+                : "Unknown Course";
+
               const resolvedSkills = await Promise.all(
                 activity.skills.map(async (skillRef) => {
-                  // Resolve the reference to a document
                   const skillSnapshot = await getDoc(skillRef);
                   return skillSnapshot.exists()
                     ? skillSnapshot.data().name
@@ -71,19 +76,17 @@ const Page = () => {
                 }),
               );
 
-              // Resolve course name from Firestore reference
-              const courseSnapshot = await getDoc(activity.course);
-              const courseName = courseSnapshot.exists()
-                ? courseSnapshot.data().title
-                : "Unknown Course";
-
-              // Resolve lecturer names from Firestore references
               const resolvedLecturers = await Promise.all(
                 activity.lecturers.map(async (lecturerRef) => {
                   const lecturerSnapshot = await getDoc(lecturerRef);
-                  return lecturerSnapshot.exists()
-                    ? lecturerSnapshot.data().name
-                    : "Unknown Lecturer";
+                  if (lecturerSnapshot.exists()) {
+                    const lecturerData = lecturerSnapshot.data();
+                    return lecturerData && lecturerData.name
+                      ? lecturerData.name
+                      : "Unknown Lecturer";
+                  } else {
+                    return "Unknown Lecturer";
+                  }
                 }),
               );
 
@@ -113,15 +116,10 @@ const Page = () => {
     fetchSkillsAndActivities();
   }, []);
 
-  const router = useRouter();
-
   const handleRowSelect = (activity) => {
-    if (selectedActivityId === activity.id) {
-      setSelectedActivityId(null);
-      router.push(`/activities/${activity.id}`);
-      return;
-    }
-    setSelectedActivityId(activity.id);
+    setSelectedActivityId(
+      selectedActivityId === activity.id ? null : activity.id,
+    );
     router.push(`/activities/${activity.id}`);
   };
 
@@ -129,10 +127,23 @@ const Page = () => {
     try {
       const activityDocRef = doc(db, "activities", activityId);
       await deleteDoc(activityDocRef);
-      // router.refresh();
     } catch (error) {
       console.error("Error deleting activity:", error);
     }
+  };
+
+  const handleEditActivity = (activityData) => {
+    setSelectedActivity(activityData);
+    setModalType("edit"); // Open the modal in edit mode
+  };
+
+  const handleCreateActivity = () => {
+    setModalType("create"); // Open the modal in create mode
+  };
+
+  const closeModal = () => {
+    setModalType(null); // Close the modal
+    setSelectedActivity(null); // Clear the edit data
   };
 
   return (
@@ -141,16 +152,29 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-gray-600 dark:text-gray-300">
           Activities
         </h1>
-        <Modal table="activity" type="create" data={[]} />
+        <button onClick={handleCreateActivity}>Create New Activity</button>
       </div>
       <div className="overflow-y-scroll pr-1">
         <SearchableTable
-          columns={Columns({ onActivityDelete: handleActivityDelete })}
+          columns={Columns({
+            onActivityDelete: handleActivityDelete,
+            onActivityEdit: handleEditActivity, // Pass the new handler
+          })}
           data={activities}
           handleRowSelect={handleRowSelect}
           page="activities"
         />
       </div>
+
+      {/* Modal component */}
+      {modalType && (
+        <Modal
+          table="activity"
+          type={modalType}
+          data={selectedActivity}
+          closeModal={closeModal}
+        />
+      )}
     </div>
   );
 };

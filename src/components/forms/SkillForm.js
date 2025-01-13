@@ -1,9 +1,10 @@
 "use client";
 import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { z } from "zod";
 import InputField from "../InputField";
 import {
@@ -17,18 +18,11 @@ import {
 const schema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters" }),
   category: z.string().nonempty({ message: "Category is required" }),
-  description: z
-    .string()
-    .min(3, { message: "Description must be at least 3 characters" })
-    .optional(),
   code: z
     .string()
     .min(2, { message: "Code must be 2 characters" })
     .max(2, { message: "Code must be 2 characters" }),
-  // properties: z.string().nonempty({ message: "Properties are required" }),
 });
-
-// TODO: Add Properties to the form
 
 const SkillForm = ({ type, data, closeModal }) => {
   const router = useRouter();
@@ -41,24 +35,46 @@ const SkillForm = ({ type, data, closeModal }) => {
     resolver: zodResolver(schema),
   });
 
+  useEffect(() => {
+    if (type === "edit" && data) {
+      // Pre-fill the form fields with the data of the selected skill
+      setValue("name", data.name);
+      setValue("category", data.category);
+      setValue("code", data.id); // Assuming 'id' holds the code
+    }
+  }, [type, data, setValue]);
+
   const submit = handleSubmit(async (formData) => {
     try {
-      await setDoc(doc(db, "skills", formData.code), {
-        name: formData.name,
-        category: formData.category,
-        code: formData.code,
-        description: formData.description,
-      });
+      if (type === "edit") {
+        // Update existing skill
+        const skillDocRef = doc(db, "skills", data.id);
+        await updateDoc(skillDocRef, {
+          name: formData.name,
+          category:
+            formData.category.charAt(0).toUpperCase() +
+            formData.category.slice(1),
+        });
+      } else {
+        // Create new skill
+        await setDoc(doc(db, "skills", formData.code), {
+          name: formData.name,
+          category: formData.category,
+          code: formData.code,
+        });
+      }
       closeModal();
       router.refresh();
     } catch (error) {
-      console.error("Error adding skill:", error);
+      console.error("Error saving skill:", error);
     }
   });
 
   return (
     <form className="flex flex-col gap-8" onSubmit={submit}>
-      <h1 className="text-xl font-semibold">Add a new skill</h1>
+      <h1 className="text-xl font-semibold">
+        {type === "edit" ? "Edit Skill" : "Add a new skill"}
+      </h1>
       <InputField
         label="Name"
         register={register}
@@ -69,9 +85,8 @@ const SkillForm = ({ type, data, closeModal }) => {
       <div className="flex flex-col gap-2">
         <label className="text-sm text-gray-400">Category</label>
         <Select
-          onValueChange={(value) => {
-            setValue("category", value);
-          }}
+          onValueChange={(value) => setValue("category", value)}
+          defaultValue={data?.category}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select category" />
@@ -99,23 +114,13 @@ const SkillForm = ({ type, data, closeModal }) => {
         register={register}
         name="code"
         error={errors.code}
+        disabled={type === "edit"}
       />
-
-      {/* <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-400">Properties</label>
-        <MultipleSelectorComboBox
-          options={[{ label: "Self" }, { label: "Team" }, { label: "Course" }]}
-        />
-      </div> */}
-
-      <InputField
-        label="Description"
-        register={register}
-        name="description"
-        error={errors.description}
-      />
-      <button className="w-max self-center rounded-md bg-primary_purple p-2 text-white">
-        Create
+      <button
+        className="w-max self-center rounded-md bg-primary_purple p-2 text-white"
+        type="submit"
+      >
+        {type === "edit" ? "Save Changes" : "Create"}
       </button>
     </form>
   );

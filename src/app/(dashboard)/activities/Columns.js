@@ -11,11 +11,11 @@ import { doc, getDoc } from "firebase/firestore";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const ActionCell = ({ row, onActivityDelete }) => {
+const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
   const activityId = row.original.id;
-  const activityLecturerIds = row.original.lecturers.map(
-    (lecturer) => lecturer.id,
-  );
+  const activityLecturerIds = row.original.lecturers
+    ? row.original.lecturers.map((lecturer) => lecturer.id)
+    : [];
   const currentUserId = auth.currentUser?.uid;
 
   const [userRole, setUserRole] = useState(null);
@@ -46,7 +46,6 @@ const ActionCell = ({ row, onActivityDelete }) => {
       await onActivityDelete(activityId);
     } catch (error) {
       console.error("Error deleting activity:", error);
-      toast.error("Failed to delete activity");
     }
   };
 
@@ -58,8 +57,9 @@ const ActionCell = ({ row, onActivityDelete }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => {}}>Edit Activity</DropdownMenuItem>
-        {/* Check for admin or if current user is a lecturer of the activity */}
+        <DropdownMenuItem onClick={() => onActivityEdit(row.original)}>
+          Edit Activity
+        </DropdownMenuItem>
         {isAuthorizedToDelete && (
           <DropdownMenuItem onClick={handleDelete}>
             Delete Activity
@@ -70,7 +70,7 @@ const ActionCell = ({ row, onActivityDelete }) => {
   );
 };
 
-export const Columns = ({ onActivityDelete }) => {
+export const Columns = ({ onActivityDelete, onActivityEdit }) => {
   return [
     {
       accessorKey: "title",
@@ -97,7 +97,7 @@ export const Columns = ({ onActivityDelete }) => {
           </Button>
         );
       },
-      cell: ({ getValue }) => getValue().join(", "),
+      cell: ({ getValue }) => (getValue() ? getValue().join(", ") : "N/A"),
     },
     {
       accessorKey: "skills",
@@ -111,7 +111,7 @@ export const Columns = ({ onActivityDelete }) => {
           </Button>
         );
       },
-      cell: ({ getValue }) => getValue().join(", "),
+      cell: ({ getValue }) => (getValue() ? getValue().join(", ") : "N/A"),
     },
     {
       accessorKey: "course",
@@ -143,7 +143,11 @@ export const Columns = ({ onActivityDelete }) => {
       accessorKey: "Actions",
       id: "actions",
       cell: ({ row }) => (
-        <ActionCell row={row} onActivityDelete={onActivityDelete} />
+        <ActionCell
+          row={row}
+          onActivityDelete={onActivityDelete}
+          onActivityEdit={onActivityEdit}
+        />
       ),
     },
   ];

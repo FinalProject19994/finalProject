@@ -2,7 +2,13 @@
 import currentDate from "@/lib/currentDate";
 import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -42,13 +48,15 @@ const schema = z.object({
     .optional(),
 });
 
-const ActivityForm = ({ closeModal }) => {
+const ActivityForm = ({ type, data, closeModal }) => {
   const router = useRouter();
   const [courses, setCourses] = useState([]);
   const [skills, setSkills] = useState([]);
   const [lecturers, setLecturers] = useState([]);
+  const [defaultSelectedSkills, setDefaultSelectedSkills] = useState([]);
+  const [defaultSelectedLecturers, setDefaultSelectedLecturers] = useState([]);
 
-  // Fetch courses
+  // Fetch courses, skills, and lecturers
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -95,40 +103,84 @@ const ActivityForm = ({ closeModal }) => {
     resolver: zodResolver(schema),
   });
 
+  useEffect(() => {
+    if (type === "edit" && data) {
+      // Pre-fill the form fields with the data of the selected activity
+      setValue("title", data.title);
+      setValue("description", data.description || "");
+      setValue("course", data.course.id);
+      setValue("weekNumber", data.weekNumber);
+      setValue("reflection", data.reflection);
+
+      // Prepare default selected skills and lecturers for MultipleSelector
+      setDefaultSelectedSkills(
+        data.skills.map((skill) => ({
+          label: skill.name,
+          value: skill.id,
+        })),
+      );
+
+      setDefaultSelectedLecturers(
+        data.lecturers.map((lecturer) => ({
+          label: lecturer.name,
+          value: lecturer.id,
+        })),
+      );
+    }
+  }, [type, data, setValue]);
+
   // Submit handler
   const submit = handleSubmit(async (formData) => {
     try {
-      // Generate activity ID
-      const querySnapshot = await getDocs(collection(db, "activities"));
-      const nextNumber = querySnapshot.docs.length + 1;
-      const activityId = `${formData.course}-${nextNumber}`;
-      const activityDocRef = doc(db, "activities", activityId);
+      if (type === "edit") {
+        // Update existing activity
+        const activityDocRef = doc(db, "activities", data.id);
+        await updateDoc(activityDocRef, {
+          title: formData.title,
+          description: formData.description,
+          course: doc(db, "courses", formData.course),
+          weekNumber: formData.weekNumber,
+          skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
+          lecturers: formData.lecturers.map((lecturerId) =>
+            doc(db, "users", lecturerId),
+          ),
+          reflection: formData.reflection,
+        });
+      } else {
+        // Generate activity ID
+        const querySnapshot = await getDocs(collection(db, "activities"));
+        const nextNumber = querySnapshot.docs.length + 1;
+        const activityId = `${formData.course}-${nextNumber}`;
+        const activityDocRef = doc(db, "activities", activityId);
 
-      // Save activity data
-      await setDoc(activityDocRef, {
-        title: formData.title,
-        description: formData.description,
-        course: doc(db, "courses", formData.course),
-        weekNumber: formData.weekNumber,
-        skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
-        lecturers: formData.lecturers.map((lecturerId) =>
-          doc(db, "users", lecturerId),
-        ),
-        reflection: formData.reflection,
-        date: currentDate,
-      });
+        // Save activity data
+        await setDoc(activityDocRef, {
+          title: formData.title,
+          description: formData.description,
+          course: doc(db, "courses", formData.course),
+          weekNumber: formData.weekNumber,
+          skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
+          lecturers: formData.lecturers.map((lecturerId) =>
+            doc(db, "users", lecturerId),
+          ),
+          reflection: formData.reflection,
+          date: currentDate,
+        });
+      }
 
       // Close modal and refresh page
       closeModal();
       router.refresh();
     } catch (error) {
-      console.error("Error adding activity:", error);
+      console.error("Error handling activity:", error);
     }
   });
 
   return (
     <form className="flex flex-col gap-4 p-4" onSubmit={submit}>
-      <h1 className="text-xl font-semibold">Add a New Activity</h1>
+      <h1 className="text-xl font-semibold">
+        {type === "edit" ? "Edit Activity" : "Add a New Activity"}
+      </h1>
 
       {/* Name Field */}
       <InputField
@@ -156,11 +208,7 @@ const ActivityForm = ({ closeModal }) => {
       {/* Course Select */}
       <div>
         <label className="text-sm text-gray-400">Course</label>
-        <Select
-          onValueChange={(id) => {
-            setValue("course", id);
-          }}
-        >
+        <Select onValueChange={(value) => setValue("course", value)}>
           <SelectTrigger>
             <SelectValue placeholder="Select a course" />
           </SelectTrigger>
@@ -199,6 +247,7 @@ const ActivityForm = ({ closeModal }) => {
               selected.map((skill) => skill.value),
             );
           }}
+          defaultValues={defaultSelectedSkills}
         />
         {errors.skills && (
           <span className="text-sm text-red-500">{errors.skills.message}</span>
@@ -218,6 +267,7 @@ const ActivityForm = ({ closeModal }) => {
               selected.map((lecturer) => lecturer.value),
             );
           }}
+          defaultValues={defaultSelectedLecturers}
         />
         {errors.lecturers && (
           <span className="text-sm text-red-500">
@@ -246,7 +296,7 @@ const ActivityForm = ({ closeModal }) => {
         type="submit"
         className="self-center rounded-md bg-primary_purple px-4 py-2 text-white"
       >
-        Create
+        {type === "edit" ? "Save Changes" : "Create"}
       </button>
     </form>
   );
