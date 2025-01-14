@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   setDoc,
   updateDoc,
@@ -100,23 +101,44 @@ const CourseForm = ({ type, data, closeModal }) => {
 
   const submit = handleSubmit(async (formData) => {
     try {
+      const courseDocRef = doc(
+        db,
+        "courses",
+        type === "edit" ? data.id : formData.id,
+      );
+
       if (type === "edit") {
-        const courseDocRef = doc(db, "courses", data.id);
+        // Fetch the current course data to merge with new data
+        const courseSnap = await getDoc(courseDocRef);
+        if (!courseSnap.exists()) {
+          throw new Error("Course not found");
+        }
+        const currentCourseData = courseSnap.data();
+
+        // Merge the current department and lecturer references with the new ones
+        const updatedDepartments = formData.departments.map((departmentId) =>
+          typeof departmentId === "string"
+            ? doc(db, "departments", departmentId)
+            : departmentId,
+        );
+        const updatedLecturers = formData.lecturers.map((lecturerId) =>
+          typeof lecturerId === "string"
+            ? doc(db, "users", lecturerId)
+            : lecturerId,
+        );
+
+        // Update the document with merged data
         await updateDoc(courseDocRef, {
           title: formData.title,
-          id: formData.id, // Assuming ID can be edited
-          departments: formData.departments.map((departmentId) =>
-            doc(db, "departments", departmentId),
-          ),
-          lecturers: formData.lecturers.map((lecturerId) =>
-            doc(db, "users", lecturerId),
-          ),
+          id: formData.id,
+          departments: updatedDepartments,
+          lecturers: updatedLecturers,
           semester: formData.semester,
           year: new Date().getFullYear(),
         });
       } else {
-        // Add the new logic here:
-        await setDoc(doc(db, "courses", formData.id), {
+        // Create a new course
+        await setDoc(courseDocRef, {
           title: formData.title,
           id: formData.id,
           departments: formData.departments.map((departmentId) =>
@@ -129,10 +151,11 @@ const CourseForm = ({ type, data, closeModal }) => {
           year: new Date().getFullYear(),
         });
       }
+
       closeModal();
       router.refresh();
     } catch (error) {
-      console.error("Error updating course:", error);
+      console.error("Error handling course:", error);
     }
   });
 
