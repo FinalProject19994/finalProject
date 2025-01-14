@@ -125,7 +125,12 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-gray-600 dark:text-gray-300">
           Courses
         </h1>
-        <button onClick={handleCreateCourse}>Create New Course</button>
+        <button
+          onClick={handleCreateCourse}
+          className="rounded-md border p-2 hover:bg-primary_purple_table dark:border-white dark:hover:bg-primary_purple"
+        >
+          Create New Course
+        </button>
       </div>
       {loading ? (
         <Loader />
