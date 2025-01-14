@@ -3,21 +3,32 @@
 import { ChevronDown, Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export default function MultipleSelector({ options, onSelect, selection }) {
+export default function MultipleSelector({
+  options,
+  onSelect,
+  selection,
+  defaultValues = [], // Add defaultValues prop
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
 
+  // Set the initial selected options based on defaultValues
+  useEffect(() => {
+    if (defaultValues) {
+      setSelectedOptions(defaultValues);
+    }
+  }, [defaultValues]);
+
   const toggleOption = (option) => {
     setSelectedOptions((prev) => {
       const isAlreadySelected = prev.some((item) => item.id === option.id);
       const newSelectedOptions = isAlreadySelected
-        ? prev.filter((item) => item.id !== option.id) // Remove the option
-        : [...prev, option]; // Add the option
+        ? prev.filter((item) => item.id !== option.id)
+        : [...prev, option];
 
-      // Pass the updated state to the parent callback
       onSelect(newSelectedOptions);
       return newSelectedOptions;
     });
@@ -25,9 +36,8 @@ export default function MultipleSelector({ options, onSelect, selection }) {
 
   const removeOption = (option, e) => {
     e.stopPropagation();
-    setSelectedOptions(
-      (prev) => prev.filter((item) => item.id !== option.id), // Remove based on `id`
-    );
+    setSelectedOptions((prev) => prev.filter((item) => item.id !== option.id));
+    onSelect(selectedOptions.filter((item) => item.id !== option.id));
   };
 
   const filteredOptions = options.filter((option) =>
