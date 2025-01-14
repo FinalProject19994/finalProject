@@ -4,13 +4,44 @@ import { SearchableTable } from "@/components/SearchableTable";
 import Loader from "@/components/ui/Loader";
 import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
 import { db } from "@/lib/firebase";
-import { collection, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { SelectedCourseIdContext } from "../../../context/CoursesContext";
 import { columns } from "./columns";
 
 const Page = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+  const [modalType, setModalType] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  const handleCreateCourse = () => {
+    setModalType("create");
+  };
+
+  const handleCourseDelete = async (courseId) => {
+    try {
+      const courseDocRef = doc(db, "courses", courseId);
+      await deleteDoc(courseDocRef);
+    } catch (error) {
+      console.error("Error deleting course:", error);
+    }
+  };
+
+  const handleEditCourse = (courseData) => {
+    setSelectedCourse(courseData);
+    setModalType("edit");
+  };
+
+  const closeModal = () => {
+    setModalType(null); // Close the modal
+    setSelectedCourse(null); // Clear the edit data
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +59,7 @@ const Page = () => {
   const { selectedCourseId, setSelectedCourseId } = useContext(
     SelectedCourseIdContext,
   );
+
   // Fetching the courses
   useEffect(() => {
     const coursesCollection = collection(db, "courses");
@@ -41,7 +73,8 @@ const Page = () => {
 
             // Resolve department references
             const departments = await Promise.all(
-              data.departments.map(async (ref) => {
+              (data.departments || []).map(async (ref) => {
+                // Handle undefined or null departments
                 const departmentDoc = await getDoc(ref);
                 return departmentDoc.data()?.title || "Unknown Department";
               }),
@@ -49,7 +82,8 @@ const Page = () => {
 
             // Resolve lecturer references
             const lecturers = await Promise.all(
-              data.lecturers.map(async (ref) => {
+              (data.lecturers || []).map(async (ref) => {
+                // Handle undefined or null lecturers
                 const lecturerDoc = await getDoc(ref);
                 return lecturerDoc.data()?.name || "Unknown Lecturer";
               }),
@@ -58,8 +92,8 @@ const Page = () => {
             return {
               id: doc.id,
               ...data,
-              departments: departments.join(", "),
-              lecturers: lecturers.join(", "),
+              departments: departments.length > 0 ? departments : ["N/A"], // Set to "N/A" if empty
+              lecturers: lecturers.length > 0 ? lecturers : ["N/A"], // Set to "N/A" if empty
               semester: data.semester + " - " + data.year,
             };
           }),
@@ -91,16 +125,28 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-gray-600 dark:text-gray-300">
           Courses
         </h1>
-        <Modal table="course" type="create" data={courses} />
+        <button onClick={handleCreateCourse}>Create New Course</button>
       </div>
       {loading ? (
         <Loader />
       ) : (
         <SearchableTable
           data={courses}
-          columns={columns}
+          columns={columns({
+            onCourseDelete: handleCourseDelete,
+            onCourseEdit: handleEditCourse,
+          })}
           handleRowSelect={handleRowSelect}
-          page="activities"
+          page="courses"
+        />
+      )}
+      {/* Modal component */}
+      {modalType && (
+        <Modal
+          table="course"
+          type={modalType}
+          data={selectedCourse}
+          closeModal={closeModal}
         />
       )}
     </div>

@@ -8,7 +8,13 @@ import {
 } from "@/components/ui/select";
 import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -76,37 +82,78 @@ const CourseForm = ({ type, data, closeModal }) => {
     fetchDepartmentsAndLecturers();
   }, []);
 
+  useEffect(() => {
+    if (type === "edit" && data) {
+      setValue("title", data.title);
+      setValue("id", data.id);
+      setValue(
+        "departments",
+        data.departments.map((department) => department.id || department),
+      );
+      setValue(
+        "lecturers",
+        data.lecturers.map((lecturer) => lecturer.id || lecturer),
+      );
+      setValue("semester", data.semester);
+    }
+  }, [type, data, setValue]);
+
   const submit = handleSubmit(async (formData) => {
     try {
-      await setDoc(doc(db, "courses", formData.id), {
-        title: formData.title,
-        id: formData.id,
-        departments: formData.departments.map((departmentId) =>
-          doc(db, "departments", departmentId),
-        ),
-        lecturers: formData.lecturers.map((lecturerId) =>
-          doc(db, "users", lecturerId),
-        ),
-        semester: formData.semester,
-        year: new Date().getFullYear(),
-      });
+      if (type === "edit") {
+        const courseDocRef = doc(db, "courses", data.id);
+        await updateDoc(courseDocRef, {
+          title: formData.title,
+          id: formData.id, // Assuming ID can be edited
+          departments: formData.departments.map((departmentId) =>
+            doc(db, "departments", departmentId),
+          ),
+          lecturers: formData.lecturers.map((lecturerId) =>
+            doc(db, "users", lecturerId),
+          ),
+          semester: formData.semester,
+          year: new Date().getFullYear(),
+        });
+      } else {
+        // Add the new logic here:
+        await setDoc(doc(db, "courses", formData.id), {
+          title: formData.title,
+          id: formData.id,
+          departments: formData.departments.map((departmentId) =>
+            doc(db, "departments", departmentId),
+          ),
+          lecturers: formData.lecturers.map((lecturerId) =>
+            doc(db, "users", lecturerId),
+          ),
+          semester: formData.semester,
+          year: new Date().getFullYear(),
+        });
+      }
       closeModal();
       router.refresh();
     } catch (error) {
-      console.error("Error adding course:", error);
+      console.error("Error updating course:", error);
     }
   });
 
   return (
     <form className="flex flex-col gap-4" onSubmit={submit}>
-      <h1 className="text-xl font-semibold">Add a new Course</h1>
-      <InputField label="Title" register={register} name="title" />
+      <h1 className="text-xl font-semibold">
+        {type === "edit" ? "Edit Course" : "Add a new Course"}
+      </h1>
       <InputField
-        type="number"
+        label="Title"
+        register={register}
+        name="title"
+        error={errors.title}
+      />
+      <InputField
+        type="text"
         label="ID"
         register={register}
         name="id"
         error={errors.id}
+        disabled={type === "edit"}
       />
       <div className="space-y-2">
         <label className="text-sm text-gray-400">Department</label>
@@ -119,6 +166,14 @@ const CourseForm = ({ type, data, closeModal }) => {
               selected.map((department) => department.value),
             );
           }}
+          defaultValues={
+            type === "edit"
+              ? data?.departments.map((department) => ({
+                  label: department, // Assuming department is a string
+                  value: department,
+                }))
+              : []
+          }
         />
         {errors.department && (
           <p className="text-xs text-red-500">
@@ -138,6 +193,14 @@ const CourseForm = ({ type, data, closeModal }) => {
               selected.map((lecturer) => lecturer.value),
             );
           }}
+          defaultValues={
+            type === "edit"
+              ? data?.lecturers.map((lecturer) => ({
+                  label: lecturer, // Assuming lecturer is a string
+                  value: lecturer,
+                }))
+              : []
+          }
         />
         {errors.lecturers && (
           <p className="text-xs text-red-500">
@@ -148,9 +211,8 @@ const CourseForm = ({ type, data, closeModal }) => {
       <div>
         <label className="text-sm text-gray-400">Semester</label>
         <Select
-          onValueChange={(value) => {
-            setValue("semester", value);
-          }}
+          onValueChange={(value) => setValue("semester", value)}
+          defaultValue={data?.semester}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select a Semester" />
@@ -174,8 +236,11 @@ const CourseForm = ({ type, data, closeModal }) => {
         )}
       </div>
 
-      <button className="w-1/4 self-center rounded-md bg-primary_purple p-2 text-white">
-        Add
+      <button
+        type="submit"
+        className="w-1/4 self-center rounded-md bg-primary_purple p-2 text-white"
+      >
+        {type === "edit" ? "Save Changes" : "Create"}
       </button>
     </form>
   );
