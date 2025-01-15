@@ -107,6 +107,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       .style("transition", "opacity 0.2s")
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
+      .on("click", handleNodeClick)
       .call(
         d3
           .drag()
@@ -282,6 +283,23 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
     }
     if (selectedNodeId) {
       highlightNodeById(selectedNodeId);
+    }
+
+    // Handle node click
+
+    function handleNodeClick(_, d) {
+      if (d.type === "skill") {
+        // If the node is a skill, navigate to the skills page with a search query
+        router.push(`/skills?search=${encodeURIComponent(d.name)}`);
+      } else if (d.type === "activity") {
+        // If the node is an activity, navigate to the activity detail page
+        router.push(`/activities/${d.id}`);
+      }
+      // If the node is a course, navigate to the course detail page
+      // Currently there is no course detail page
+      // } else if (d.type === "course") {
+      //   router.push(`/courses/${d.id}`);
+      // }
     }
 
     // Observe container size changes
