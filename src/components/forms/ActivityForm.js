@@ -140,7 +140,7 @@ const ActivityForm = ({ type, data, closeModal }) => {
         title: formData.title,
         description: formData.description,
         course: doc(db, "courses", formData.course),
-        weekNumber: formData.weekNumber, // removed the parseInt
+        weekNumber: formData.weekNumber,
         skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
         lecturers: formData.lecturers.map((lecturerId) =>
           doc(db, "users", lecturerId),
