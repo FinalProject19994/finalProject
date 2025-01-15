@@ -32,12 +32,9 @@ const schema = z.object({
     .min(3, { message: "Description must be at least 3 characters" })
     .optional(),
   course: z.string().nonempty({ message: "Course is required" }),
-  weekNumber: z
-    .string()
-    .transform((val) => Number(val))
-    .refine((val) => !isNaN(val) && val > 0, {
-      message: "Week number must be a positive number",
-    }),
+  weekNumber: z.coerce
+    .number()
+    .min(1, { message: "Week number must be a positive number" }),
   skills: z.array(z.string()).min(1, { message: "Select at least one skill" }),
   lecturers: z
     .array(z.string())
@@ -47,7 +44,6 @@ const schema = z.object({
     .min(3, { message: "Reflection must be at least 3 characters" })
     .optional(),
 });
-
 const ActivityForm = ({ type, data, closeModal }) => {
   const router = useRouter();
   const [courses, setCourses] = useState([]);
@@ -103,13 +99,21 @@ const ActivityForm = ({ type, data, closeModal }) => {
     resolver: zodResolver(schema),
   });
 
+  // Pre-fill form fields if in edit mode
   useEffect(() => {
     if (type === "edit" && data) {
-      // Pre-fill the form fields with the data of the selected activity
       setValue("title", data.title);
       setValue("description", data.description || "");
       setValue("course", data.course.id);
       setValue("weekNumber", data.weekNumber);
+      setValue(
+        "skills",
+        data.skills.map((skill) => skill.id),
+      );
+      setValue(
+        "lecturers",
+        data.lecturers.map((lecturer) => lecturer.id),
+      );
       setValue("reflection", data.reflection);
 
       // Prepare default selected skills and lecturers for MultipleSelector
@@ -132,43 +136,32 @@ const ActivityForm = ({ type, data, closeModal }) => {
   // Submit handler
   const submit = handleSubmit(async (formData) => {
     try {
+      const activityData = {
+        title: formData.title,
+        description: formData.description,
+        course: doc(db, "courses", formData.course),
+        weekNumber: formData.weekNumber, // removed the parseInt
+        skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
+        lecturers: formData.lecturers.map((lecturerId) =>
+          doc(db, "users", lecturerId),
+        ),
+        reflection: formData.reflection,
+      };
       if (type === "edit") {
-        // Update existing activity
         const activityDocRef = doc(db, "activities", data.id);
-        await updateDoc(activityDocRef, {
-          title: formData.title,
-          description: formData.description,
-          course: doc(db, "courses", formData.course),
-          weekNumber: formData.weekNumber,
-          skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
-          lecturers: formData.lecturers.map((lecturerId) =>
-            doc(db, "users", lecturerId),
-          ),
-          reflection: formData.reflection,
-        });
+        await updateDoc(activityDocRef, activityData);
       } else {
-        // Generate activity ID
         const querySnapshot = await getDocs(collection(db, "activities"));
         const nextNumber = querySnapshot.docs.length + 1;
         const activityId = `${formData.course}-${nextNumber}`;
         const activityDocRef = doc(db, "activities", activityId);
 
-        // Save activity data
         await setDoc(activityDocRef, {
-          title: formData.title,
-          description: formData.description,
-          course: doc(db, "courses", formData.course),
-          weekNumber: formData.weekNumber,
-          skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
-          lecturers: formData.lecturers.map((lecturerId) =>
-            doc(db, "users", lecturerId),
-          ),
-          reflection: formData.reflection,
+          ...activityData,
           date: currentDate,
         });
       }
 
-      // Close modal and refresh page
       closeModal();
       router.refresh();
     } catch (error) {
@@ -208,7 +201,10 @@ const ActivityForm = ({ type, data, closeModal }) => {
       {/* Course Select */}
       <div>
         <label className="text-sm text-gray-400">Course</label>
-        <Select onValueChange={(value) => setValue("course", value)}>
+        <Select
+          onValueChange={(value) => setValue("course", value)}
+          defaultValue={data?.course.id}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select a course" />
           </SelectTrigger>
