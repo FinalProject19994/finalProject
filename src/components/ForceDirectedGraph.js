@@ -295,11 +295,10 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
         // If the node is an activity, navigate to the activity detail page
         router.push(`/activities/${d.id}`);
       }
-      // If the node is a course, navigate to the course detail page
-      // Currently there is no course detail page
-      // } else if (d.type === "course") {
-      //   router.push(`/courses/${d.id}`);
-      // }
+      // If the node is a course, navigate to the activities page with the course name as a search query
+      else if (d.type === "course") {
+        router.push(`/activities?search=${encodeURIComponent(d.name)}`);
+      }
     }
 
     // Observe container size changes
