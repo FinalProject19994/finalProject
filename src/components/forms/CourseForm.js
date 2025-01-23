@@ -192,7 +192,7 @@ const CourseForm = ({ type, data, closeModal }) => {
           defaultValues={
             type === "edit"
               ? data?.departments.map((department) => ({
-                  label: department, // Assuming department is a string
+                  label: department,
                   value: department,
                 }))
               : []
@@ -219,7 +219,7 @@ const CourseForm = ({ type, data, closeModal }) => {
           defaultValues={
             type === "edit"
               ? data?.lecturers.map((lecturer) => ({
-                  label: lecturer, // Assuming lecturer is a string
+                  label: lecturer,
                   value: lecturer,
                 }))
               : []
@@ -235,7 +235,7 @@ const CourseForm = ({ type, data, closeModal }) => {
         <label className="text-sm text-gray-400">Semester</label>
         <Select
           onValueChange={(value) => setValue("semester", value)}
-          defaultValue={data?.semester}
+          defaultValue={data?.semester.split(" ")[0]}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select a Semester" />
