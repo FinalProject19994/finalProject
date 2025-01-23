@@ -36,8 +36,11 @@ export default function MultipleSelector({
 
   const removeOption = (option, e) => {
     e.stopPropagation();
-    setSelectedOptions((prev) => prev.filter((item) => item.id !== option.id));
-    onSelect(selectedOptions.filter((item) => item.id !== option.id));
+    const newSelectedOptions = selectedOptions.filter(
+      (item) => item.id !== option.id,
+    );
+    setSelectedOptions(newSelectedOptions);
+    onSelect(newSelectedOptions);
   };
 
   const filteredOptions = options.filter((option) =>
@@ -66,10 +69,16 @@ export default function MultipleSelector({
   return (
     <div className="w-full" ref={dropdownRef}>
       <div className="relative">
-        <button
-          type="button"
+        <div
+          role="button"
+          tabIndex={0}
           className="flex w-full items-center justify-between rounded-md border border-gray-200 bg-white p-2 text-left text-sm focus:outline-none dark:border-gray-800 dark:bg-gray-400 dark:placeholder-slate-700"
           onClick={() => setIsOpen(!isOpen)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setIsOpen(!isOpen);
+            }
+          }}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
         >
@@ -96,7 +105,7 @@ export default function MultipleSelector({
             )}
           </div>
           <ChevronDown className="h-5 w-5 text-gray-400" aria-hidden="true" />
-        </button>
+        </div>
 
         {isOpen && (
           <div className="absolute z-10 mt-1 max-h-60 w-full rounded-md bg-white shadow-lg focus:outline-none dark:bg-gray-400 sm:text-sm">
