@@ -163,7 +163,7 @@ const Page = () => {
         <SearchableTable
           columns={Columns({
             onActivityDelete: handleActivityDelete,
-            onActivityEdit: handleEditActivity, // Pass the new handler
+            onActivityEdit: handleEditActivity,
           })}
           data={activities}
           handleRowSelect={handleRowSelect}

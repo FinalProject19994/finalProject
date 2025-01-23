@@ -119,15 +119,17 @@ const ActivityForm = ({ type, data, closeModal }) => {
       // Prepare default selected skills and lecturers for MultipleSelector
       setDefaultSelectedSkills(
         data.skills.map((skill) => ({
-          label: skill.name,
-          value: skill.id,
+          id: skill.id,
+          value: skill.value,
+          label: skill,
         })),
       );
 
       setDefaultSelectedLecturers(
         data.lecturers.map((lecturer) => ({
-          label: lecturer.name,
-          value: lecturer.id,
+          id: lecturer.id,
+          value: lecturer.value,
+          label: lecturer,
         })),
       );
     }
