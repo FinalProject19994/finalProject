@@ -5,6 +5,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
 import { useTheme } from "next-themes";
 
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
 const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
   const { theme } = useTheme();
   const containerRef = useRef(null);
@@ -286,30 +295,36 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
     }
 
     // Handle node click
-
     function handleNodeClick(_, d) {
-      if (d.type === "skill") {
-        // If the node is a skill, navigate to the skills page with a search query
-        router.push(`/skills?search=${encodeURIComponent(d.name)}`);
-      } else if (d.type === "activity") {
-        // If the node is an activity, navigate to the activity detail page
-        router.push(`/activities/${d.id}`);
-      }
-      // If the node is a course, navigate to the activities page with the course name as a search query
-      else if (d.type === "course") {
-        router.push(`/activities?search=${encodeURIComponent(d.name)}`);
+      switch (d.type) {
+        case "skill":
+          // If the node is a skill, navigate to the skills page with a search query
+          router.push(`/skills?search=${encodeURIComponent(d.name)}`);
+          break;
+
+        case "activity":
+          // If the node is an activity, navigate to the activity detail page
+          router.push(`/activities/${d.id}`);
+          break;
+
+        // If the node is a course, navigate to the activities page with the course name as a search query
+        case "course":
+          router.push(`/activities?search=${encodeURIComponent(d.name)}`);
+          break;
       }
     }
 
-    // Observe container size changes
-    const resizeObserver = new ResizeObserver(() => {
+    // Add a resize handler with debouncing
+    const debouncedResize = debounce(() => {
       const newWidth = container.offsetWidth;
       const newHeight = container.offsetHeight;
       svg.attr("width", newWidth).attr("height", newHeight);
       simulation.force("center", d3.forceCenter(newWidth / 2, newHeight / 2));
       simulation.alpha(1).restart();
-    });
+    }, 250);
 
+    // Observe container size changes
+    const resizeObserver = new ResizeObserver(debouncedResize);
     resizeObserver.observe(container);
 
     // Cleanup on unmount
@@ -323,10 +338,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
   return (
     <div
       ref={containerRef}
-      style={{
-        width: "100%",
-        height: "100%",
-      }}
+      className="h-full w-full" // Tailwind classes for the container
     />
   );
 };
