@@ -25,7 +25,12 @@ export function SearchableTable({ columns, data, handleRowSelect, page }) {
   const handleSearch = (event) => {
     const searchTerm = event.target.value.toLowerCase();
     const filtered = data.filter((item) =>
-      Object.values(item).some((value) => {
+      Object.entries(item).some(([key, value]) => {
+        // Use Object.entries to get key and value
+        if (key === "course" && typeof value === "object" && value !== null) {
+          // Check if it's the 'course' object
+          return String(value.title).toLowerCase().includes(searchTerm); // Search in course.title
+        }
         if (Array.isArray(value)) {
           return value.some((v) =>
             String(v).toLowerCase().includes(searchTerm),
