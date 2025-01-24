@@ -19,6 +19,12 @@ const Page = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [modalType, setModalType] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const { selectedCourseId, setSelectedCourseId } = useContext(
+    SelectedCourseIdContext,
+  );
 
   const handleCreateCourse = () => {
     setModalType("create");
@@ -53,13 +59,6 @@ const Page = () => {
     fetchData();
   }, []);
 
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const { selectedCourseId, setSelectedCourseId } = useContext(
-    SelectedCourseIdContext,
-  );
-
   // Fetching the courses
   useEffect(() => {
     const coursesCollection = collection(db, "courses");
@@ -71,29 +70,55 @@ const Page = () => {
           snapshot.docs.map(async (doc) => {
             const data = doc.data();
 
-            // Resolve department references
-            const departments = await Promise.all(
+            // --- FORCE Resolve department references to objects with ID and title ---
+            const resolvedDepartments = await Promise.all(
               (data.departments || []).map(async (ref) => {
-                // Handle undefined or null departments
-                const departmentDoc = await getDoc(ref);
-                return departmentDoc.data()?.title || "Unknown Department";
+                try {
+                  // Add try-catch for error handling in individual department fetch
+                  const departmentDoc = await getDoc(ref);
+                  if (departmentDoc.exists()) {
+                    return {
+                      id: departmentDoc.id, // Get department ID from departmentDoc.id
+                      title: departmentDoc.data().title, // Get department title from departmentDoc.data().title
+                    };
+                  } else {
+                    console.warn("Department document not found:", ref.path); // Warn if department doc is missing
+                    return null; // Or handle missing department as needed
+                  }
+                } catch (error) {
+                  console.error("Error fetching department:", ref.path, error); // Log error for individual department fetch
+                  return null; // Or handle error as needed
+                }
               }),
             );
 
-            // Resolve lecturer references
-            const lecturers = await Promise.all(
+            // --- FORCE Resolve lecturer references to objects with ID and name ---
+            const resolvedLecturers = await Promise.all(
               (data.lecturers || []).map(async (ref) => {
-                // Handle undefined or null lecturers
-                const lecturerDoc = await getDoc(ref);
-                return lecturerDoc.data()?.name || "Unknown Lecturer";
+                try {
+                  // Add try-catch for error handling in individual lecturer fetch
+                  const lecturerDoc = await getDoc(ref);
+                  if (lecturerDoc.exists()) {
+                    return {
+                      id: lecturerDoc.id, // Get lecturer ID from lecturerDoc.id
+                      name: lecturerDoc.data().name, // Get lecturer name from lecturerDoc.data().name
+                    };
+                  } else {
+                    console.warn("Lecturer document not found:", ref.path); // Warn if lecturer doc is missing
+                    return null; // Handle missing lecturer as needed
+                  }
+                } catch (error) {
+                  console.error("Error fetching lecturer:", ref.path, error); // Log error for individual lecturer fetch
+                  return null; // Handle error as needed
+                }
               }),
             );
 
             return {
               id: doc.id,
               ...data,
-              departments: departments.length > 0 ? departments : ["N/A"], // Set to "N/A" if empty
-              lecturers: lecturers.length > 0 ? lecturers : ["N/A"], // Set to "N/A" if empty
+              departments: resolvedDepartments.filter(Boolean), // Filter out nulls
+              lecturers: resolvedLecturers.filter(Boolean), // Filter out nulls
               semester: data.semester + " - " + data.year,
             };
           }),

@@ -134,7 +134,9 @@ export const columns = ({ onCourseDelete, onCourseEdit }) => {
           </Button>
         );
       },
-      cell: ({ getValue }) => getValue()?.join(", ") || "N/A",
+      cell: ({ row }) =>
+        row.original.lecturers?.map((lecturer) => lecturer.name).join(", ") ||
+        "Unknown lecturers",
     },
     {
       accessorKey: "departments",
@@ -148,7 +150,10 @@ export const columns = ({ onCourseDelete, onCourseEdit }) => {
           </Button>
         );
       },
-      cell: ({ getValue }) => getValue()?.join(", ") || "N/A",
+      cell: ({ row }) =>
+        row.original.departments
+          ?.map((department) => department.title)
+          .join(", ") || "Unknown departments",
     },
     {
       id: "actions",
