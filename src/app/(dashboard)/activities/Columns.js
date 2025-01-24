@@ -97,7 +97,8 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
           </Button>
         );
       },
-      cell: ({ getValue }) => (getValue() ? getValue().join(", ") : "N/A"),
+      cell: ({ row }) =>
+        row.original.lecturers?.map((lecturer) => lecturer.name).join(", "),
     },
     {
       accessorKey: "skills",
@@ -111,7 +112,8 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
           </Button>
         );
       },
-      cell: ({ getValue }) => (getValue() ? getValue().join(", ") : "N/A"),
+      cell: ({ row }) =>
+        row.original.skills?.map((skill) => skill.name).join(", "),
     },
     {
       accessorKey: "course",

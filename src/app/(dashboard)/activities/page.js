@@ -21,8 +21,8 @@ const Page = () => {
   const { selectedActivityId, setSelectedActivityId } = useContext(
     SelectedActivityIdContext,
   );
-  const [modalType, setModalType] = useState(null); // "create" | "edit" | null
-  const [selectedActivity, setSelectedActivity] = useState(null); // To store data for editing
+  const [modalType, setModalType] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -63,29 +63,58 @@ const Page = () => {
               const activity = doc.data();
 
               const courseSnapshot = await getDoc(activity.course);
-              const course = courseSnapshot.exists()
-                ? courseSnapshot.data()
-                : "Unknown Course";
+              const courseDetails = courseSnapshot.exists()
+                ? { id: courseSnapshot.id, title: courseSnapshot.data().title }
+                : { id: null, title: "Unknown Course" };
 
               const resolvedSkills = await Promise.all(
                 activity.skills.map(async (skillRef) => {
-                  const skillSnapshot = await getDoc(skillRef);
-                  return skillSnapshot.exists()
-                    ? skillSnapshot.data().name
-                    : "Unknown Skill";
+                  try {
+                    const skillSnapshot = await getDoc(skillRef);
+                    if (skillSnapshot.exists()) {
+                      return {
+                        id: skillSnapshot.id,
+                        name: skillSnapshot.data().name,
+                      };
+                    } else {
+                      console.warn("Skill document not found:", skillRef.path);
+                      return null;
+                    }
+                  } catch (error) {
+                    console.error(
+                      "Error fetching skill:",
+                      skillRef.path,
+                      error,
+                    );
+                    return null;
+                  }
                 }),
               );
 
               const resolvedLecturers = await Promise.all(
                 activity.lecturers.map(async (lecturerRef) => {
-                  const lecturerSnapshot = await getDoc(lecturerRef);
-                  if (lecturerSnapshot.exists()) {
-                    const lecturerData = lecturerSnapshot.data();
-                    return lecturerData && lecturerData.name
-                      ? lecturerData.name
-                      : "Unknown Lecturer";
-                  } else {
-                    return "Unknown Lecturer";
+                  try {
+                    const lecturerSnapshot = await getDoc(lecturerRef);
+                    if (lecturerSnapshot.exists()) {
+                      const lecturerData = lecturerSnapshot.data();
+                      return {
+                        id: lecturerSnapshot.id,
+                        name: lecturerData.name,
+                      };
+                    } else {
+                      console.warn(
+                        "Lecturer document not found:",
+                        lecturerRef.path,
+                      );
+                      return null;
+                    }
+                  } catch (error) {
+                    console.error(
+                      "Error fetching lecturer:",
+                      lecturerRef.path,
+                      error,
+                    );
+                    return null;
                   }
                 }),
               );
@@ -93,9 +122,9 @@ const Page = () => {
               return {
                 id: doc.id,
                 ...activity,
-                skills: resolvedSkills,
-                course: course,
-                lecturers: resolvedLecturers,
+                skills: resolvedSkills.filter(Boolean),
+                course: courseDetails,
+                lecturers: resolvedLecturers.filter(Boolean),
               };
             }),
           );
@@ -134,16 +163,16 @@ const Page = () => {
 
   const handleEditActivity = (activityData) => {
     setSelectedActivity(activityData);
-    setModalType("edit"); // Open the modal in edit mode
+    setModalType("edit");
   };
 
   const handleCreateActivity = () => {
-    setModalType("create"); // Open the modal in create mode
+    setModalType("create");
   };
 
   const closeModal = () => {
-    setModalType(null); // Close the modal
-    setSelectedActivity(null); // Clear the edit data
+    setModalType(null);
+    setSelectedActivity(null);
   };
 
   return (

@@ -99,9 +99,26 @@ const ActivityForm = ({ type, data, closeModal }) => {
     resolver: zodResolver(schema),
   });
 
-  // Pre-fill form fields if in edit mode
   useEffect(() => {
     if (type === "edit" && data) {
+      const defaultSkills = data.skills.map((skill) => {
+        return {
+          label: skill.name,
+          value: skill.id,
+          id: skill.id,
+        };
+      });
+      setDefaultSelectedSkills(defaultSkills);
+
+      const defaultLecturers = data.lecturers.map((lecturer) => {
+        return {
+          label: lecturer.name,
+          value: lecturer.id,
+          id: lecturer.id,
+        };
+      });
+      setDefaultSelectedLecturers(defaultLecturers);
+
       setValue("title", data.title);
       setValue("description", data.description || "");
       setValue("course", data.course.id);
@@ -115,22 +132,6 @@ const ActivityForm = ({ type, data, closeModal }) => {
         data.lecturers.map((lecturer) => lecturer.id),
       );
       setValue("reflection", data.reflection);
-
-      setDefaultSelectedSkills(
-        data.skills.map((skill) => ({
-          id: skill.id,
-          value: skill.value,
-          label: skill,
-        })),
-      );
-
-      setDefaultSelectedLecturers(
-        data.lecturers.map((lecturer) => ({
-          id: lecturer.id,
-          value: lecturer.value,
-          label: lecturer,
-        })),
-      );
     }
   }, [type, data, setValue]);
 
@@ -150,7 +151,6 @@ const ActivityForm = ({ type, data, closeModal }) => {
       };
       if (type === "edit") {
         const activityDocRef = doc(db, "activities", data.id);
-        console.log(activityData);
         await updateDoc(activityDocRef, activityData);
       } else {
         const querySnapshot = await getDocs(collection(db, "activities"));
