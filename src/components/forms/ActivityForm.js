@@ -116,7 +116,6 @@ const ActivityForm = ({ type, data, closeModal }) => {
       );
       setValue("reflection", data.reflection);
 
-      // Prepare default selected skills and lecturers for MultipleSelector
       setDefaultSelectedSkills(
         data.skills.map((skill) => ({
           id: skill.id,
@@ -151,6 +150,7 @@ const ActivityForm = ({ type, data, closeModal }) => {
       };
       if (type === "edit") {
         const activityDocRef = doc(db, "activities", data.id);
+        console.log(activityData);
         await updateDoc(activityDocRef, activityData);
       } else {
         const querySnapshot = await getDocs(collection(db, "activities"));

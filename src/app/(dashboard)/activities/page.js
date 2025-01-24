@@ -63,8 +63,8 @@ const Page = () => {
               const activity = doc.data();
 
               const courseSnapshot = await getDoc(activity.course);
-              const courseName = courseSnapshot.exists()
-                ? courseSnapshot.data().title
+              const course = courseSnapshot.exists()
+                ? courseSnapshot.data()
                 : "Unknown Course";
 
               const resolvedSkills = await Promise.all(
@@ -94,7 +94,7 @@ const Page = () => {
                 id: doc.id,
                 ...activity,
                 skills: resolvedSkills,
-                course: courseName,
+                course: course,
                 lecturers: resolvedLecturers,
               };
             }),

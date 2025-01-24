@@ -125,6 +125,7 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
           </Button>
         );
       },
+      cell: ({ row }) => row.original.course?.title || "Unknown Course",
     },
     {
       accessorKey: "date",

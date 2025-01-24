@@ -38,7 +38,6 @@ const ActionCell = ({ row, onSkillDelete, onSkillEdit }) => {
   }, []);
 
   const handleNavigation = () => {
-    console.log(row.original);
     const encodedSkill = encodeURIComponent(row.original.name);
     router.push(`/activities/?search=${encodedSkill}`);
   };
