@@ -13,33 +13,48 @@ import { useEffect, useState } from "react";
 
 const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
   const activityId = row.original.id;
-  const activityLecturerIds = row.original.lecturers
+  // Ensure lecturers array exists and is not null before mapping
+  const activityLecturerIds = Array.isArray(row.original.lecturers)
     ? row.original.lecturers.map((lecturer) => lecturer.id)
     : [];
   const currentUserId = auth.currentUser?.uid;
 
   const [userRole, setUserRole] = useState(null);
+  const [isAuthorizedToDelete, setIsAuthorizedToDelete] = useState(false); // State for delete authorization
+  const [isAuthorizedToEdit, setIsAuthorizedToEdit] = useState(false); // State for edit authorization
 
   useEffect(() => {
-    const fetchUserRole = async () => {
+    const fetchUserRoleAndCheckAuthorization = async () => {
       if (currentUserId) {
         try {
           const userDocRef = doc(db, "users", currentUserId);
           const userDoc = await getDoc(userDocRef);
+          let role = null;
           if (userDoc.exists()) {
-            setUserRole(userDoc.data().role.toLowerCase());
+            role = userDoc.data().role.toLowerCase();
+            setUserRole(role);
           }
+
+          // Authorization checks
+          const deleteAuth =
+            role === "admin" || activityLecturerIds.includes(currentUserId);
+          setIsAuthorizedToDelete(deleteAuth);
+
+          const editAuth =
+            role === "admin" || activityLecturerIds.includes(currentUserId);
+          setIsAuthorizedToEdit(editAuth);
         } catch (error) {
           console.error("Error fetching user role:", error);
         }
+      } else {
+        // If no currentUserId, user is not authorized
+        setIsAuthorizedToDelete(false);
+        setIsAuthorizedToEdit(false);
       }
     };
 
-    fetchUserRole();
-  }, [currentUserId]);
-
-  const isAuthorizedToDelete =
-    userRole === "admin" || activityLecturerIds.includes(currentUserId);
+    fetchUserRoleAndCheckAuthorization();
+  }, [currentUserId, activityLecturerIds]);
 
   const handleDelete = async () => {
     try {
@@ -57,14 +72,19 @@ const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => onActivityEdit(row.original)}>
+        <DropdownMenuItem
+          disabled={!isAuthorizedToEdit}
+          onClick={() => onActivityEdit(row.original)}
+        >
           Edit Activity
         </DropdownMenuItem>
-        {isAuthorizedToDelete && (
-          <DropdownMenuItem onClick={handleDelete}>
-            Delete Activity
-          </DropdownMenuItem>
-        )}
+
+        <DropdownMenuItem
+          disabled={!isAuthorizedToDelete}
+          onClick={handleDelete}
+        >
+          Delete Activity
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -98,7 +118,8 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
         );
       },
       cell: ({ row }) =>
-        row.original.lecturers?.map((lecturer) => lecturer.name).join(", "),
+        row.original.lecturers?.map((lecturer) => lecturer.name).join(", ") ||
+        "N/A",
     },
     {
       accessorKey: "skills",
@@ -113,7 +134,7 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
         );
       },
       cell: ({ row }) =>
-        row.original.skills?.map((skill) => skill.name).join(", "),
+        row.original.skills?.map((skill) => skill.name).join(", ") || "N/A",
     },
     {
       accessorKey: "course",
