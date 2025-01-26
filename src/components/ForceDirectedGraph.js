@@ -135,9 +135,8 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       .data(memoizedData.nodes)
       .enter()
       .append("text")
-      .text((d) => d.name)
       .attr("x", 12)
-      .attr("y", 4)
+      .attr("y", 0) // <-- REDUCED y offset to 0 (was 4)
       .style("font-size", "10px")
       .style("fill", (d) => {
         const categories =
@@ -153,7 +152,26 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
               : "#666666";
       })
       .style("opacity", 1)
-      .style("transition", "opacity 0.2s");
+      .style("transition", "opacity 0.2s")
+      .each(function (d) {
+        if (d.type === "course") {
+          d3.select(this).text("");
+          d3.select(this)
+            .append("tspan") // Name - first line
+            .attr("x", "1.5em")
+            .attr("dy", "-0.5em")
+            .style("font-weight", "bold")
+            .text(d.name);
+          d3.select(this)
+            .append("tspan") // Semester - second line, smaller font
+            .attr("x", "2.1em")
+            .attr("dy", "1em")
+            .style("font-size", "0.8em")
+            .text(d.semester + " " + d.year);
+        } else {
+          d3.select(this).text(d.name);
+        }
+      });
 
     labelRef.current = labels;
 
@@ -265,7 +283,12 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
 
       node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
-      labels.attr("x", (d) => d.x + 12).attr("y", (d) => d.y + 4);
+      labels.each(function (d) {
+        d3.select(this)
+          .attr("transform", `translate(${d.x},${d.y})`)
+          .attr("x", 12)
+          .attr("y", 0);
+      });
     }
 
     // Handle drag start event
