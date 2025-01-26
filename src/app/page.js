@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../lib/firebase";
 
@@ -11,20 +11,47 @@ const Page = () => {
 
   const emailRef = useRef();
   const passwordRef = useRef();
+  const [error, setError] = useState("");
+  const [loginStatus, setLoginStatus] = useState("idle");
 
-  // TODO: add login errors
-  // TODO: add login validation
-  const handleLogIn = () => {
-    signInWithEmailAndPassword(
-      auth,
-      emailRef.current.value,
-      passwordRef.current.value,
-    )
-      .then(() => router.push("/homepage"))
-      .catch((error) => {
-        console.error("Error logging in:", error.message);
-      });
+  const handleLogIn = async () => {
+    setError("");
+    setLoginStatus("loading");
+
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value,
+      );
+      setLoginStatus("success");
+      router.push("/homepage");
+    } catch (err) {
+      console.error("Error logging in:", err.message);
+      setLoginStatus("error");
+      switch (err.code) {
+        case "auth/invalid-credential":
+          setError("Invalid email or password.");
+          break;
+        case "auth/user-disabled":
+          setError("This account has been disabled.");
+          break;
+        case "auth/user-not-found":
+          setError("User not found");
+          break;
+        default:
+          setError("Login failed :-(");
+      }
+    }
   };
+
+  const getInputBorderClass = () => {
+    if (loginStatus === "error" && error) {
+      return "border-red-500 focus:border-red-700";
+    }
+    return "border-gray-300 focus:border-primary_purple dark:border-gray-500 dark:focus:border-primary_purple_table_light";
+  };
+
   return (
     <div className="flex h-screen bg-slate-100 dark:bg-gray-800 lg:text-xl">
       <div className="flex w-1/2 flex-col items-center justify-center">
@@ -43,21 +70,27 @@ const Page = () => {
           <input
             type="Email"
             placeholder="Email Address"
-            className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
+            className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-600 ${getInputBorderClass(
+              "email",
+            )}`}
             ref={emailRef}
           />
           {/* Password */}
           <input
             type="Password"
             placeholder="Password"
-            className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
+            className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-600 ${getInputBorderClass(
+              "password",
+            )}`}
             ref={passwordRef}
           />
           <button
             onClick={handleLogIn}
             className="rounded-md bg-primary_purple p-2 font-semibold text-white hover:brightness-110 dark:text-gray-300"
+            disabled={loginStatus === "loading"}
           >
-            Log in
+            {loginStatus === "loading" ? "Logging in..." : "Log in"}
+            {/* Show "Logging in..." when loading */}
           </button>
           <Link
             href="/forgotPassword"
@@ -65,6 +98,7 @@ const Page = () => {
           >
             Forgot Password?
           </Link>
+          {error && <p className="mt-2 text-center text-red-600">{error}</p>}
           <div className="h-px w-full bg-gray-300 dark:bg-gray-700" />
           <div className="flex justify-center">
             <p className="text-[16px] text-gray-500">
