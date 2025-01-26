@@ -87,8 +87,6 @@ const CourseForm = ({ type, data, closeModal }) => {
 
   useEffect(() => {
     if (type === "edit" && data) {
-      console.log("Course Edit Mode Data:", data);
-
       setValue("title", data.title);
       setValue("id", data.id);
       setValue("semester", data.semester.split(" ")[0]);
@@ -104,10 +102,6 @@ const CourseForm = ({ type, data, closeModal }) => {
         };
       });
       setDefaultDepartments(defaultDepartments);
-      console.log(
-        "Default Departments (Corrected Creation):",
-        defaultDepartments,
-      );
 
       // --- Default Lecturers - CREATE OBJECTS with label, value, id CORRECTLY ---
       const defaultLecturers = data.lecturers.map((lecturer) => {
@@ -120,7 +114,6 @@ const CourseForm = ({ type, data, closeModal }) => {
         };
       });
       setDefaultLecturers(defaultLecturers);
-      console.log("Default Lecturers (Corrected Creation):", defaultLecturers);
 
       setValue(
         "departments",
