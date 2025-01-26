@@ -213,7 +213,7 @@ const ActivityForm = ({ type, data, closeModal }) => {
           <SelectContent>
             {courses.map((course) => (
               <SelectItem key={course.id} value={course.id}>
-                {course.title}
+                {course.title} - {course.semester} {course.year}
               </SelectItem>
             ))}
           </SelectContent>

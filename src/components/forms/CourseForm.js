@@ -136,11 +136,8 @@ const CourseForm = ({ type, data, closeModal }) => {
 
   const submit = handleSubmit(async (formData) => {
     try {
-      const courseDocRef = doc(
-        db,
-        "courses",
-        type === "edit" ? data.id : formData.id,
-      );
+      const courseId = `${formData.id}-${formData.semester}-${new Date().getFullYear()}`;
+      const courseDocRef = doc(db, "courses", courseId);
 
       if (type === "edit") {
         // Fetch the current course data to merge with new data
@@ -175,7 +172,7 @@ const CourseForm = ({ type, data, closeModal }) => {
         // Create a new course
         await setDoc(courseDocRef, {
           title: formData.title,
-          id: formData.id,
+          id: courseId, // Save composite courseId as document ID and in 'id' field
           departments: formData.departments.map((departmentId) =>
             doc(db, "departments", departmentId),
           ),
@@ -211,7 +208,7 @@ const CourseForm = ({ type, data, closeModal }) => {
         register={register}
         name="id"
         error={errors.id}
-        disabled={type === "edit"}
+        disabled={type === "edit" || type === "create"}
       />
       <div className="space-y-2">
         <label className="text-sm text-gray-400">Department</label>

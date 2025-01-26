@@ -108,6 +108,7 @@ export const columns = ({ onCourseDelete, onCourseEdit }) => {
           </Button>
         );
       },
+      cell: ({ row }) => row.original.id.split("-")[0],
     },
     {
       accessorKey: "semester",
