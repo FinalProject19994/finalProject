@@ -118,7 +118,7 @@ const Page = () => {
             {/* Full name */}
             <input
               type="text"
-              placeholder="Full name"
+              placeholder="Full name*"
               className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={nameRef}
             />
@@ -153,7 +153,7 @@ const Page = () => {
             {/* Email */}
             <input
               type="email"
-              placeholder="Email Address"
+              placeholder="Email Address*"
               className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={emailRef}
             />
@@ -161,7 +161,7 @@ const Page = () => {
             {/* Password */}
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Password*"
               className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={passwordRef}
             />
@@ -169,14 +169,17 @@ const Page = () => {
             {/* Confirm Password */}
             <input
               type="password"
-              placeholder="Confirm Password"
+              placeholder="Confirm Password*"
               className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={confirmPasswordRef}
             />
           </div>
         </div>
+        <h3 className="mt-4 text-center text-sm text-black">
+          * are required field
+        </h3>
 
-        <button className="mt-16 w-1/2 self-center rounded-md bg-primary_green p-2 font-semibold text-white hover:brightness-110 sm:w-1/3 lg:w-1/4">
+        <button className="mt-12 w-1/2 self-center rounded-md bg-primary_green p-2 font-semibold text-white hover:brightness-110 sm:w-1/3 lg:w-1/4">
           Sign up
         </button>
         <div className="mt-2 flex justify-center">
