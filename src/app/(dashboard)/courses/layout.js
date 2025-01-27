@@ -1,6 +1,9 @@
-"use client";
 import CoursesGraph from "./CoursesGraph";
-import { SelectedCourseIdProvider } from "../../../context/CoursesContext";
+import { SelectedCourseIdProvider } from "@/context/CoursesContext";
+
+export const metadata = {
+  title: "Courses",
+};
 
 const Page = ({ children }) => {
   return (

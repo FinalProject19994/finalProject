@@ -1,6 +1,9 @@
-"use client";
 import ActivitiesGraph from "./ActivitiesGraph";
 import { SelectedActivityIdProvider } from "@/context/ActivitiesContext";
+
+export const metadata = {
+  title: "Activities",
+};
 
 const Page = ({ children }) => {
   return (

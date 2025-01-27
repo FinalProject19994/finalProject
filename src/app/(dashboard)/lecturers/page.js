@@ -1,11 +1,10 @@
 "use client";
-import DataTable from "@/components/data-table";
+import { SearchableTable } from "@/components/SearchableTable";
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
 import { collection, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
-import { SearchableTable } from "@/components/SearchableTable";
 
 const TeacherListPage = () => {
   const [lecturers, setLecturers] = useState([]);

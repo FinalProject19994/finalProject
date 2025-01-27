@@ -1,3 +1,7 @@
+export const metadata = {
+  title: "About Core Skills",
+};
+
 const Page = () => {
   return (
     <div className="mx-4 my-2 h-[98%] overflow-auto rounded-lg bg-white p-4 shadow-md dark:bg-gray-500">

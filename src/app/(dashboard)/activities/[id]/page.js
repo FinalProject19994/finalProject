@@ -2,12 +2,12 @@
 import { Badge } from "@/components/ui/badge";
 import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
 import { db } from "@/lib/firebase";
-import { skillsCategories, darkSkillsCategories } from "@/lib/skillsCategories";
+import { darkSkillsCategories, skillsCategories } from "@/lib/skillsCategories";
 import { doc, getDoc } from "firebase/firestore";
 import { X } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 
 const Page = ({ params }) => {
   const { theme } = useTheme();
@@ -99,16 +99,31 @@ const Page = ({ params }) => {
         <h1 className="mb-2 text-center text-2xl font-semibold">
           {activity.title}
         </h1>
-        <h5 className="text-center text-xs">{activity.date}</h5>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
+        <h5 className="text-center text-xs">
+          {activity.course?.semester[0].toUpperCase() +
+            activity.course?.semester.slice(1)}{" "}
+          - {activity.date}
+        </h5>
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Course
         </h3>
         <div className="flex flex-wrap gap-2">
-          <Badge variant="outline">{activity.course?.title}</Badge>
+          <Badge
+            className="cursor-pointer"
+            onClick={() => {
+              setSelectedActivityId(null);
+              router.push(
+                `/activities?search=${encodeURIComponent(activity.course?.title)}`,
+              );
+            }}
+            variant="outline"
+          >
+            {activity.course?.title}
+          </Badge>
         </div>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Skills
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -122,7 +137,12 @@ const Page = ({ params }) => {
                     : skillsCategories[skill.category],
                 cursor: "pointer",
               }}
-              // onClick={() => router.push(`/skills/${skill.id}`)}
+              onClick={() => {
+                setSelectedActivityId(null);
+                router.push(
+                  `/activities?search=${encodeURIComponent(skill.name)}`,
+                );
+              }}
             >
               {skill.name}
             </Badge>
@@ -130,38 +150,48 @@ const Page = ({ params }) => {
         </div>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Lecturers
         </h3>
         <div className="flex flex-wrap gap-2">
           {activity.lecturers?.map((lecturer) => (
-            <Badge key={lecturer.id} variant="outline">
+            <Badge
+              className="cursor-pointer"
+              onClick={() => {
+                setSelectedActivityId(null);
+                router.push(
+                  `/activities?search=${encodeURIComponent(lecturer.name)}`,
+                );
+              }}
+              key={lecturer.id}
+              variant="outline"
+            >
               {lecturer.name}
             </Badge>
           ))}
         </div>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Week Number
         </h3>
         <p>{activity.weekNumber}</p>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Description
         </h3>
         <p className="text-sm">{activity.description}</p>
       </div>
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
+        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Reflection
         </h3>
         <p className="text-sm">{activity.reflection}</p>
-        <h3 className="my-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
+        {/*<h3 className="my-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
           Images
         </h3>
-        {/* {activity.images.length > 0 ? (
+        {activity.images.length > 0 ? (
           activity.images.map((image) => (
             <img key={image} src={image} className="h-auto w-full" />
           ))

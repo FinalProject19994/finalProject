@@ -1,4 +1,3 @@
-"use client";
 import SkillsGraph from "./SkillsGraph";
 import { SelectedNodeIdProvider } from "../../../context/SkillsContext";
 
