@@ -165,7 +165,7 @@ const CourseForm = ({ type, data, closeModal }) => {
         // Create a new course
         await setDoc(courseDocRef, {
           title: formData.title,
-          id: courseId, // Save composite courseId as document ID and in 'id' field
+          id: courseId,
           departments: formData.departments.map((departmentId) =>
             doc(db, "departments", departmentId),
           ),

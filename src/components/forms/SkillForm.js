@@ -40,7 +40,7 @@ const SkillForm = ({ type, data, closeModal }) => {
       // Pre-fill the form fields with the data of the selected skill
       setValue("name", data.name);
       setValue("category", data.category);
-      setValue("code", data.id); // Assuming 'id' holds the code
+      setValue("code", data.id);
     }
   }, [type, data, setValue]);
 
@@ -88,20 +88,20 @@ const SkillForm = ({ type, data, closeModal }) => {
         </label>
         <Select
           onValueChange={(value) => setValue("category", value)}
-          defaultValue={data?.category}
+          defaultValue={data.category}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="emotional quotient">
+            <SelectItem value="Emotional quotient">
               Emotional quotient
             </SelectItem>
-            <SelectItem value="thinking development">
+            <SelectItem value="Thinking development">
               Thinking development
             </SelectItem>
-            <SelectItem value="mindset">Mindset</SelectItem>
-            <SelectItem value="professional self">Professional self</SelectItem>
+            <SelectItem value="Mindset">Mindset</SelectItem>
+            <SelectItem value="Professional self">Professional self</SelectItem>
           </SelectContent>
         </Select>
         {errors.category && (
