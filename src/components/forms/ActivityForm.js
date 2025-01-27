@@ -172,7 +172,10 @@ const ActivityForm = ({ type, data, closeModal }) => {
   });
 
   return (
-    <form className="flex flex-col gap-4 p-4" onSubmit={submit}>
+    <form
+      className="flex max-h-[85vh] flex-col gap-4 overflow-auto p-4"
+      onSubmit={submit}
+    >
       <h1 className="text-xl font-semibold">
         {type === "edit" ? "Edit Activity" : "Add a New Activity"}
       </h1>
