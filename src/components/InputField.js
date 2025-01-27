@@ -1,7 +1,7 @@
 const InputField = ({ label, type = "text", register, name, error }) => {
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm text-gray-400">{label}</label>
+      <label className="text-sm text-gray-600 dark:text-gray-50">{label}</label>
       <input
         type={type}
         min={1}

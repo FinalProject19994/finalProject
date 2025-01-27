@@ -204,7 +204,9 @@ const CourseForm = ({ type, data, closeModal }) => {
         disabled={type === "edit" || type === "create"}
       />
       <div className="space-y-2">
-        <label className="text-sm text-gray-400">Department</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Department
+        </label>
         <MultipleSelector
           options={departments}
           selection="departments"
@@ -232,7 +234,9 @@ const CourseForm = ({ type, data, closeModal }) => {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm text-gray-400">Lecturers</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Lecturers
+        </label>
         <MultipleSelector
           options={lecturers}
           selection="lecturers"
@@ -259,7 +263,9 @@ const CourseForm = ({ type, data, closeModal }) => {
         )}
       </div>
       <div>
-        <label className="text-sm text-gray-400">Semester</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Semester
+        </label>
         <Select
           onValueChange={(value) => setValue("semester", value)}
           defaultValue={data?.semester.split(" ")[0]}

@@ -190,7 +190,9 @@ const ActivityForm = ({ type, data, closeModal }) => {
 
       {/* Description Field */}
       <div>
-        <label className="text-sm text-gray-400">Description</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Description
+        </label>
         <Textarea
           className="rounded-md border p-2 text-sm text-gray-700 outline-none dark:bg-gray-400 dark:placeholder-slate-700"
           placeholder="Enter a Description..."
@@ -205,7 +207,9 @@ const ActivityForm = ({ type, data, closeModal }) => {
 
       {/* Course Select */}
       <div>
-        <label className="text-sm text-gray-400">Course</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Course
+        </label>
         <Select
           onValueChange={(value) => setValue("course", value)}
           defaultValue={data?.course.id}
@@ -237,7 +241,9 @@ const ActivityForm = ({ type, data, closeModal }) => {
 
       {/* Skills Selector */}
       <div>
-        <label className="text-sm text-gray-400">Skills</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Skills
+        </label>
         <MultipleSelector
           options={skills}
           name="skills"
@@ -257,7 +263,9 @@ const ActivityForm = ({ type, data, closeModal }) => {
 
       {/* Lecturers Selector */}
       <div>
-        <label className="text-sm text-gray-400">Lecturers</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Lecturers
+        </label>
         <MultipleSelector
           options={lecturers}
           name="lecturers"
@@ -279,10 +287,12 @@ const ActivityForm = ({ type, data, closeModal }) => {
 
       {/* Reflection Textarea */}
       <div>
-        <label className="text-sm text-gray-400">Reflection</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Reflection
+        </label>
         <Textarea
           placeholder="Enter a Reflection..."
-          className="rounded-md border p-2 text-sm text-gray-700 outline-none dark:bg-gray-400 dark:placeholder-slate-700"
+          className="rounded-md border p-2 text-sm text-gray-800 outline-none dark:bg-gray-400 dark:placeholder-slate-700"
           {...register("reflection")}
         />
         {errors.reflection && (

@@ -83,7 +83,9 @@ const SkillForm = ({ type, data, closeModal }) => {
       />
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-400">Category</label>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Category
+        </label>
         <Select
           onValueChange={(value) => setValue("category", value)}
           defaultValue={data?.category}
