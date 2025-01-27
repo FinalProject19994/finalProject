@@ -48,7 +48,7 @@ export default function ComboBox({ options, onSelect, title, defaultValue }) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-full justify-between text-gray-700 dark:bg-gray-400"
         >
           {value
             ? options.find((option) => option.value === value)?.label
