@@ -246,7 +246,7 @@ const Page = () => {
           development of every student.
         </p>
 
-        <section className="">
+        <section>
           <h2 className="mb-4 text-2xl font-semibold text-primary_purple dark:text-primary_purple_table">
             Why Core Skills Matter
           </h2>
@@ -260,7 +260,7 @@ const Page = () => {
           </p>
         </section>
 
-        <section className="">
+        <section>
           <h2 className="mb-4 text-2xl font-semibold text-primary_purple dark:text-primary_purple_table">
             Our Mission
           </h2>
@@ -275,7 +275,7 @@ const Page = () => {
           </p>
         </section>
 
-        <section className="">
+        <section>
           <h2 className="mb-4 text-2xl font-semibold text-primary_purple dark:text-primary_purple_table">
             Join Us in Transforming Education
           </h2>
@@ -288,7 +288,7 @@ const Page = () => {
           </p>
         </section>
 
-        <section className="">
+        <section>
           <h3 className="mb-4 text-2xl font-semibold text-primary_purple dark:text-primary_purple_table">
             Contact Us
           </h3>
