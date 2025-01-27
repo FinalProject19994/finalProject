@@ -1,14 +1,14 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Info, CircleHelp } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { CircleHelp, Heart, Info } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Profile from "./Profile";
 
 const topMenuItems = [
@@ -21,6 +21,8 @@ const topMenuItems = [
   },
   { icon: "/menuIcons/courses.png", label: "Courses", href: "/courses" },
   { icon: "/menuIcons/lecturers.png", label: "Lecturers", href: "/lecturers" },
+  { icon: "/menuIcons/Heart.png", label: "Favorites", href: "/favorites" },
+
   // { icon: "/menuIcons/questionnaire.png", label: "Surveys", href: "/surveys" }, // Future feature
 ];
 

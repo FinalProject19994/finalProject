@@ -11,6 +11,9 @@ import { doc, getDoc } from "firebase/firestore";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 
+// import ThumbsUpButton from "@/components/ui/ThumbsUpButton";
+import FavoriteHeart from "@/components/ui/FavoriteHeart";
+
 const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
   const activityId = row.original.id;
   // Ensure lecturers array exists and is not null before mapping
@@ -173,6 +176,18 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
           onActivityEdit={onActivityEdit}
         />
       ),
+    },
+    // {
+    //   accessorKey: "thumbsUp",
+    //   header: "Thumbs Up",
+    //   cell: ({ row }) => <ThumbsUpButton activityId={row.original.id} />, // Render ThumbsUpButton
+    //   className: "w-[100px]", // Adjust width as needed
+    // },
+    {
+      accessorKey: "favorite",
+      header: "Favorite",
+      cell: ({ row }) => <FavoriteHeart activityId={row.original.id} />, // Render FavoriteStar
+      // className: "w-[120px]", // Adjust width as needed
     },
   ];
 };

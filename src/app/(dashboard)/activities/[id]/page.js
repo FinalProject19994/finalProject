@@ -8,6 +8,7 @@ import { X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import FavoriteHeart from "@/components/ui/FavoriteHeart";
 
 const Page = ({ params }) => {
   const { theme } = useTheme();
@@ -104,9 +105,13 @@ const Page = ({ params }) => {
             activity.course?.semester.slice(1)}{" "}
           - {activity.date}
         </h5>
+        {/* Buttons on right */}
+        {/* <ThumbsUpButton activityId={params.id} /> Add ThumbsUpButton */}
+        <FavoriteHeart activityId={params.id} /> {/* Add FavoriteStar */}
         <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Course
         </h3>
+        <div className="flex space-x-4"></div>
         <div className="flex flex-wrap gap-2">
           <Badge
             className="cursor-pointer"
