@@ -4,7 +4,7 @@ const Legend = ({ header }) => {
       <p className="relative top-2 mb-2 bg-white text-3xl font-bold text-gray-600 dark:bg-gray-500 dark:text-gray-300">
         {header}
       </p>
-      <div className="my-4 bg-white text-xs dark:bg-gray-500 dark:text-gray-200">
+      <div className="mb-2 mt-4 bg-white text-xs dark:bg-gray-500 dark:text-gray-200">
         <h6 className="underline">Node types</h6>
         <div className="flex items-center gap-2">
           <svg
@@ -25,7 +25,13 @@ const Legend = ({ header }) => {
           <div className="ml-0.5 h-2 w-2 bg-[#888] dark:bg-[#e5e7eb]"></div>
           <p>Activity</p>
         </div>
-        <div className="ml-0.5 flex items-center gap-2">
+      </div>
+
+      <div className="bg-white text-xs dark:bg-gray-500 dark:text-gray-200">
+        <div className="flex items-center gap-2">
+          <h6 className="underline">Skill categories</h6>
+        </div>
+        <div className="flex items-center gap-2">
           <svg
             width="10"
             height="10"
@@ -37,29 +43,60 @@ const Legend = ({ header }) => {
               cx="6"
               cy="6"
               r="6"
-              className="fill-[#888] dark:fill-[#e5e7eb]"
+              className="fill-[#d396ff] dark:fill-[#d396ff]"
             />
           </svg>
-          <p>Skill</p>
-        </div>
-      </div>
-
-      <div className="bg-white text-xs dark:bg-gray-500 dark:text-gray-200">
-        <h6 className="underline">Skill categories</h6>
-        <div className="flex items-center gap-2">
-          <div className="h-2 w-2 bg-primary_purple_table dark:bg-[#d396ff]"></div>
           <p>Professional self</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-2 w-2 bg-primary_lightblue dark:bg-[#D9F3FC]"></div>
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="6"
+              cy="6"
+              r="6"
+              className="fill-[#90dcf3] dark:fill-[#D9F3FC]"
+            />
+          </svg>
           <p>Thinking development</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-2 w-2 bg-primary_green dark:bg-[#C6FBC8]"></div>
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="6"
+              cy="6"
+              r="6"
+              className="fill-[#5de000] dark:fill-[#C6FBC8]"
+            />
+          </svg>
           <p>Mindset</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-2 w-2 bg-primary_orange dark:bg-[#FFE4AD]"></div>
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 12 12"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="6"
+              cy="6"
+              r="6"
+              className="fill-[#ffb85c] dark:fill-[#FFE4AD]"
+            />
+          </svg>
           <p>Emotional quotient</p>
         </div>
       </div>
