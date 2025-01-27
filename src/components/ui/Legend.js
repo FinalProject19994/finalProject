@@ -22,7 +22,7 @@ const Legend = ({ header }) => {
           <p>Course</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="ml-0.5 h-2 w-2 bg-[#888] dark:bg-[#e5e7eb]"></div>
+          <div className="ml-0.5 h-2 w-2 bg-black" />
           <p>Activity</p>
         </div>
       </div>
