@@ -1,5 +1,9 @@
 "use client";
-import { skillsCategories, darkSkillsCategories } from "@/lib/skillsCategories";
+import {
+  skillsCategories,
+  darkSkillsCategories,
+  getColor,
+} from "@/lib/skillsCategories";
 import * as d3 from "d3";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
@@ -99,20 +103,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
             return null;
         }
       })
-      .attr("fill", (d) => {
-        const categories =
-          theme === "dark" ? darkSkillsCategories : skillsCategories;
-        switch (d.type) {
-          case "skill":
-            return categories[d.category];
-          case "activity":
-            return "black";
-          case "course":
-            return theme === "dark" ? "#CCC" : "#666";
-          default:
-            return null;
-        }
-      })
+      .attr("fill", (d) => getColor(theme, d.type, d.category))
       .style("opacity", 1)
       .style("transition", "opacity 0.2s")
       .on("mouseover", handleMouseOver)
@@ -139,20 +130,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       .attr("x", 12)
       .attr("y", 0)
       .style("font-size", "10px")
-      .style("fill", (d) => {
-        const categories =
-          theme === "dark" ? darkSkillsCategories : skillsCategories;
-        switch (d.type) {
-          case "skill":
-            return categories[d.category];
-          case "activity":
-            return "black";
-          case "course":
-            return theme === "dark" ? "#E0E0E0" : "#666";
-          default:
-            return null;
-        }
-      })
+      .style("fill", (d) => getColor(theme, d.type, d.category))
       .style("opacity", 1)
       .style("transition", "opacity 0.2s")
       .each(function (d) {

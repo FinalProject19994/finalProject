@@ -14,4 +14,18 @@ const darkSkillsCategories = {
   default: "#AAAAAA",
 };
 
-export { skillsCategories, darkSkillsCategories };
+const getColor = (theme, nodeType, skillsCategory) => {
+  const categories = theme === "dark" ? darkSkillsCategories : skillsCategories;
+  switch (nodeType) {
+    case "skill":
+      return categories[skillsCategory];
+    case "activity":
+      return "black";
+    case "course":
+      return theme === "dark" ? "#CCC" : "#666";
+    default:
+      return null;
+  }
+};
+
+export { skillsCategories, darkSkillsCategories, getColor };
