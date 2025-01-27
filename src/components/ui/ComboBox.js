@@ -1,7 +1,4 @@
 "use client";
-import { Check, ChevronsUpDown } from "lucide-react";
-import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -17,17 +14,26 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
+import { useEffect } from "react";
 
-export default function ComboBox({ options, onSelect, title }) {
+export default function ComboBox({ options, onSelect, title, defaultValue }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  useEffect(() => {
+    if (defaultValue) {
+      setValue(defaultValue);
+    }
+  }, [defaultValue]);
 
   const handleSelect = (currentValue) => {
     const selectedOption = options.find(
       (option) => option.value === currentValue,
     );
 
-    setValue(currentValue === value ? "" : currentValue);
+    setValue(currentValue); // Set value state
 
     // Call onSelect with the selected option only
     onSelect && onSelect(selectedOption);
@@ -59,8 +65,8 @@ export default function ComboBox({ options, onSelect, title }) {
               {options.map((selection) => (
                 <CommandItem
                   key={selection.value}
-                  value={selection.value}
-                  onSelect={handleSelect}
+                  value={selection.label}
+                  onSelect={() => handleSelect(selection.value)}
                 >
                   <Check
                     className={cn(

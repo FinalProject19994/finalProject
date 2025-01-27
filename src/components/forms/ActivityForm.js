@@ -1,4 +1,5 @@
 "use client";
+import ComboBox from "@/components/ui/ComboBox";
 import currentDate from "@/lib/currentDate";
 import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,13 +16,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputField from "../InputField";
 import MultipleSelector from "../ui/MultipleSelector";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { Textarea } from "../ui/textarea";
 
 // Define the schema for form validation
@@ -58,10 +52,15 @@ const ActivityForm = ({ type, data, closeModal }) => {
       try {
         // Fetch courses
         const querySnapshot = await getDocs(collection(db, "courses"));
-        const fetchedCourses = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const fetchedCourses = querySnapshot.docs.map((doc) => {
+          const courseData = doc.data();
+          return {
+            id: doc.id,
+            value: doc.id,
+            label: `${courseData.title} - ${courseData.semester} ${courseData.year}`,
+            ...courseData,
+          };
+        });
         setCourses(fetchedCourses);
 
         // Fetch skills
@@ -210,21 +209,15 @@ const ActivityForm = ({ type, data, closeModal }) => {
         <label className="text-sm text-gray-600 dark:text-gray-50">
           Course
         </label>
-        <Select
-          onValueChange={(value) => setValue("course", value)}
-          defaultValue={data?.course.id}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a course" />
-          </SelectTrigger>
-          <SelectContent>
-            {courses.map((course) => (
-              <SelectItem key={course.id} value={course.id}>
-                {course.title} - {course.semester} {course.year}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <ComboBox
+          options={courses} // Pass the 'courses' array as options
+          onSelect={(selectedCourse) => {
+            // Handle selected course
+            setValue("course", selectedCourse?.value); // Set form value to selected course ID
+          }}
+          title="course"
+          defaultValue={data?.course?.id} // Pass default course ID for edit mode
+        />
         {errors.course && (
           <span className="text-sm text-red-500">{errors.course.message}</span>
         )}
