@@ -312,7 +312,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
 
         // If the node is a course, navigate to the activities page with the course name as a search query
         case "course":
-          router.push(`/activities?search=${encodeURIComponent(d.name)}`);
+          router.push(`/courses?search=${encodeURIComponent(d.name)}`);
           break;
       }
     }
