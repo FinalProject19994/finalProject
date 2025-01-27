@@ -11,8 +11,10 @@ import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
+import { useRouter } from "next/navigation";
 
 const ActionCell = ({ row, onCourseDelete, onCourseEdit }) => {
+  const router = useRouter();
   const courseId = row.original.id;
   const [userRole, setUserRole] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,6 +51,11 @@ const ActionCell = ({ row, onCourseDelete, onCourseEdit }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleNavigation = () => {
+    const encodedCourseId = encodeURIComponent(row.original.title);
+    router.push(`/activities/?search=${encodedCourseId}`);
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -58,6 +65,9 @@ const ActionCell = ({ row, onCourseDelete, onCourseEdit }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => handleNavigation()}>
+            View Activities
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onCourseEdit(row.original)}>
             Edit Course
           </DropdownMenuItem>
