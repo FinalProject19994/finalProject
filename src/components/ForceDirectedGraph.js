@@ -102,15 +102,16 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       .attr("fill", (d) => {
         const categories =
           theme === "dark" ? darkSkillsCategories : skillsCategories;
-        return d.type === "skill"
-          ? categories[d.category]
-          : d.type === "course"
-            ? theme === "dark"
-              ? "white"
-              : "black"
-            : theme === "dark"
-              ? "#AAAAAA"
-              : "#666666";
+        switch (d.type) {
+          case "skill":
+            return categories[d.category];
+          case "activity":
+            return "black";
+          case "course":
+            return theme === "dark" ? "#CCC" : "#666";
+          default:
+            return null;
+        }
       })
       .style("opacity", 1)
       .style("transition", "opacity 0.2s")
@@ -136,20 +137,21 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
       .enter()
       .append("text")
       .attr("x", 12)
-      .attr("y", 0) // <-- REDUCED y offset to 0 (was 4)
+      .attr("y", 0)
       .style("font-size", "10px")
       .style("fill", (d) => {
         const categories =
           theme === "dark" ? darkSkillsCategories : skillsCategories;
-        return d.type === "skill"
-          ? categories[d.category]
-          : d.type === "course"
-            ? theme === "dark"
-              ? "#CCCCCC"
-              : "black"
-            : theme === "dark"
-              ? "#AAAAAA"
-              : "#666666";
+        switch (d.type) {
+          case "skill":
+            return categories[d.category];
+          case "activity":
+            return "black";
+          case "course":
+            return theme === "dark" ? "#E0E0E0" : "#666";
+          default:
+            return null;
+        }
       })
       .style("opacity", 1)
       .style("transition", "opacity 0.2s")
@@ -358,12 +360,7 @@ const ForceDirectedGraph = ({ nodes, links, selectedNodeId, page }) => {
     };
   }, [memoizedData, selectedNodeId, page, router, theme]);
 
-  return (
-    <div
-      ref={containerRef}
-      className="h-full w-full" // Tailwind classes for the container
-    />
-  );
+  return <div ref={containerRef} className="h-full w-full" />;
 };
 
 export default ForceDirectedGraph;
