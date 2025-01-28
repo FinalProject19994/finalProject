@@ -22,12 +22,10 @@ const FavoritesPage = () => {
     const fetchFavoritedActivities = async () => {
       setLoading(true);
       const user = auth.currentUser;
-      console.log("FavoritesPage - Current User:", user);
       if (!user) {
         setLoading(false);
         return; // No user logged in
       }
-      console.log("FavoritesPage - Current User UID:", user.uid); // --- ADD CONSOLE LOG ---
       const userId = user.uid;
 
       try {
