@@ -74,7 +74,7 @@ const FavoriteHeart = ({ activityId }) => {
       {isFavorited ? (
         <Heart className="h-4 w-4 fill-red-400 text-red-400" /> // Filled heart if favorited
       ) : (
-        <HeartOff className="h-4 w-4 text-gray-500 dark:text-gray-300" /> // Hollow heart if not
+        <HeartOff className="h-4 w-4 text-gray-500 dark:text-white" /> // Hollow heart if not
       )}
     </button>
   );

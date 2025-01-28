@@ -128,7 +128,7 @@ const ThumbsUpButton = ({ activityId }) => {
         {hasThumbedUp ? (
           <ThumbsUp className="h-4 w-4 fill-primary_purple text-primary_purple" />
         ) : (
-          <ThumbsUp className="h-4 w-4 text-gray-500 dark:text-gray-300" />
+          <ThumbsUp className="h-4 w-4 text-gray-500 dark:text-white" />
         )}
       </button>
       <Popover open={isLikersPopoverOpen} onOpenChange={setIsLikersPopoverOpen}>
@@ -138,7 +138,7 @@ const ThumbsUpButton = ({ activityId }) => {
               event.stopPropagation();
               setIsLikersPopoverOpen(!isLikersPopoverOpen);
             }} // Toggle popover on count click
-            className="cursor-pointer text-sm text-gray-500 hover:underline dark:text-gray-300"
+            className="cursor-pointer text-sm text-gray-500 hover:underline dark:text-white"
           >
             {thumbsUpCount}
           </span>
