@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Profile from "./Profile";
+import { MessageCircle, MessageSquare } from "lucide-react";
 
 const topMenuItems = [
   { icon: "/menuIcons/home.png", label: "Home", href: "/homepage" },
@@ -21,11 +22,16 @@ const topMenuItems = [
   },
   { icon: "/menuIcons/courses.png", label: "Courses", href: "/courses" },
   { icon: "/menuIcons/lecturers.png", label: "Lecturers", href: "/lecturers" },
-
   // { icon: "/menuIcons/questionnaire.png", label: "Surveys", href: "/surveys" }, // Future feature
 ];
 
 const bottomMenuItems = [
+  // {
+  //   icon: <MessageSquare size={25} />,
+  //   label: "Private Chat",
+  //   href: "/private-chat",
+  // },
+  { icon: <MessageCircle size={30} />, label: "Chat", href: "/chat" },
   { icon: <Heart size={30} />, label: "Favorites", href: "/favorites" },
   { icon: <CircleHelp size={30} />, label: "Help", href: "/help" },
   { icon: <Info size={30} />, label: "About", href: "/about" },
