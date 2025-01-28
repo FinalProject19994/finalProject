@@ -46,49 +46,24 @@ const LecturerChat = () => {
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      let fetchedMessages = [];
+      const fetchedMessages = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-      if (snapshot.empty) {
-        console.log("Initial snapshot is empty, no messages to load.");
-      } else {
-        if (messages.length === 0) {
-          fetchedMessages = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          console.log(
-            "Initial messages loaded from snapshot:",
-            fetchedMessages.length,
-          );
-        } else {
-          // Real-time updates - Process only docChanges for new messages
-          fetchedMessages = snapshot
-            .docChanges()
-            .map((change) => {
-              if (change.type === "added") {
-                return { id: change.doc.id, ...change.doc.data() };
-              } else {
-                return null;
-              }
-            })
-            .filter(Boolean);
-          console.log("Real-time messages updates:", fetchedMessages.length);
-        }
-        setMessages((prevMessages) => {
-          return messages.length === 0
-            ? fetchedMessages
-            : [...prevMessages, ...fetchedMessages];
-        });
-      }
-
-      if (chatContainerRef.current) {
-        chatContainerRef.current.scrollTop =
-          chatContainerRef.current.scrollHeight;
-      }
+      setMessages(fetchedMessages);
     });
 
     return () => unsubscribe();
   }, []);
+
+  // Scroll to bottom whenever messages are updated
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
@@ -98,7 +73,6 @@ const LecturerChat = () => {
         alert("You must be logged in to send messages.");
         return;
       }
-      console.log(userData);
 
       try {
         const messagesCollection = collection(db, "lecturerChats");
@@ -120,21 +94,21 @@ const LecturerChat = () => {
     <div className="flex h-full flex-col">
       <div
         ref={chatContainerRef}
-        className="flex-1 space-y-2 overflow-y-auto p-4"
+        className="mb-1 flex-1 space-y-2 overflow-y-auto"
       >
         {messages.map((message) => (
           <div
             key={message.id}
             className={cn(
-              "w-max rounded-lg p-2",
+              "w-fit max-w-[80%] rounded-lg p-2 shadow-md",
               message.senderId === auth.currentUser?.uid
-                ? "bg-primary_purple-table-light ml-auto bg-primary_purple text-right text-white" // Right align for current user
-                : "mr-auto bg-gray-100 text-left text-gray-700 dark:bg-gray-700 dark:text-gray-300", // Left align for others
+                ? "ml-auto mr-2 bg-primary_purple text-right text-white"
+                : "mr-auto bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200",
             )}
           >
             <div className="text-sm font-semibold">{message.senderName}</div>
-            <div className="text-sm">{message.messageText}</div>
-            <div className="text-xs text-gray-400 dark:text-gray-300">
+            <div className="break-words text-sm">{message.messageText}</div>
+            <div className="mt-1 text-xs text-gray-400 dark:text-gray-300">
               {message.timestamp?.toDate().toLocaleTimeString()}
             </div>
           </div>
@@ -144,17 +118,17 @@ const LecturerChat = () => {
         onSubmit={sendMessage}
         className="border-t p-4 dark:border-gray-700"
       >
-        <div className="flex">
+        <div className="flex gap-2">
           <input
             type="text"
             placeholder="Type your message..."
-            className="flex-1 rounded-md border p-2 text-sm text-gray-700 outline-none dark:border-gray-500 dark:bg-gray-700 dark:text-white"
+            className="flex-1 rounded-md border border-gray-500 bg-gray-500 p-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-primary_purple dark:border-gray-700 dark:text-white"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
           <button
             type="submit"
-            className="ml-2 rounded-md bg-primary_purple p-2 font-semibold text-white hover:brightness-110 dark:text-gray-300"
+            className="rounded-md bg-primary_purple px-4 py-2 font-semibold text-white hover:bg-purple-700 dark:text-gray-200"
           >
             Send
           </button>
