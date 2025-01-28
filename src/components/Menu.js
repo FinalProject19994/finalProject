@@ -21,12 +21,12 @@ const topMenuItems = [
   },
   { icon: "/menuIcons/courses.png", label: "Courses", href: "/courses" },
   { icon: "/menuIcons/lecturers.png", label: "Lecturers", href: "/lecturers" },
-  { icon: "/menuIcons/Heart.png", label: "Favorites", href: "/favorites" },
 
   // { icon: "/menuIcons/questionnaire.png", label: "Surveys", href: "/surveys" }, // Future feature
 ];
 
 const bottomMenuItems = [
+  { icon: <Heart size={30} />, label: "Favorites", href: "/favorites" },
   { icon: <CircleHelp size={30} />, label: "Help", href: "/help" },
   { icon: <Info size={30} />, label: "About", href: "/about" },
 ];
