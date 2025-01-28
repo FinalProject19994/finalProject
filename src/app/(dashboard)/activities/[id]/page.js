@@ -106,10 +106,13 @@ const Page = ({ params }) => {
             activity.course?.semester.slice(1)}{" "}
           - {activity.date}
         </h5>
-        {/* Buttons on right */}
-        <FavoriteHeart activityId={params.id} /> {/* Add FavoriteStar */}
-        <ThumbsUpButton activityId={params.id} />{" "}
-        {/* <-- Verify ThumbsUpButton is rendered */}
+
+        {/* Misc. buttons */}
+        <div className="mt-4 flex justify-center space-x-4">
+          <FavoriteHeart activityId={params.id} />
+          <ThumbsUpButton activityId={params.id} />
+        </div>
+
         <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Course
         </h3>
