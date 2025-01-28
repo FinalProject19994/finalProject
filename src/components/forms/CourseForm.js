@@ -117,11 +117,11 @@ const CourseForm = ({ type, data, closeModal }) => {
 
       setValue(
         "departments",
-        data.departments.map((department) => department.id), // Set form values to DEPARTMENT IDs
+        data.departments.map((department) => department.id),
       );
       setValue(
         "lecturers",
-        data.lecturers.map((lecturer) => lecturer.id), // Set form values to LECTURER IDs
+        data.lecturers.map((lecturer) => lecturer.id),
       );
       setValue("semester", data.semester.split(" ")[0]);
     }
@@ -129,8 +129,16 @@ const CourseForm = ({ type, data, closeModal }) => {
 
   const submit = handleSubmit(async (formData) => {
     try {
-      const courseId = `${formData.id}-${formData.semester}-${new Date().getFullYear()}`;
-      const courseDocRef = doc(db, "courses", courseId);
+      let courseId;
+      let courseDocRef;
+
+      if (type === "edit") {
+        courseId = data.id;
+        courseDocRef = doc(db, "courses", courseId);
+      } else {
+        courseId = `${formData.id}-${formData.semester}-${new Date().getFullYear()}`;
+        courseDocRef = doc(db, "courses", courseId);
+      }
 
       if (type === "edit") {
         // Fetch the current course data to merge with new data
@@ -155,7 +163,7 @@ const CourseForm = ({ type, data, closeModal }) => {
         // Update the document with merged data
         await updateDoc(courseDocRef, {
           title: formData.title,
-          id: formData.id,
+          id: formData.id.trim(),
           departments: updatedDepartments,
           lecturers: updatedLecturers,
           semester: formData.semester,
@@ -165,7 +173,7 @@ const CourseForm = ({ type, data, closeModal }) => {
         // Create a new course
         await setDoc(courseDocRef, {
           title: formData.title,
-          id: courseId,
+          id: courseId.trim(),
           departments: formData.departments.map((departmentId) =>
             doc(db, "departments", departmentId),
           ),
