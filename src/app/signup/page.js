@@ -1,49 +1,15 @@
 "use client";
-import MultipleSelector from "@/components/ui/MultipleSelector";
 import { auth, db } from "@/lib/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 const Page = () => {
-  const [departments, setDepartments] = useState([]);
-  const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [courses, setCourses] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
-
-  useEffect(() => {
-    const fetchDepartmentsAndCourses = async () => {
-      try {
-        // Fetch departments
-        const departmentSnapshot = await getDocs(collection(db, "departments"));
-        const fetchedDepartments = departmentSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          value: doc.id,
-          label: doc.data().title,
-        }));
-        setDepartments(fetchedDepartments);
-
-        // Fetch courses
-        const coursesSnapshot = await getDocs(collection(db, "courses"));
-        const fetchedCourses = coursesSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          value: doc.id,
-          label: doc.data().title,
-        }));
-        setCourses(fetchedCourses);
-      } catch (error) {
-        console.error("Error fetching departments or courses:", error);
-      }
-    };
-
-    fetchDepartmentsAndCourses();
-  }, []);
-
   const router = useRouter();
 
   const emailRef = useRef();
@@ -86,10 +52,6 @@ const Page = () => {
         phone: phoneNumberRef.current.value,
         email: emailRef.current.value,
         role: "Lecturer",
-        departments: selectedDepartments.map((department) =>
-          doc(db, "departments", department.id),
-        ),
-        courses: selectedCourses.map((course) => doc(db, "courses", course.id)),
       });
 
       alert("Please verify your email address to continue");
@@ -130,20 +92,6 @@ const Page = () => {
               className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
               ref={phoneNumberRef}
             />
-
-            {/* Department */}
-            <MultipleSelector
-              options={departments}
-              onSelect={(selected) => setSelectedDepartments(selected)}
-              selection="departments"
-            />
-
-            {/* Courses */}
-            <MultipleSelector
-              options={courses}
-              onSelect={(selected) => setSelectedCourses(selected)}
-              selection="courses"
-            />
           </div>
 
           <h2 className="pt-6 text-lg font-bold text-gray-500 dark:text-gray-300">
@@ -176,7 +124,7 @@ const Page = () => {
           </div>
         </div>
         <h3 className="mt-4 text-center text-sm text-black">
-          * are required field
+          * is a required field
         </h3>
 
         <button className="mt-12 w-1/2 self-center rounded-md bg-primary_green p-2 font-semibold text-white hover:brightness-110 sm:w-1/3 lg:w-1/4">

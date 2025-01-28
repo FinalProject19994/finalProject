@@ -1,13 +1,10 @@
 "use client";
-import MultipleSelector from "@/components/ui/MultipleSelector";
 import { auth, db } from "@/lib/firebase";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 const Settings = () => {
   const [userData, setUserData] = useState(null);
-  const [departments, setDepartments] = useState([]);
-  const [courses, setCourses] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -26,37 +23,7 @@ const Settings = () => {
       }
     };
 
-    const fetchDepartments = async () => {
-      try {
-        const departmentSnapshot = await getDocs(collection(db, "departments"));
-        const fetchedDepartments = departmentSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          value: doc.id,
-          label: doc.data().title,
-        }));
-        setDepartments(fetchedDepartments);
-      } catch (error) {
-        console.error("Error fetching departments:", error);
-      }
-    };
-
-    const fetchCourses = async () => {
-      try {
-        const courseSnapshot = await getDocs(collection(db, "courses"));
-        const fetchedCourses = courseSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          value: doc.id,
-          label: doc.data().title,
-        }));
-        setCourses(fetchedCourses);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      }
-    };
-
     fetchUserData();
-    fetchDepartments();
-    fetchCourses();
   }, []);
 
   return (
@@ -92,40 +59,6 @@ const Settings = () => {
             placeholder={userData?.phone}
             className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
           />
-        </div>
-
-        <div className="mt-4 flex flex-col gap-4 text-sm">
-          <div>
-            {/* Department */}
-            <label className="font-semibold dark:text-gray-300">
-              Departments
-            </label>
-            <MultipleSelector
-              options={departments}
-              selection="departments"
-              // onSelect={(selected) => {
-              //   setValue(
-              //     "department",
-              //     selected.map((department) => department.value),
-              //   );
-              // }}
-            />
-          </div>
-
-          <div>
-            {/* Courses */}
-            <label className="font-semibold dark:text-gray-300">Courses</label>
-            <MultipleSelector
-              options={courses}
-              selection="courses"
-              // onSelect={(selected) => {
-              //   setValue(
-              //     "department",
-              //     selected.map((department) => department.value),
-              //   );
-              // }}
-            />
-          </div>
         </div>
 
         <div className="my-8 h-px bg-gray-300" />
