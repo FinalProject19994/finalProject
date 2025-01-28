@@ -308,8 +308,9 @@ const Page = () => {
 
       <div className="w-[55%] text-center">
         <div ref={chartRef} />
-        <span className="select-none text-sm text-gray-500 dark:text-gray-300">
-          Click on a category to focus on its skills
+        <span className="select-none text-xs text-gray-500 dark:text-gray-300">
+          Click on a category to focus on its skills - Click in the center to
+          zoom out
         </span>
       </div>
     </div>
