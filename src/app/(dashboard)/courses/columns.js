@@ -65,14 +65,20 @@ const ActionCell = ({ row, onCourseDelete, onCourseEdit }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => handleNavigation()}>
+          <DropdownMenuItem
+            onClick={() => handleNavigation()}
+            className="cursor-pointer"
+          >
             View Activities
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onCourseEdit(row.original)}>
+          <DropdownMenuItem
+            onClick={() => onCourseEdit(row.original)}
+            className="cursor-pointer"
+          >
             Edit Course
           </DropdownMenuItem>
           {isAuthorizedToDelete && (
-            <DropdownMenuItem onClick={handleDelete}>
+            <DropdownMenuItem onClick={handleDelete} className="cursor-pointer">
               Delete Course
             </DropdownMenuItem>
           )}

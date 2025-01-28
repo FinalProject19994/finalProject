@@ -67,7 +67,7 @@ const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
     }
   };
 
-  return (
+  return isAuthorizedToDelete || isAuthorizedToEdit ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -75,22 +75,26 @@ const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          disabled={!isAuthorizedToEdit}
-          onClick={() => onActivityEdit(row.original)}
-        >
-          Edit Activity
-        </DropdownMenuItem>
-
-        <DropdownMenuItem
-          disabled={!isAuthorizedToDelete}
-          onClick={handleDelete}
-        >
-          Delete Activity
-        </DropdownMenuItem>
+        {isAuthorizedToEdit && (
+          <DropdownMenuItem
+            onClick={() => onActivityEdit(row.original)}
+            className="cursor-pointer"
+          >
+            Edit Activity
+          </DropdownMenuItem>
+        )}
+        {isAuthorizedToDelete && (
+          <DropdownMenuItem
+            disabled={!isAuthorizedToDelete}
+            onClick={handleDelete}
+            className="cursor-pointer"
+          >
+            Delete Activity
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  ) : null;
 };
 
 export const Columns = ({ onActivityDelete, onActivityEdit }) => {
@@ -169,7 +173,7 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
     {
       accessorKey: "thumbsUp",
       header: "Thumbs Up",
-      cell: ({ row }) => <ThumbsUpButton activityId={row.original.id} />, // <-- Verify this rendering
+      cell: ({ row }) => <ThumbsUpButton activityId={row.original.id} />,
       className: "w-[100px]", // Adjust width as needed
     },
     {

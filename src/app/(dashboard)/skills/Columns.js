@@ -54,15 +54,21 @@ const ActionCell = ({ row, onSkillDelete, onSkillEdit }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => handleNavigation()}>
+        <DropdownMenuItem
+          onClick={() => handleNavigation()}
+          className="cursor-pointer"
+        >
           View Activities
         </DropdownMenuItem>
         {role === "admin" && (
           <>
-            <DropdownMenuItem onClick={() => onSkillEdit(skill)}>
+            <DropdownMenuItem
+              onClick={() => onSkillEdit(skill)}
+              className="cursor-pointer"
+            >
               Edit Skill
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleDelete}>
+            <DropdownMenuItem onClick={handleDelete} className="cursor-pointer">
               Delete Skill
             </DropdownMenuItem>
           </>
