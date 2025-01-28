@@ -25,7 +25,8 @@ const FavoriteHeart = ({ activityId }) => {
     fetchFavoriteStatus();
   }, [activityId, userId]);
 
-  const handleFavorite = async () => {
+  const handleFavorite = async (event) => {
+    event.stopPropagation(); // Prevent click event from bubbling up to parent elements
     if (!userId) {
       alert("You must be logged in to favorite activities."); // Handle unauthenticated state
       return;
@@ -45,7 +46,8 @@ const FavoriteHeart = ({ activityId }) => {
     }
   };
 
-  const handleUnfavorite = async () => {
+  const handleUnfavorite = async (event) => {
+    event.stopPropagation(); // Prevent click event from bubbling up to parent elements
     if (!userId) {
       return;
     }
