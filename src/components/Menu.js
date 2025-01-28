@@ -31,7 +31,7 @@ const bottomMenuItems = [
   //   label: "Private Chat",
   //   href: "/private-chat",
   // },
-  { icon: <MessageCircle size={30} />, label: "Chat", href: "/chat" },
+  { icon: <MessageCircle size={30} />, label: "Forum", href: "/forum" },
   { icon: <Heart size={30} />, label: "Favorites", href: "/favorites" },
   { icon: <CircleHelp size={30} />, label: "Help", href: "/help" },
   { icon: <Info size={30} />, label: "About", href: "/about" },
