@@ -172,7 +172,7 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
     },
     {
       accessorKey: "thumbsUp",
-      header: "Thumbs Up",
+      header: "Likes",
       cell: ({ row }) => <ThumbsUpButton activityId={row.original.id} />,
       className: "w-[100px]", // Adjust width as needed
     },
