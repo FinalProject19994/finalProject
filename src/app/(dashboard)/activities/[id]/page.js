@@ -1,12 +1,13 @@
 "use client";
+import Modal from "@/components/Modal";
 import { Badge } from "@/components/ui/badge";
 import FavoriteHeart from "@/components/ui/FavoriteHeart";
 import ThumbsUpButton from "@/components/ui/ThumbsUpButton";
 import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { darkSkillsCategories, skillsCategories } from "@/lib/skillsCategories";
-import { doc, getDoc } from "firebase/firestore";
-import { X } from "lucide-react";
+import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { Trash2, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -14,46 +15,81 @@ import { useContext, useEffect, useState } from "react";
 const Page = ({ params }) => {
   const { theme } = useTheme();
   const router = useRouter();
-  const { setSelectedActivityId } = useContext(SelectedActivityIdContext);
+  const { selectedActivityId, setSelectedActivityId } = useContext(
+    SelectedActivityIdContext,
+  );
 
+  const [modalType, setModalType] = useState(null);
   const [activity, setActivity] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [isAuthorizedToDelete, setIsAuthorizedToDelete] = useState(false);
+  const [isAuthorizedToEdit, setIsAuthorizedToEdit] = useState(false);
 
   useEffect(() => {
-    const fetchActivity = async () => {
+    const fetchActivityAndUserRole = async () => {
+      setLoading(true);
       try {
-        const activityDoc = doc(db, "activities", params.id);
-        const activitySnapshot = await getDoc(activityDoc);
+        const activityDocRef = doc(db, "activities", params.id);
+
+        const activitySnapshot = await getDoc(activityDocRef);
 
         if (activitySnapshot.exists()) {
           const data = activitySnapshot.data();
 
-          // Resolve course reference
+          // Authorization Check - START
+          const currentUserId = auth.currentUser?.uid;
+          let role = null;
+          let activityLecturerIds = Array.isArray(data.lecturers)
+            ? data.lecturers.map((lecturer) => lecturer.id)
+            : [];
+
+          if (currentUserId) {
+            const userDocRef = doc(db, "users", currentUserId);
+            const userDocSnap = await getDoc(userDocRef);
+            if (userDocSnap.exists()) {
+              role = userDocSnap.data().role.toLowerCase();
+              setUserRole(role); // Set user role state
+            }
+          }
+
+          const deleteAuth =
+            role === "admin" || activityLecturerIds.includes(currentUserId);
+          const editAuth =
+            role === "admin" || activityLecturerIds.includes(currentUserId); // <-- DECLARE editAuth *BEFORE* using it
+
+          setIsAuthorizedToDelete(deleteAuth);
+          setIsAuthorizedToEdit(editAuth); // <-- Line 92 - Now referencing editAuth *after* declaration
+          // Authorization Check - END
+
+          // Resolve course, skills, lecturers (as before) - Add logs for each resolve step
           const courseSnapshot = await getDoc(data.course);
+
           const course = courseSnapshot.exists()
             ? { id: courseSnapshot.id, ...courseSnapshot.data() }
             : null;
 
-          // Resolve skills references
           const skills = await Promise.all(
             data.skills.map(async (skillRef) => {
               const skillSnapshot = await getDoc(skillRef);
+
               return skillSnapshot.exists()
                 ? { id: skillSnapshot.id, ...skillSnapshot.data() }
                 : null;
             }),
           );
 
-          // Resolve lecturers references
           const lecturers = await Promise.all(
             data.lecturers.map(async (lecturerRef) => {
               const lecturerSnapshot = await getDoc(lecturerRef);
+
               return lecturerSnapshot.exists()
                 ? { id: lecturerSnapshot.id, ...lecturerSnapshot.data() }
                 : null;
             }),
           );
+
           setActivity({
             ...data,
             course,
@@ -62,16 +98,22 @@ const Page = ({ params }) => {
           });
         } else {
           setError("Activity not found");
+          console.warn(
+            "fetchActivityAndUserRole - Activity not found (activitySnapshot doesn't exist)",
+          ); // Warn if activity not found
         }
       } catch (err) {
-        console.error("Error fetching activity:", err);
+        console.error(
+          "fetchActivityAndUserRole - Error fetching activity:",
+          err,
+        ); // Log full error details
         setError("Failed to fetch activity. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchActivity();
+    fetchActivityAndUserRole();
   }, [params.id]);
 
   if (error) {
@@ -82,13 +124,35 @@ const Page = ({ params }) => {
     );
   }
 
+  const closeModal = () => {
+    setModalType(null);
+    setSelectedActivityId(null);
+  };
+
   const handleGoBack = () => {
     setSelectedActivityId(null);
     router.push("/activities");
   };
 
+  const handleEditActivity = () => {
+    console.log("handleEditActivity function called!");
+    setModalType("edit");
+    setSelectedActivityId(activity);
+  };
+
+  const handleActivityDelete = async () => {
+    try {
+      const activityDocRef = doc(db, "activities", params.id);
+      await deleteDoc(activityDocRef);
+      setSelectedActivityId(null);
+      router.push("/activities");
+    } catch (error) {
+      console.error("Error deleting activity:", error);
+    }
+  };
+
   return (
-    <div className="h-full space-y-4 rounded-md bg-white p-4 px-6 shadow-md dark:bg-gray-500">
+    <div className="flex h-[102%] flex-col space-y-4 rounded-md bg-white p-4 px-6 shadow-md dark:bg-gray-500">
       <div className="flex justify-end">
         <button
           onClick={handleGoBack}
@@ -97,11 +161,11 @@ const Page = ({ params }) => {
           <X />
         </button>
       </div>
-      <div>
-        <h1 className="mb-2 text-center text-2xl font-semibold">
+      <div className="flex-grow">
+        <h1 className="mb-2 text-center text-3xl font-bold text-gray-800 dark:text-white">
           {activity.title}
         </h1>
-        <h5 className="text-center text-xs">
+        <h5 className="text-center text-sm text-gray-600 dark:text-gray-200">
           {activity.course?.semester[0].toUpperCase() +
             activity.course?.semester.slice(1)}{" "}
           - {activity.date}
@@ -109,106 +173,137 @@ const Page = ({ params }) => {
 
         {/* Misc. buttons */}
         <div className="mt-4 flex justify-center space-x-4">
-          <FavoriteHeart activityId={params.id} />
           <ThumbsUpButton activityId={params.id} />
+          <FavoriteHeart activityId={params.id} />
         </div>
 
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
-          Course
-        </h3>
-        <div className="flex space-x-4"></div>
-        <div className="flex flex-wrap gap-2">
-          <Badge
-            className="cursor-pointer"
-            onClick={() => {
-              setSelectedActivityId(null);
-              router.push(
-                `/activities?search=${encodeURIComponent(activity.course?.title)}`,
-              );
-            }}
-            variant="outline"
+        <div className="mt-6 space-y-6">
+          <div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-50">
+              Course
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              <Badge
+                className="cursor-pointer bg-gray-300"
+                onClick={() => {
+                  setSelectedActivityId(null);
+                  router.push(
+                    `/activities?search=${encodeURIComponent(activity.course?.title)}`,
+                  );
+                }}
+              >
+                {activity.course?.title}
+              </Badge>
+            </div>
+          </div>
+          <div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-50">
+              Skills
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {activity.skills?.map((skill) => (
+                <Badge
+                  key={skill.id}
+                  style={{
+                    backgroundColor:
+                      theme === "dark"
+                        ? darkSkillsCategories[skill.category]
+                        : skillsCategories[skill.category],
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setSelectedActivityId(null);
+                    router.push(
+                      `/activities?search=${encodeURIComponent(skill.name)}`,
+                    );
+                  }}
+                >
+                  {skill.name}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-50">
+              Lecturers
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {activity.lecturers?.map((lecturer) => (
+                <Badge
+                  className="cursor-pointer bg-gray-300"
+                  onClick={() => {
+                    setSelectedActivityId(null);
+                    router.push(
+                      `/activities?search=${encodeURIComponent(lecturer.name)}`,
+                    );
+                  }}
+                  key={lecturer.id}
+                >
+                  {lecturer.name}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-50">
+              Week Number
+            </h3>
+            <p className="text-gray-600 dark:text-white">
+              {activity.weekNumber}
+            </p>
+          </div>
+          <div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-50">
+              Description
+            </h3>
+            <p className="text-gray-600 dark:text-white">
+              {activity.description}
+            </p>
+          </div>
+          <div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-50">
+              Reflection
+            </h3>
+            <p className="text-gray-600 dark:text-white">
+              {activity.reflection}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="mt-auto flex justify-center space-x-4 pt-4">
+        {/* {isAuthorizedToEdit && (
+          <button
+            onClick={handleEditActivity}
+            className="flex items-center justify-center rounded-md border border-gray-200 p-2 text-gray-700 transition-colors hover:bg-primary_purple_table dark:text-white dark:hover:bg-primary_purple"
           >
-            {activity.course?.title}
-          </Badge>
-        </div>
-      </div>
-      <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
-          Skills
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {activity.skills?.map((skill) => (
-            <Badge
-              key={skill.id}
-              style={{
-                backgroundColor:
-                  theme === "dark"
-                    ? darkSkillsCategories[skill.category]
-                    : skillsCategories[skill.category],
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setSelectedActivityId(null);
-                router.push(
-                  `/activities?search=${encodeURIComponent(skill.name)}`,
-                );
-              }}
-            >
-              {skill.name}
-            </Badge>
-          ))}
-        </div>
-      </div>
-      <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
-          Lecturers
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {activity.lecturers?.map((lecturer) => (
-            <Badge
-              className="cursor-pointer"
-              onClick={() => {
-                setSelectedActivityId(null);
-                router.push(
-                  `/activities?search=${encodeURIComponent(lecturer.name)}`,
-                );
-              }}
-              key={lecturer.id}
-              variant="outline"
-            >
-              {lecturer.name}
-            </Badge>
-          ))}
-        </div>
-      </div>
-      <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
-          Week Number
-        </h3>
-        <p>{activity.weekNumber}</p>
-      </div>
-      <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
-          Description
-        </h3>
-        <p className="text-sm">{activity.description}</p>
-      </div>
-      <div>
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
-          Reflection
-        </h3>
-        <p className="text-sm">{activity.reflection}</p>
-        {/*<h3 className="my-2 text-sm font-semibold text-muted-foreground dark:text-gray-300">
-          Images
-        </h3>
-        {activity.images.length > 0 ? (
-          activity.images.map((image) => (
-            <img key={image} src={image} className="h-auto w-full" />
-          ))
-        ) : (
-          <p className="text-sm text-muted-foreground">No images available</p>
+            <PencilIcon size={20} className="mr-2" />
+            Edit Activity
+          </button>
         )} */}
+        {isAuthorizedToDelete && (
+          <button
+            className="flex items-center justify-center rounded-md border border-gray-200 p-2 text-gray-700 transition-colors hover:bg-primary_purple_table dark:text-white dark:hover:bg-primary_purple"
+            onClick={handleActivityDelete}
+          >
+            <Trash2 size={20} className="mr-2" />
+            Delete Activity
+          </button>
+        )}
       </div>
+      {console.log(
+        "Before Modal Render - modalType:",
+        modalType,
+        "selectedActivity:",
+        selectedActivityId,
+      )}
+      {modalType && (
+        <Modal
+          table="activity"
+          type={modalType}
+          data={selectedActivityId}
+          closeModal={closeModal}
+        />
+      )}
     </div>
   );
 };

@@ -100,23 +100,96 @@ const ActivityForm = ({ type, data, closeModal }) => {
 
   useEffect(() => {
     if (type === "edit" && data) {
-      const defaultSkills = data.skills.map((skill) => {
-        return {
-          label: skill.name,
-          value: skill.id,
-          id: skill.id,
-        };
-      });
-      setDefaultSelectedSkills(defaultSkills);
+      let defaultSkills = []; // Initialize defaultSkills as empty array
 
-      const defaultLecturers = data.lecturers.map((lecturer) => {
-        return {
-          label: lecturer.name,
-          value: lecturer.id,
-          id: lecturer.id,
-        };
-      });
+      if (Array.isArray(data.skills)) {
+        // --- CHECK if data.skills is an array (outer check) ---
+        defaultSkills = data.skills
+          .map((skill, index) => {
+            // Iterate only IF data.skills is an array
+            if (typeof skill === "object" && skill !== null) {
+              // --- ADDED: CHECK if skill item is an object ---
+              if (
+                typeof skill.name === "string" &&
+                typeof skill.id === "string"
+              ) {
+                // --- ADDED: CHECK if skill.name and skill.id are strings ---
+                return {
+                  // Only create object if skill, skill.name, and skill.id are valid
+                  label: skill.name,
+                  value: skill.id,
+                  id: skill.id,
+                };
+              } else {
+                console.warn(
+                  `ActivityForm - useEffect - Invalid skill object (missing name or id string) at index ${index}:`,
+                  skill,
+                ); // Warn if skill object is missing name or id string
+                return null; // Skip invalid skill object
+              }
+            } else {
+              console.warn(
+                `ActivityForm - useEffect - Invalid skill item (not an object) at index ${index}:`,
+                skill,
+              ); // Warn if skill item is not an object
+              return null; // Skip invalid skill item
+            }
+          })
+          .filter(Boolean); // Filter out any null values from mapping
+      } else {
+        console.warn(
+          "ActivityForm - useEffect - data.skills is NOT an array or is undefined:",
+          data.skills,
+        ); // Warn if data.skills is not an array
+      }
+
+      setDefaultSelectedSkills(defaultSkills);
+      console.log("Default Skills (Robust Handling):", defaultSkills); // Log robustly handled defaultSkills
+
+      let defaultLecturers = []; // Initialize defaultLecturers as empty array
+
+      if (Array.isArray(data.lecturers)) {
+        // --- ADDED: CHECK if data.lecturers is an array ---
+        defaultLecturers = data.lecturers
+          .map((lecturer, index) => {
+            // Iterate only IF data.lecturers is an array
+            if (typeof lecturer === "object" && lecturer !== null) {
+              // --- ADDED: CHECK if lecturer item is an object ---
+              if (
+                typeof lecturer.name === "string" &&
+                typeof lecturer.id === "string"
+              ) {
+                // --- ADDED: CHECK if lecturer.name and lecturer.id are strings ---
+                return {
+                  // Only create object if lecturer, lecturer.name, and lecturer.id are valid
+                  label: lecturer.name,
+                  value: lecturer.id,
+                  id: lecturer.id,
+                };
+              } else {
+                console.warn(
+                  `ActivityForm - useEffect - Invalid lecturer object (missing name or id string) at index ${index}:`,
+                  lecturer,
+                ); // Warn if lecturer object is missing name or id string
+                return null; // Skip invalid lecturer object
+              }
+            } else {
+              console.warn(
+                `ActivityForm - useEffect - Invalid lecturer item (not an object) at index ${index}:`,
+                lecturer,
+              ); // Warn if lecturer item is not an object
+              return null; // Skip invalid lecturer item
+            }
+          })
+          .filter(Boolean); // Filter out any null values from mapping
+      } else {
+        console.warn(
+          "ActivityForm - useEffect - data.lecturers is NOT an array or is undefined:",
+          data.lecturers,
+        ); // Warn if data.lecturers is not an array
+      }
       setDefaultSelectedLecturers(defaultLecturers);
+      console.log("Default Lecturers (Robust Handling):", defaultLecturers); // Log robustly handled defaultLecturers
 
       setValue("title", data.title);
       setValue("description", data.description || "");
@@ -132,6 +205,25 @@ const ActivityForm = ({ type, data, closeModal }) => {
       );
       setValue("reflection", data.reflection);
     }
+    if (type === "duplicate" && data) {
+      const defaultSkills = data.skills.map((skill) => {
+        return {
+          label: skill.name,
+          value: skill.id,
+          id: skill.id,
+        };
+      });
+      setDefaultSelectedSkills(defaultSkills);
+      setValue(
+        "skills",
+        data.skills.map((skill) => skill.id),
+      );
+
+      setValue("title", data.title);
+      setValue("description", data.description || "");
+      setValue("course", data.course.id);
+      setValue("reflection", data.reflection);
+    }
   }, [type, data, setValue]);
 
   // Submit handler
@@ -140,7 +232,7 @@ const ActivityForm = ({ type, data, closeModal }) => {
       const activityData = {
         title: formData.title,
         description: formData.description,
-        course: doc(db, "courses", formData.course),
+        course: formData.course ? doc(db, "courses", formData.course) : null, // Handle null course if not selected
         weekNumber: formData.weekNumber,
         skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
         lecturers: formData.lecturers.map((lecturerId) =>
@@ -148,10 +240,12 @@ const ActivityForm = ({ type, data, closeModal }) => {
         ),
         reflection: formData.reflection,
       };
+
       if (type === "edit") {
         const activityDocRef = doc(db, "activities", data.id);
         await updateDoc(activityDocRef, activityData);
-      } else {
+      } else if (type === "duplicate" || type === "create") {
+        // --- Handle "duplicate" and "create" types together ---
         const querySnapshot = await getDocs(collection(db, "activities"));
         const nextNumber = querySnapshot.docs.length + 1;
         const activityId = `${formData.course}-${nextNumber}`;

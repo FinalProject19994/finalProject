@@ -170,6 +170,11 @@ const Page = () => {
     setModalType("create");
   };
 
+  const handleDuplicateActivity = (activityData) => {
+    setSelectedActivity(activityData);
+    setModalType("duplicate");
+  };
+
   const closeModal = () => {
     setModalType(null);
     setSelectedActivity(null);
@@ -193,6 +198,7 @@ const Page = () => {
           columns={Columns({
             onActivityDelete: handleActivityDelete,
             onActivityEdit: handleEditActivity,
+            onActivityDuplicate: handleDuplicateActivity,
           })}
           data={activities}
           handleRowSelect={handleRowSelect}

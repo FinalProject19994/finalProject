@@ -14,7 +14,12 @@ import { useEffect, useState } from "react";
 import FavoriteHeart from "@/components/ui/FavoriteHeart";
 import ThumbsUpButton from "@/components/ui/ThumbsUpButton"; // <-- Verify this import
 
-const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
+const ActionCell = ({
+  row,
+  onActivityDelete,
+  onActivityEdit,
+  onActivityDuplicate,
+}) => {
   const activityId = row.original.id;
   // Ensure lecturers array exists and is not null before mapping
   const activityLecturerIds = Array.isArray(row.original.lecturers)
@@ -23,7 +28,6 @@ const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
   const currentUserId = auth.currentUser?.uid;
 
   const [userRole, setUserRole] = useState(null);
-  const [isAuthorizedToDelete, setIsAuthorizedToDelete] = useState(false); // State for delete authorization
   const [isAuthorizedToEdit, setIsAuthorizedToEdit] = useState(false); // State for edit authorization
 
   useEffect(() => {
@@ -39,10 +43,6 @@ const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
           }
 
           // Authorization checks
-          const deleteAuth =
-            role === "admin" || activityLecturerIds.includes(currentUserId);
-          setIsAuthorizedToDelete(deleteAuth);
-
           const editAuth =
             role === "admin" || activityLecturerIds.includes(currentUserId);
           setIsAuthorizedToEdit(editAuth);
@@ -51,7 +51,6 @@ const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
         }
       } else {
         // If no currentUserId, user is not authorized
-        setIsAuthorizedToDelete(false);
         setIsAuthorizedToEdit(false);
       }
     };
@@ -67,7 +66,7 @@ const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
     }
   };
 
-  return isAuthorizedToDelete || isAuthorizedToEdit ? (
+  return isAuthorizedToEdit ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -75,29 +74,47 @@ const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {isAuthorizedToEdit && (
-          <DropdownMenuItem
-            onClick={() => onActivityEdit(row.original)}
-            className="cursor-pointer"
-          >
-            Edit Activity
-          </DropdownMenuItem>
-        )}
-        {isAuthorizedToDelete && (
-          <DropdownMenuItem
-            disabled={!isAuthorizedToDelete}
-            onClick={handleDelete}
-            className="cursor-pointer"
-          >
-            Delete Activity
-          </DropdownMenuItem>
-        )}
+        <DropdownMenuItem
+          onClick={() => onActivityEdit(row.original)}
+          className="cursor-pointer"
+        >
+          Edit Activity
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => onActivityDuplicate(row.original)}
+          className="cursor-pointer"
+        >
+          Duplicate Activity
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleDelete} className="cursor-pointer">
+          Delete Activity
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  ) : null;
+  ) : (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem
+          onClick={() => onActivityDuplicate(row.original)}
+          className="cursor-pointer"
+        >
+          Duplicate Activity
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 };
 
-export const Columns = ({ onActivityDelete, onActivityEdit }) => {
+export const Columns = ({
+  onActivityDelete,
+  onActivityEdit,
+  onActivityDuplicate,
+}) => {
   return [
     {
       accessorKey: "title",
@@ -190,6 +207,7 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
           row={row}
           onActivityDelete={onActivityDelete}
           onActivityEdit={onActivityEdit}
+          onActivityDuplicate={onActivityDuplicate}
         />
       ),
     },

@@ -18,6 +18,9 @@ const forms = {
   survey: (type, data, closeModal) => (
     <SurveyForm type={type} data={data} closeModal={closeModal} />
   ),
+  duplicate: (type, data, closeModal) => (
+    <ActivityForm type={type} data={data} closeModal={closeModal} />
+  ),
 };
 
 const Modal = ({ table, type, data, closeModal }) => {
