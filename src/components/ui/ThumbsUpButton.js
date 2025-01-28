@@ -64,42 +64,22 @@ const ThumbsUpButton = ({ activityId }) => {
   };
 
   const handleRemoveThumbsUp = async () => {
-    console.log("handleRemoveThumbsUp function called!"); // Log at start
     if (!userId) {
-      console.log("handleRemoveThumbsUp - No userId, returning"); // Log if no userId
       return;
     }
 
     const activityDocRef = doc(db, "activities", activityId);
     const userThumbsUpDocRef = doc(activityDocRef, "thumbsUpUsers", userId);
-    console.log("handleRemoveThumbsUp - activityDocRef:", activityDocRef.path); // Log doc paths
-    console.log(
-      "handleRemoveThumbsUp - userThumbsUpDocRef:",
-      userThumbsUpDocRef.path,
-    );
 
     try {
-      console.log(
-        "handleRemoveThumbsUp - Deleting userThumbsUpDocRef:",
-        userThumbsUpDocRef.path,
-      ); // Log before deleteDoc
       await deleteDoc(userThumbsUpDocRef); // Attempt to delete user-specific doc
-      console.log("handleRemoveThumbsUp - deleteDoc SUCCESS"); // Log on success
 
       await updateDoc(activityDocRef, {
         thumbsUpCount: increment(-1), // Decrement total count
       });
-      console.log(
-        "handleRemoveThumbsUp - updateDoc SUCCESS - Decrementing thumbsUpCount",
-      ); // Log on updateDoc success
 
       setThumbsUpCount((prevCount) => Math.max(0, prevCount - 1));
       setHasThumbedUp(false);
-      console.log(
-        "handleRemoveThumbsUp - State updated - thumbsUpCount:",
-        thumbsUpCount - 1,
-        "hasThumbedUp: false",
-      ); // Log state updates
     } catch (error) {
       console.error("handleRemoveThumbsUp - Error removing thumb up:", error); // Log error details
       // Revert optimistic update on error (optional)
