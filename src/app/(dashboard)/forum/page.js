@@ -8,7 +8,6 @@ const ChatPage = () => {
         Lecturer Chat
       </h1>
       <div className="mx-4 h-[calc(100%-80px)]">
-        {/* Adjust height as needed */}
         <LecturerChat />
       </div>
     </div>
