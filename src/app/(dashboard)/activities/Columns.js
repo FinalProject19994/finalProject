@@ -11,8 +11,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { MoreHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 
-// import ThumbsUpButton from "@/components/ui/ThumbsUpButton";
 import FavoriteHeart from "@/components/ui/FavoriteHeart";
+import ThumbsUpButton from "@/components/ui/ThumbsUpButton"; // <-- Verify this import
 
 const ActionCell = ({ row, onActivityDelete, onActivityEdit }) => {
   const activityId = row.original.id;
@@ -167,6 +167,18 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
       },
     },
     {
+      accessorKey: "thumbsUp",
+      header: "Thumbs Up",
+      cell: ({ row }) => <ThumbsUpButton activityId={row.original.id} />, // <-- Verify this rendering
+      className: "w-[100px]", // Adjust width as needed
+    },
+    {
+      accessorKey: "favorite",
+      header: "Favorite",
+      cell: ({ row }) => <FavoriteHeart activityId={row.original.id} />,
+      // className: "w-[120px]", // Adjust width as needed
+    },
+    {
       accessorKey: "Actions",
       id: "actions",
       cell: ({ row }) => (
@@ -176,18 +188,6 @@ export const Columns = ({ onActivityDelete, onActivityEdit }) => {
           onActivityEdit={onActivityEdit}
         />
       ),
-    },
-    // {
-    //   accessorKey: "thumbsUp",
-    //   header: "Thumbs Up",
-    //   cell: ({ row }) => <ThumbsUpButton activityId={row.original.id} />, // Render ThumbsUpButton
-    //   className: "w-[100px]", // Adjust width as needed
-    // },
-    {
-      accessorKey: "favorite",
-      header: "Favorite",
-      cell: ({ row }) => <FavoriteHeart activityId={row.original.id} />, // Render FavoriteStar
-      // className: "w-[120px]", // Adjust width as needed
     },
   ];
 };

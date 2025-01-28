@@ -1,5 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
+import FavoriteHeart from "@/components/ui/FavoriteHeart";
+import ThumbsUpButton from "@/components/ui/ThumbsUpButton";
 import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
 import { db } from "@/lib/firebase";
 import { darkSkillsCategories, skillsCategories } from "@/lib/skillsCategories";
@@ -8,7 +10,6 @@ import { X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import FavoriteHeart from "@/components/ui/FavoriteHeart";
 
 const Page = ({ params }) => {
   const { theme } = useTheme();
@@ -106,8 +107,9 @@ const Page = ({ params }) => {
           - {activity.date}
         </h5>
         {/* Buttons on right */}
-        {/* <ThumbsUpButton activityId={params.id} /> Add ThumbsUpButton */}
         <FavoriteHeart activityId={params.id} /> {/* Add FavoriteStar */}
+        <ThumbsUpButton activityId={params.id} />{" "}
+        {/* <-- Verify ThumbsUpButton is rendered */}
         <h3 className="mb-2 text-sm font-semibold text-muted-foreground dark:text-gray-50">
           Course
         </h3>
