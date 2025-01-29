@@ -1,270 +1,371 @@
-"use client";
-import React, { useEffect, useRef } from "react";
-import * as d3 from "d3";
+export const metadata = {
+  title: "Help",
+  description: "Learn more about the core skills site.",
+};
 
-const SunburstChart = () => {
-  const chartRef = useRef(null);
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import FavoriteHeart from "@/components/ui/FavoriteHeart";
+import ThumbsUpButton from "@/components/ui/ThumbsUpButton";
+import { Heart } from "lucide-react";
 
-  const data = {
-    name: "root",
-    children: [
-      {
-        name: "Mindset",
-        color: "#a7f9ab",
-        children: [
-          { name: "Development of skills", value: 25, color: "#a7f9ab" },
-          {
-            name: "Coping with success and failure",
-            value: 25,
-            color: "#a7f9ab",
-          },
-          { name: "Moving from comfort zone", value: 25, color: "#a7f9ab" },
-          { name: "Effort investing in learning", value: 25, color: "#a7f9ab" },
-        ],
-      },
-      {
-        name: "Thinking development",
-        color: "#c3ebfa",
-        children: [
-          { name: "Creative thinking", value: 25, color: "#c3ebfa" },
-          { name: "Analytical thinking", value: 25, color: "#c3ebfa" },
-          { name: "Evaluative-critical thinking", value: 25, color: "#c3ebfa" },
-          { name: "System thinking", value: 25, color: "#c3ebfa" },
-        ],
-      },
-      {
-        name: "Emotional quotient",
-        color: "#FFC36D",
-        children: [
-          { name: "Awareness of emotions", value: 25, color: "#FFC36D" },
-          { name: "Familiarity and acceptance", value: 25, color: "#FFC36D" },
-          { name: "Self regulation of emotions", value: 25, color: "#FFC36D" },
-          { name: "Relationship building", value: 25, color: "#FFC36D" },
-          { name: "Collaboration in the team", value: 25, color: "#FFC36D" },
-          { name: "Empathy", value: 25, color: "#FFC36D" },
-          {
-            name: "Uncertainty and stress handling",
-            value: 25,
-            color: "#FFC36D",
-          },
-        ],
-      },
-      {
-        name: "Professional self",
-        color: "#D396FF",
-        children: [
-          { name: "Meaning", value: 25, color: "#D396FF" },
-          { name: "Positive framing", value: 25, color: "#D396FF" },
-          { name: "Social relationship", value: 25, color: "#D396FF" },
-          { name: "Wellbeing", value: 25, color: "#D396FF" },
-        ],
-      },
-    ],
-  };
-
-  useEffect(() => {
-    const container = d3.select(chartRef.current);
-    const aspectRatio = 1.2; // Example aspect ratio (width/height)
-
-    const updateChartSize = () => {
-      const containerWidth = container.node().offsetWidth;
-      const width = containerWidth * 0.9; // Use 90% of container width
-      const height = width / aspectRatio; // Maintain aspect ratio
-
-      // Declare topMargin and bottomMargin BEFORE using them
-      const topMargin = height * 0.1;
-      const bottomMargin = height * 0.1;
-
-      // Now you can use them in verticalShift calculation
-      const verticalShift = -height / 2 - topMargin - 10; // Fine-tune vertical positioning
-
-      const radius = width / 6.2; // Adjust radius based on new width
-
-      container.selectAll("*").remove(); // Clear the previous chart
-
-      const hierarchy = d3
-        .hierarchy(data)
-        .sum((d) => d.value)
-        .sort((a, b) => b.value - a.value);
-      const root = d3.partition().size([2 * Math.PI, hierarchy.height + 1])(
-        hierarchy,
-      );
-      root.each((d) => (d.current = d));
-
-      const arc = d3
-        .arc()
-        .startAngle((d) => d.x0)
-        .endAngle((d) => d.x1)
-        .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.005))
-        .padRadius(radius * 1.5)
-        .innerRadius((d) => d.y0 * radius)
-        .outerRadius((d) => Math.max(d.y0 * radius, d.y1 * radius - 1));
-
-      const svg = container.append("svg");
-      svg.attr("viewBox", [
-        -width / 2,
-        verticalShift,
-        width,
-        height + topMargin + bottomMargin,
-      ]);
-
-      const path = svg
-        .append("g")
-        .selectAll("path")
-        .data(root.descendants().slice(1))
-        .join("path")
-        .attr("fill", (d) => d.data.color || "#ccc")
-        .attr("fill-opacity", (d) =>
-          arcVisible(d.current) ? (d.children ? 1 : 1) : 0,
-        )
-        .attr("pointer-events", (d) =>
-          arcVisible(d.current) ? "auto" : "none",
-        )
-        .attr("d", (d) => arc(d.current));
-
-      path
-        .filter((d) => d.children)
-        .style("cursor", "pointer")
-        .on("click", clicked);
-
-      const label = svg
-        .append("g")
-        .attr("pointer-events", "none")
-        .attr("text-anchor", "middle")
-        .style("user-select", "none")
-        .selectAll("text")
-        .data(root.descendants().slice(1))
-        .join("text")
-        // .attr("dy", "0.35em")
-        .attr("fill-opacity", (d) => +labelVisible(d.current))
-        .attr("transform", (d) => labelTransform(d.current))
-        .style("font-size", () => (window.innerWidth < 768 ? "4px" : "9px"))
-        .text((d) => d.data.name);
-
-      const parent = svg
-        .append("circle")
-        .datum(root)
-        .attr("r", radius)
-        .attr("fill", "none")
-        .attr("pointer-events", "all")
-        .on("click", clicked);
-
-      function clicked(event, p) {
-        parent.datum(p.parent || root);
-
-        root.each(
-          (d) =>
-            (d.target = {
-              x0:
-                Math.max(0, Math.min(1, (d.x0 - p.x0) / (p.x1 - p.x0))) *
-                2 *
-                Math.PI,
-              x1:
-                Math.max(0, Math.min(1, (d.x1 - p.x0) / (p.x1 - p.x0))) *
-                2 *
-                Math.PI,
-              y0: Math.max(0, d.y0 - p.depth),
-              y1: Math.max(0, d.y1 - p.depth),
-            }),
-        );
-
-        const t = svg.transition().duration(750);
-
-        path
-          .transition(t)
-          .tween("data", (d) => {
-            const i = d3.interpolate(d.current, d.target);
-            return (t) => (d.current = i(t));
-          })
-          .filter(function (d) {
-            return +this.getAttribute("fill-opacity") || arcVisible(d.target);
-          })
-          .attr("fill-opacity", (d) =>
-            arcVisible(d.target) ? (d.children ? 1 : 1) : 0,
-          )
-          .attr("pointer-events", (d) =>
-            arcVisible(d.target) ? "auto" : "none",
-          )
-          .attrTween("d", (d) => () => arc(d.current));
-
-        label
-          .filter(function (d) {
-            return +this.getAttribute("fill-opacity") || labelVisible(d.target);
-          })
-          .transition(t)
-          .attr("fill-opacity", (d) => +labelVisible(d.target))
-          .attrTween("transform", (d) => () => labelTransform(d.current));
-      }
-
-      function arcVisible(d) {
-        return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0;
-      }
-
-      function labelVisible(d) {
-        return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.03;
-      }
-
-      function labelTransform(d) {
-        const x = ((d.x0 + d.x1) / 2) * (180 / Math.PI);
-        const y = ((d.y0 + d.y1) / 2) * radius;
-
-        if (d.depth === 1) {
-          return `rotate(${x - 90}) translate(${y},0) rotate(${
-            x < 180 ? 0 : 180
-          })`;
-        } else {
-          return `rotate(${x - 90}) translate(${y},0) rotate(${
-            x < 180 ? 0 : 180
-          })`;
-        }
-      }
-    };
-
-    // Initial chart size
-    updateChartSize();
-
-    // Add event listener for window resize
-    window.addEventListener("resize", updateChartSize);
-
-    // Clean up on unmount
-    return () => {
-      container.selectAll("*").remove();
-      window.removeEventListener("resize", updateChartSize);
-    };
-  }, [data]);
-
+const HelpPage = () => {
   return (
-    <div className="mx-4 my-2 h-[98%] rounded-md bg-white shadow-md dark:bg-gray-500">
-      {/* <h1 className="relative left-4 top-2 mb-6 ml-4 w-min pt-4 text-4xl font-bold text-primary_purple dark:text-primary_purple_table">
-          Help
-        </h1> */}
-      <div className="mx-14 flex items-center justify-between">
-        <div className="flex w-[45%] flex-col">
-          <h2 className="mx-5 py-2 text-4xl font-semibold italic text-primary_purple dark:text-primary_purple_table">
-            Core skills Sunburst
-          </h2>
-          <p className="text-md mx-6 text-justify text-gray-700 dark:text-gray-300">
-            Core skills are essential competencies that empower individuals to
-            navigate various personal and professional challenges effectively.
-            In the context of a sunburst diagram, these skills are visually
-            represented as interconnected segments radiating from a central
-            point. This illustrates how foundational abilities—such as
-            communication, critical thinking, and problem-solving—branch out
-            into specialized skills. This visual structure emphasizes the
-            hierarchical relationship between core skills and their sub-skills,
-            highlighting the importance of developing a robust foundation to
-            support more advanced competencies.
-          </p>
-        </div>
-        <div className="w-[55%] text-center">
-          <div ref={chartRef} />
-          <span className="select-none text-sm text-gray-500 dark:text-gray-300">
-            Click on a category to focus on its skills
-          </span>
-        </div>
-      </div>
+    <div className="mx-4 my-2 h-[98%] overflow-auto rounded-md bg-white shadow-md dark:bg-gray-500">
+      <h1 className="p-4 text-4xl font-bold text-primary_purple dark:text-primary_purple_table">
+        Help Page
+      </h1>
+      <span className="block p-4 text-lg text-gray-700 dark:text-gray-50">
+        Welcome to the Help Page! Here&apos;s everything you need to know to
+        navigate the website and use its features effectively.
+      </span>
+
+      <Accordion
+        type="single"
+        collapsible
+        className="mx-auto my-2 w-3/4 rounded-md p-4 transition duration-300 ease-in-out"
+      >
+        {/*  Understanding the Graph */}
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="rounded-md px-2 text-xl">
+            Understanding the Graph
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="mb-2 text-base text-gray-700 dark:text-gray-300">
+              The graph is the central feature of the website, visually
+              connecting the three main components:
+            </p>
+            <ul className="list-inside list-disc space-y-1 text-base text-gray-700 dark:text-gray-300">
+              <li>Skills</li>
+              <li>Activities</li>
+              <li>Courses</li>
+            </ul>
+            <p className="mb-2 mt-4 text-base font-semibold text-gray-700 dark:text-gray-300">
+              Key Features:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>Interactive Nodes and Edges:</b> Each node represents a
+                skill, activity, or course. Edges show the relationships between
+                these components.
+              </li>
+              <li>
+                <b>Clickable Navigation:</b> Click on a skill, activity, or
+                course in the graph to go directly to its corresponding page.
+              </li>
+              <li>
+                <b>Highlighting:</b> Interactions on other pages (like clicking
+                a skill or activity) will highlight the relevant node in the
+                graph for better context.
+              </li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/*  Viewing and Managing Skills, Activities, and Courses */}
+        <AccordionItem value="item-2">
+          <AccordionTrigger className="rounded-md px-2 text-xl">
+            Viewing and Managing Skills, Activities, and Courses
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="mb-2 text-base text-gray-700 dark:text-gray-300">
+              This section explains how to interact with the core components of
+              the website:
+            </p>
+
+            {/* Skills */}
+            <h4 className="mb-2 mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">
+              Skills
+            </h4>
+            <p className="mb-2 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You&apos;ll See:
+            </p>
+            <ul className="list-inside list-disc space-y-1 text-sm text-gray-700 dark:text-gray-300">
+              <li>A table listing all available skills.</li>
+            </ul>
+            <p className="mb-2 mt-2 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You Can Do:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>View Activities for a Skill:</b> Click the three dots next to
+                a skill to see which activities practice it.
+              </li>
+              <li>
+                <b>Graph Interaction:</b> Clicking on a skill highlights it in
+                the graph for easy visualization of related components.
+              </li>
+            </ul>
+
+            {/* Activities */}
+            <h4 className="mb-2 mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">
+              Activities
+            </h4>
+            <p className="mb-2 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You&apos;ll See:
+            </p>
+            <ul className="list-inside list-disc space-y-1 text-sm text-gray-700 dark:text-gray-300">
+              <li>A list of all activities.</li>
+            </ul>
+            <p className="mb-2 mt-2 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You Can Do:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>View Activity Details:</b> Click on an activity to open its
+                <b>Activity Card</b>, which shows details like related skills,
+                courses, and lecturers.
+              </li>
+              <li>
+                All related items (skills, courses, lecturers) are clickable,
+                allowing easy navigation.
+              </li>
+              <li>
+                <b>Graph Interaction:</b> Clicking on an activity highlights it
+                in the graph.
+              </li>
+              <li>
+                <b>Manage Activities:</b>
+                <ul className="list-inside list-disc space-y-1 pl-4 text-sm text-gray-700 dark:text-gray-300">
+                  <li>
+                    <b>Create</b> a new activity.
+                  </li>
+                  <li>
+                    <b>Edit</b> or <b>Delete</b> activities that belong to you.
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            {/* Courses */}
+            <h4 className="mb-2 mt-4 text-lg font-semibold text-gray-700 dark:text-gray-300">
+              Courses
+            </h4>
+            <p className="mb-2 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You&apos;ll See:
+            </p>
+            <ul className="list-inside list-disc space-y-1 text-sm text-gray-700 dark:text-gray-300">
+              <li>A list of all courses.</li>
+            </ul>
+            <p className="mb-2 mt-2 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You Can Do:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>View Activities for a Course:</b> Click the three dots next
+                to a course to see the activities associated with it.
+              </li>
+              <li>
+                <b>Graph Interaction:</b> Clicking on a course highlights it in
+                the graph.
+              </li>
+              <li>
+                <b>Manage Courses:</b>
+                <ul className="list-inside list-disc space-y-1 pl-4 text-sm text-gray-700 dark:text-gray-300">
+                  <li>
+                    <b>Create</b> a new course.
+                  </li>
+                  <li>
+                    <b>Edit</b> an existing course.
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/*  Working with Lecturers */}
+        <AccordionItem value="item-3">
+          <AccordionTrigger className="rounded-md px-2 text-xl">
+            Working with Lecturers
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="mb-2 text-base text-gray-700 dark:text-gray-300">
+              The website also helps you explore the contributions of lecturers.
+            </p>
+            <p className="mb-2 mt-4 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You&apos;ll See:
+            </p>
+            <ul className="list-inside list-disc space-y-1 text-sm text-gray-700 dark:text-gray-300">
+              <li>A list of all registered lecturers on the platform.</li>
+            </ul>
+            <p className="mb-2 mt-2 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You Can Do:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>View Lecturer Details:</b> Click the three dots next to a
+                lecturer to view their related courses or activities.
+              </li>
+              <li>
+                Navigate seamlessly to courses or activities related to a
+                specific lecturer.
+              </li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/*  Managing Your Content */}
+        <AccordionItem value="item-4">
+          <AccordionTrigger className="rounded-md px-2 text-xl">
+            Managing Your Content
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="mb-2 text-base text-gray-700 dark:text-gray-300">
+              If you are authorized to create or edit content, you can manage
+              the following:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>Create New Content:</b> Add activities and courses.
+              </li>
+              <li>
+                <b>Edit or Delete Your Content:</b> Modify or remove activities
+                and courses that belong to you.
+              </li>
+              <li>
+                Use the graph and page-specific features to visualize and track
+                changes instantly.
+              </li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/*  Favorites Feature */}
+        <AccordionItem value="item-6">
+          <AccordionTrigger className="rounded-md px-2 text-xl">
+            Using Favorites
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="mb-2 text-base text-gray-700 dark:text-gray-300">
+              The Favorites feature allows you to bookmark activities that you
+              find particularly useful or want to easily access later.
+            </p>
+            <p className="mb-2 mt-4 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You Can Do:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>Favorite Activities:</b> Click the heart icon on an Activity
+                Card in the Activities table or on the Activity Detail page to
+                add it to your favorites.
+              </li>
+              <li>
+                <b>Access Your Favorites List:</b> Click on the <b>Favorites</b>
+                link in the sidebar menu to view a dedicated page listing all
+                your favorited activities in a table.
+              </li>
+              <li>
+                <b>Unfavorite Activities:</b> Click the filled heart icon again
+                to remove an activity from your favorites list.
+              </li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/*  Likes  Feature */}
+        <AccordionItem value="item-7">
+          <AccordionTrigger className="rounded-md px-2 text-xl">
+            Using Likes
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="mb-2 text-base text-gray-700 dark:text-gray-300">
+              The Likes feature allows you to show appreciation for activities
+              and see how many other lecturers find them useful.
+            </p>
+            <p className="mb-2 mt-4 text-base font-semibold text-gray-700 dark:text-gray-300">
+              What You Can Do:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>Like an Activity:</b> Click the thumbs up icon on an Activity
+                Card or Activity Detail page to like an activity.
+              </li>
+              <li>
+                <b>View Likes Count:</b> The number next to the thumbs up icon
+                indicates how many lecturers have liked the activity.
+              </li>
+              <li>
+                <b>See Who Liked:</b> Click on the thumbs up count to open a
+                popover listing the names of lecturers who have liked the
+                activity.
+              </li>
+              <li>You can like each activity only once.</li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/*  forum System */}
+        <AccordionItem value="item-8">
+          <AccordionTrigger className="rounded-md px-2 text-xl">
+            Forum System
+          </AccordionTrigger>
+          <AccordionContent>
+            <p className="mb-2 text-base text-gray-700 dark:text-gray-300">
+              The Forum System provides a platform for all lecturers to engage
+              in open discussions and share insights with the entire Core Skills
+              community. It functions like a group chat, where every message
+              posted is visible to all lecturers.
+            </p>
+            <p className="mb-2 mt-4 text-base font-semibold text-gray-700 dark:text-gray-300">
+              Key Features:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                <b>Public Forum:</b> All messages posted in the forum are
+                visible to all registered lecturers on the platform.
+              </li>
+              <li>
+                <b>Broadcast Messaging:</b> Every message sent is broadcast to
+                the entire lecturer community, fostering open communication and
+                knowledge sharing.
+              </li>
+              <li>
+                <b>Real-time Updates:</b> Messages are displayed in a chat-like
+                interface, providing a real-time view of ongoing discussions.
+              </li>
+              <li>
+                Ideal for general announcements, platform-wide discussions, and
+                sharing resources relevant to all lecturers.
+              </li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Quick Tips for Effective Navigation */}
+        <AccordionItem value="item-5">
+          <AccordionTrigger className="rounded-md px-2 text-xl">
+            Quick Tips for Effective Navigation
+          </AccordionTrigger>
+          <AccordionContent>
+            <ul className="list-inside list-disc space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li>
+                Use the <b>graph on the Homepage</b> to explore relationships
+                between skills, activities, and courses visually.
+              </li>
+              <li>
+                The <b>three dots menu</b> next to items like skills,
+                activities, or courses offers additional options for viewing
+                related content.
+              </li>
+              <li>
+                <b>Clickable links within Activity Cards</b> make it easy to
+                move between related pages.
+              </li>
+              <li>
+                The <b>Create</b> and <b>Edit</b> options are available only for
+                content you own.
+              </li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };
 
-export default SunburstChart;
+export default HelpPage;
