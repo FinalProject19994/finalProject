@@ -9,6 +9,7 @@ import { darkSkillsCategories, skillsCategories } from "@/lib/skillsCategories";
 import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { Trash2, X } from "lucide-react";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -38,7 +39,6 @@ const Page = ({ params }) => {
         if (activitySnapshot.exists()) {
           const data = activitySnapshot.data();
 
-          // Authorization Check - START
           const currentUserId = auth.currentUser?.uid;
           let role = null;
           let activityLecturerIds = Array.isArray(data.lecturers)
@@ -50,20 +50,18 @@ const Page = ({ params }) => {
             const userDocSnap = await getDoc(userDocRef);
             if (userDocSnap.exists()) {
               role = userDocSnap.data().role.toLowerCase();
-              setUserRole(role); // Set user role state
+              setUserRole(role);
             }
           }
 
           const deleteAuth =
             role === "admin" || activityLecturerIds.includes(currentUserId);
           const editAuth =
-            role === "admin" || activityLecturerIds.includes(currentUserId); // <-- DECLARE editAuth *BEFORE* using it
+            role === "admin" || activityLecturerIds.includes(currentUserId);
 
           setIsAuthorizedToDelete(deleteAuth);
-          setIsAuthorizedToEdit(editAuth); // <-- Line 92 - Now referencing editAuth *after* declaration
-          // Authorization Check - END
+          setIsAuthorizedToEdit(editAuth);
 
-          // Resolve course, skills, lecturers (as before) - Add logs for each resolve step
           const courseSnapshot = await getDoc(data.course);
 
           const course = courseSnapshot.exists()
@@ -100,13 +98,13 @@ const Page = ({ params }) => {
           setError("Activity not found");
           console.warn(
             "fetchActivityAndUserRole - Activity not found (activitySnapshot doesn't exist)",
-          ); // Warn if activity not found
+          );
         }
       } catch (err) {
         console.error(
           "fetchActivityAndUserRole - Error fetching activity:",
           err,
-        ); // Log full error details
+        );
         setError("Failed to fetch activity. Please try again.");
       } finally {
         setLoading(false);
@@ -135,7 +133,6 @@ const Page = ({ params }) => {
   };
 
   const handleEditActivity = () => {
-    console.log("handleEditActivity function called!");
     setModalType("edit");
     setSelectedActivityId(activity);
   };
@@ -152,7 +149,7 @@ const Page = ({ params }) => {
   };
 
   return (
-    <div className="flex h-[102%] flex-col space-y-4 rounded-md bg-white p-4 px-6 shadow-md dark:bg-gray-500">
+    <div className="grid h-[102%] max-h-[102%] grid-rows-[auto_auto_1fr_auto] overflow-auto rounded-md bg-white p-2 shadow-md dark:bg-gray-500">
       <div className="flex justify-end">
         <button
           onClick={handleGoBack}
@@ -267,6 +264,31 @@ const Page = ({ params }) => {
             <p className="text-gray-600 dark:text-white">
               {activity.reflection}
             </p>
+            <div className="overflow-y-auto">
+              <h3 className="mb-2 mt-4 text-lg font-semibold text-gray-700 dark:text-gray-50">
+                Images
+              </h3>
+              <div className="flex flex-col">
+                {activity.images && activity.images.length > 0 ? (
+                  activity.images.map((imageURL, index) => (
+                    <div key={index} className="mb-4 w-full">
+                      <Image
+                        src={imageURL}
+                        alt={`Activity Image ${index + 1}`}
+                        width={500}
+                        height={300}
+                        loading="lazy"
+                        className="h-auto w-full rounded-lg object-contain shadow-md"
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground dark:text-gray-300">
+                    No images available
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -290,12 +312,6 @@ const Page = ({ params }) => {
           </button>
         )}
       </div>
-      {console.log(
-        "Before Modal Render - modalType:",
-        modalType,
-        "selectedActivity:",
-        selectedActivityId,
-      )}
       {modalType && (
         <Modal
           table="activity"

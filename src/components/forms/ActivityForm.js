@@ -10,6 +10,12 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -45,6 +51,9 @@ const ActivityForm = ({ type, data, closeModal }) => {
   const [lecturers, setLecturers] = useState([]);
   const [defaultSelectedSkills, setDefaultSelectedSkills] = useState([]);
   const [defaultSelectedLecturers, setDefaultSelectedLecturers] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({});
 
   // Fetch courses, skills, and lecturers
   useEffect(() => {
@@ -100,22 +109,17 @@ const ActivityForm = ({ type, data, closeModal }) => {
 
   useEffect(() => {
     if (type === "edit" && data) {
-      let defaultSkills = []; // Initialize defaultSkills as empty array
+      let defaultSkills = [];
 
       if (Array.isArray(data.skills)) {
-        // --- CHECK if data.skills is an array (outer check) ---
         defaultSkills = data.skills
           .map((skill, index) => {
-            // Iterate only IF data.skills is an array
             if (typeof skill === "object" && skill !== null) {
-              // --- ADDED: CHECK if skill item is an object ---
               if (
                 typeof skill.name === "string" &&
                 typeof skill.id === "string"
               ) {
-                // --- ADDED: CHECK if skill.name and skill.id are strings ---
                 return {
-                  // Only create object if skill, skill.name, and skill.id are valid
                   label: skill.name,
                   value: skill.id,
                   id: skill.id,
@@ -124,15 +128,15 @@ const ActivityForm = ({ type, data, closeModal }) => {
                 console.warn(
                   `ActivityForm - useEffect - Invalid skill object (missing name or id string) at index ${index}:`,
                   skill,
-                ); // Warn if skill object is missing name or id string
-                return null; // Skip invalid skill object
+                );
+                return null;
               }
             } else {
               console.warn(
                 `ActivityForm - useEffect - Invalid skill item (not an object) at index ${index}:`,
                 skill,
-              ); // Warn if skill item is not an object
-              return null; // Skip invalid skill item
+              );
+              return null;
             }
           })
           .filter(Boolean); // Filter out any null values from mapping
@@ -140,28 +144,22 @@ const ActivityForm = ({ type, data, closeModal }) => {
         console.warn(
           "ActivityForm - useEffect - data.skills is NOT an array or is undefined:",
           data.skills,
-        ); // Warn if data.skills is not an array
+        );
       }
 
       setDefaultSelectedSkills(defaultSkills);
-      console.log("Default Skills (Robust Handling):", defaultSkills); // Log robustly handled defaultSkills
 
-      let defaultLecturers = []; // Initialize defaultLecturers as empty array
+      let defaultLecturers = [];
 
       if (Array.isArray(data.lecturers)) {
-        // --- ADDED: CHECK if data.lecturers is an array ---
         defaultLecturers = data.lecturers
           .map((lecturer, index) => {
-            // Iterate only IF data.lecturers is an array
             if (typeof lecturer === "object" && lecturer !== null) {
-              // --- ADDED: CHECK if lecturer item is an object ---
               if (
                 typeof lecturer.name === "string" &&
                 typeof lecturer.id === "string"
               ) {
-                // --- ADDED: CHECK if lecturer.name and lecturer.id are strings ---
                 return {
-                  // Only create object if lecturer, lecturer.name, and lecturer.id are valid
                   label: lecturer.name,
                   value: lecturer.id,
                   id: lecturer.id,
@@ -170,26 +168,25 @@ const ActivityForm = ({ type, data, closeModal }) => {
                 console.warn(
                   `ActivityForm - useEffect - Invalid lecturer object (missing name or id string) at index ${index}:`,
                   lecturer,
-                ); // Warn if lecturer object is missing name or id string
-                return null; // Skip invalid lecturer object
+                );
+                return null;
               }
             } else {
               console.warn(
                 `ActivityForm - useEffect - Invalid lecturer item (not an object) at index ${index}:`,
                 lecturer,
-              ); // Warn if lecturer item is not an object
-              return null; // Skip invalid lecturer item
+              );
+              return null;
             }
           })
-          .filter(Boolean); // Filter out any null values from mapping
+          .filter(Boolean);
       } else {
         console.warn(
           "ActivityForm - useEffect - data.lecturers is NOT an array or is undefined:",
           data.lecturers,
-        ); // Warn if data.lecturers is not an array
+        );
       }
       setDefaultSelectedLecturers(defaultLecturers);
-      console.log("Default Lecturers (Robust Handling):", defaultLecturers); // Log robustly handled defaultLecturers
 
       setValue("title", data.title);
       setValue("description", data.description || "");
@@ -228,29 +225,80 @@ const ActivityForm = ({ type, data, closeModal }) => {
 
   // Submit handler
   const submit = handleSubmit(async (formData) => {
+    setUploadProgress({});
+    setLoading(true);
     try {
+      // 1. Determine Activity ID:
+      let activityId;
+      if (type === "edit") {
+        activityId = data.id;
+      } else {
+        const querySnapshot = await getDocs(collection(db, "activities"));
+        const nextNumber = querySnapshot.docs.length + 1;
+        activityId = `${formData.course}-${nextNumber}`;
+      }
+
+      // 2. Upload Images (if any):
+      const storage = getStorage();
+      const imageUrls = [];
+
+      if (selectedFiles.length > 0) {
+        const uploadPromises = Array.from(selectedFiles).map((file) => {
+          const storageRef = ref(
+            storage,
+            `activity-images/${activityId}/${file.name}`,
+          );
+          const uploadTask = uploadBytesResumable(storageRef, file);
+
+          return new Promise((resolve, reject) => {
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                const progress =
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                setUploadProgress((prev) => ({
+                  ...prev,
+                  [file.name]: progress,
+                }));
+              },
+              (error) => {
+                console.error("Error uploading image:", error);
+                reject(error);
+              },
+              async () => {
+                const downloadURL = await getDownloadURL(
+                  uploadTask.snapshot.ref,
+                );
+                imageUrls.push(downloadURL);
+                resolve();
+              },
+            );
+          });
+        });
+
+        await Promise.all(uploadPromises);
+      }
+
+      // 3. Prepare Activity Data:
       const activityData = {
         title: formData.title,
         description: formData.description,
-        course: formData.course ? doc(db, "courses", formData.course) : null, // Handle null course if not selected
+        course: formData.course ? doc(db, "courses", formData.course) : null,
         weekNumber: formData.weekNumber,
         skills: formData.skills.map((skillId) => doc(db, "skills", skillId)),
         lecturers: formData.lecturers.map((lecturerId) =>
           doc(db, "users", lecturerId),
         ),
         reflection: formData.reflection,
+        images: imageUrls,
       };
 
+      // 4. Update or Create Activity in Firestore:
       if (type === "edit") {
         const activityDocRef = doc(db, "activities", data.id);
         await updateDoc(activityDocRef, activityData);
       } else if (type === "duplicate" || type === "create") {
-        // --- Handle "duplicate" and "create" types together ---
-        const querySnapshot = await getDocs(collection(db, "activities"));
-        const nextNumber = querySnapshot.docs.length + 1;
-        const activityId = `${formData.course}-${nextNumber}`;
         const activityDocRef = doc(db, "activities", activityId);
-
         await setDoc(activityDocRef, {
           ...activityData,
           date: currentDate,
@@ -261,6 +309,8 @@ const ActivityForm = ({ type, data, closeModal }) => {
       router.refresh();
     } catch (error) {
       console.error("Error handling activity:", error);
+    } finally {
+      setLoading(false);
     }
   });
 
@@ -304,13 +354,13 @@ const ActivityForm = ({ type, data, closeModal }) => {
           Course
         </label>
         <ComboBox
-          options={courses} // Pass the 'courses' array as options
+          options={courses}
           onSelect={(selectedCourse) => {
             // Handle selected course
-            setValue("course", selectedCourse?.value); // Set form value to selected course ID
+            setValue("course", selectedCourse?.value);
           }}
           title="course"
-          defaultValue={data?.course?.id} // Pass default course ID for edit mode
+          defaultValue={data?.course?.id}
         />
         {errors.course && (
           <span className="text-sm text-red-500">{errors.course.message}</span>
@@ -388,6 +438,34 @@ const ActivityForm = ({ type, data, closeModal }) => {
           </span>
         )}
       </div>
+
+      <div>
+        <label className="text-sm text-gray-600 dark:text-gray-50">
+          Images (Optional)
+        </label>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={(event) => {
+            setSelectedFiles(event.target.files);
+            setUploadProgress({});
+          }}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        />
+      </div>
+
+      {Object.entries(uploadProgress).map(([fileName, progress]) => (
+        <div key={fileName} className="mt-2">
+          <div className="text-sm">{fileName}</div>
+          <div className="h-2 w-full rounded-full bg-gray-200">
+            <div
+              className="h-full rounded-full bg-primary_purple"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
+      ))}
 
       {/* Submit Button */}
       <button
