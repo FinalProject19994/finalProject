@@ -78,7 +78,7 @@ export function SearchableTable({ columns, data, handleRowSelect, page }) {
   };
 
   return (
-    <div>
+    <div className="overflow-auto">
       <div className="relative top-14 flex w-1/2 rounded-md border border-gray-200 p-2 text-sm">
         <Search className="mr-2 opacity-50 dark:text-gray-200" />
         <input
