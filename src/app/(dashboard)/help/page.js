@@ -9,9 +9,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import FavoriteHeart from "@/components/ui/FavoriteHeart";
-import ThumbsUpButton from "@/components/ui/ThumbsUpButton";
-import { Heart } from "lucide-react";
 
 const HelpPage = () => {
   return (
