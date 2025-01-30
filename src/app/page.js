@@ -18,6 +18,13 @@ const Page = () => {
     setError("");
     setLoginStatus("loading");
 
+    // Basic client-side validation for password length
+    if (passwordRef.current.value.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      setLoginStatus("error");
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(
         auth,
@@ -47,7 +54,13 @@ const Page = () => {
 
   const getInputBorderClass = () => {
     if (loginStatus === "error" && error) {
-      return "border-red-500 focus:border-red-700";
+      if (passwordRef.current && passwordRef.current.value.length < 6) {
+        return "border-red-500 focus:border-red-700";
+      } else if (emailRef.current && emailRef.current.value === "") {
+        return "border-red-500 focus:border-red-700";
+      } else if (error) {
+        return "border-red-500 focus:border-red-700";
+      }
     }
     return "border-gray-300 focus:border-primary_purple dark:border-gray-500 dark:focus:border-primary_purple_table_light";
   };
@@ -70,18 +83,14 @@ const Page = () => {
           <input
             type="Email"
             placeholder="Email Address"
-            className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-600 ${getInputBorderClass(
-              "email",
-            )}`}
+            className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-600 ${getInputBorderClass()}`}
             ref={emailRef}
           />
           {/* Password */}
           <input
             type="Password"
             placeholder="Password"
-            className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-600 ${getInputBorderClass(
-              "password",
-            )}`}
+            className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-600 ${getInputBorderClass()}`}
             ref={passwordRef}
           />
           <button
