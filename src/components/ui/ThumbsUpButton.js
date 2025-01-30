@@ -143,7 +143,7 @@ const ThumbsUpButton = ({ activityId }) => {
             {thumbsUpCount}
           </span>
         </PopoverTrigger>
-        <PopoverContent className="w-80 overflow-auto p-4 text-sm text-gray-500 dark:bg-gray-700 dark:text-gray-300">
+        <PopoverContent className="w-80 overflow-auto p-4 text-sm text-gray-500 dark:bg-gray-400 dark:text-gray-700">
           <h4 className="mb-2 font-semibold dark:text-gray-100">
             Lecturers who liked this activity:
           </h4>
