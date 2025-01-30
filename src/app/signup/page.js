@@ -54,7 +54,9 @@ const Page = () => {
         role: "Lecturer",
       });
 
-      alert("Please verify your email address to continue");
+      alert(
+        "Please verify your email address to continue, a verification email has been sent to you.",
+      );
       router.push("/");
     } catch (error) {
       console.error("Error creating user:", error.message);
