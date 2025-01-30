@@ -91,12 +91,12 @@ const Page = () => {
           >
             {loginStatus === "loading" ? "Logging in..." : "Log in"}
           </button>
-          {/* <Link
+          <Link
             href="/forgotPassword"
             className="text-center text-sm text-primary_purple hover:underline"
           >
             Forgot Password?
-          </Link> */}
+          </Link>
           {error && <p className="mt-2 text-center text-red-600">{error}</p>}
           <div className="h-px w-full bg-gray-300 dark:bg-gray-700" />
           <div className="flex justify-center">
