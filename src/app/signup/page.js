@@ -55,7 +55,7 @@ const Page = () => {
       });
 
       alert(
-        "Please verify your email address to continue, a verification email has been sent to you.",
+        "Check your email to verify your account, an email has been sent to you.",
       );
       router.push("/");
     } catch (error) {
