@@ -88,7 +88,7 @@ const SkillForm = ({ type, data, closeModal }) => {
         </label>
         <Select
           onValueChange={(value) => setValue("category", value)}
-          defaultValue={data.category}
+          defaultValue={data?.category ?? undefined}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select category" />
