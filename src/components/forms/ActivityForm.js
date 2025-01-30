@@ -1,11 +1,13 @@
 "use client";
 import ComboBox from "@/components/ui/ComboBox";
 import currentDate from "@/lib/currentDate";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   setDoc,
   updateDoc,
@@ -54,6 +56,31 @@ const ActivityForm = ({ type, data, closeModal }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({});
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Set the current user as the default selected lecturer
+        const userRef = doc(db, "users", user.uid);
+        getDoc(userRef).then((doc) => {
+          if (doc.exists()) {
+            const userData = doc.data();
+            setDefaultSelectedLecturers([
+              {
+                label: userData.name,
+                value: user.uid,
+                id: user.uid,
+              },
+            ]);
+            // Also set the value in the form
+            setValue("lecturers", [user.uid]);
+          }
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Fetch courses, skills, and lecturers
   useEffect(() => {
@@ -186,7 +213,12 @@ const ActivityForm = ({ type, data, closeModal }) => {
           data.lecturers,
         );
       }
-      setDefaultSelectedLecturers(defaultLecturers);
+      setDefaultSelectedLecturers(
+        data.lecturers.map((lecturer) => ({
+          label: lecturer.name,
+          value: lecturer.id,
+        })),
+      );
 
       setValue("title", data.title);
       setValue("description", data.description || "");
