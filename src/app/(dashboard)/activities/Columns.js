@@ -191,13 +191,11 @@ export const Columns = ({
       accessorKey: "thumbsUp",
       header: "Likes",
       cell: ({ row }) => <ThumbsUpButton activityId={row.original.id} />,
-      className: "w-[100px]", // Adjust width as needed
     },
     {
       accessorKey: "favorite",
       header: "Favorite",
       cell: ({ row }) => <FavoriteHeart activityId={row.original.id} />,
-      // className: "w-[120px]", // Adjust width as needed
     },
     {
       accessorKey: "Actions",
