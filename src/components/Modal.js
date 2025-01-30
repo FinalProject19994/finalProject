@@ -24,17 +24,8 @@ const forms = {
 };
 
 const Modal = ({ table, type, data, closeModal }) => {
-  const handleBackdropClick = (event) => {
-    if (event.target === event.currentTarget) {
-      closeModal();
-    }
-  };
-
   return (
-    <div
-      onClick={handleBackdropClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
       <div
         onClick={(e) => e.stopPropagation()}
         className="relative w-11/12 rounded-md bg-white p-4 dark:bg-gray-500 md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]"
