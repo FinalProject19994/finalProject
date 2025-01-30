@@ -7,7 +7,7 @@ import {
 import { doc, setDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const Page = () => {
   const router = useRouter();
@@ -18,32 +18,49 @@ const Page = () => {
   const nameRef = useRef();
   const phoneNumberRef = useRef();
 
+  const [error, setError] = useState("");
+
   const handleSignUp = async (event) => {
     event.preventDefault();
+    setError("");
 
-    // Ensure passwords match before creating the user
-    if (passwordRef.current.value !== confirmPasswordRef.current.value) {
-      console.error("Passwords do not match");
+    // Validation checks (improved):
+    if (!nameRef.current?.value) {
+      setError("Full name is required.");
       return;
     }
 
-    if (!emailRef.current.value.endsWith("@gmail.com")) {
-      // if (!emailRef.current.value.endsWith("@braude.ac.il")) {
-      console.error("Email must be from Braude domain");
+    if (!emailRef.current?.value) {
+      setError("Email address is required.");
+      return;
+    }
+
+    if (passwordRef.current?.value.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    if (passwordRef.current?.value !== confirmPasswordRef.current?.value) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    // if (!emailRef.current?.value.endsWith("@gmail.com")) {
+    if (!emailRef.current?.value.endsWith("@braude.ac.il")) {
+      setError("Email must be from Braude domain.");
       return;
     }
 
     try {
-      // Create the user with email and password
+      // Create user
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         emailRef.current.value,
         passwordRef.current.value,
       );
-
       const user = userCredential.user;
 
-      // Send email verification to the lecturer
+      // Send email verification
       await sendEmailVerification(user);
 
       // Save attributes in Firestore
@@ -60,9 +77,53 @@ const Page = () => {
       router.push("/");
     } catch (error) {
       console.error("Error creating user:", error.message);
+      if (error.code === "auth/email-already-in-use") {
+        setError("Email already in use.");
+      } else {
+        setError("Error creating user. Please try again.");
+      }
     }
   };
 
+  // Function to generate dynamic border classes (corrected):
+  const getInputBorderClass = (field) => {
+    if (error) {
+      switch (field) {
+        case "name":
+          if (!nameRef.current?.value) {
+            return "border-red-500 focus:border-red-700";
+          }
+          break;
+        case "email":
+          if (
+            !emailRef.current?.value ||
+            // !emailRef.current?.value.endsWith("@braude.ac.il")
+            !emailRef.current?.value.endsWith("@gmail.com")
+          ) {
+            return "";
+          }
+          break;
+        case "password":
+          if (
+            !passwordRef.current?.value ||
+            passwordRef.current?.value.length < 6
+          ) {
+            return "border-red-500 focus:border-red-700";
+          }
+          break;
+        case "confirmPassword":
+          if (
+            !confirmPasswordRef.current?.value ||
+            passwordRef.current?.value !== confirmPasswordRef.current?.value
+          ) {
+            return "border-red-500 focus:border-red-700";
+          }
+          break;
+      }
+    }
+    // Default style when there's no error or no error for the specific field
+    return "border-gray-300 focus:border-primary_purple dark:border-gray-500 dark:focus:border-primary_purple_table_light";
+  };
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 dark:bg-gray-800 lg:text-xl">
       <form
@@ -83,7 +144,9 @@ const Page = () => {
             <input
               type="text"
               placeholder="Full name*"
-              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
+              className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700 ${getInputBorderClass(
+                "name",
+              )}`}
               ref={nameRef}
             />
 
@@ -91,7 +154,7 @@ const Page = () => {
             <input
               type="text"
               placeholder="Phone Number"
-              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
+              className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700`}
               ref={phoneNumberRef}
             />
           </div>
@@ -104,7 +167,9 @@ const Page = () => {
             <input
               type="email"
               placeholder="Email Address*"
-              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
+              className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700 ${getInputBorderClass(
+                "email",
+              )}`}
               ref={emailRef}
             />
 
@@ -112,7 +177,9 @@ const Page = () => {
             <input
               type="password"
               placeholder="Password*"
-              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
+              className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700 ${getInputBorderClass(
+                "password",
+              )}`}
               ref={passwordRef}
             />
 
@@ -120,18 +187,28 @@ const Page = () => {
             <input
               type="password"
               placeholder="Confirm Password*"
-              className="rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700"
+              className={`rounded-md border p-2 outline-none dark:bg-gray-400 dark:text-gray-700 dark:placeholder-slate-700 ${getInputBorderClass(
+                "confirmPassword",
+              )}`}
               ref={confirmPasswordRef}
             />
           </div>
         </div>
+
+        {/* Display error message */}
+        {error && <p className="mt-4 text-center text-red-500">{error}</p>}
+
         <h3 className="mt-4 text-center text-sm text-black">
           * is a required field
         </h3>
 
-        <button className="mt-12 w-1/2 self-center rounded-md bg-primary_green p-2 font-semibold text-white hover:brightness-110 sm:w-1/3 lg:w-1/4">
+        <button
+          type="submit"
+          className="mt-12 w-1/2 self-center rounded-md bg-primary_green p-2 font-semibold text-white hover:brightness-110 sm:w-1/3 lg:w-1/4"
+        >
           Sign up
         </button>
+
         <div className="mt-2 flex justify-center">
           <p className="mr-2 text-center">Already have an account?</p>
           <Link href="/" className="text-center text-primary_purple">
