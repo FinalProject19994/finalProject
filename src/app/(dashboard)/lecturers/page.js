@@ -1,17 +1,17 @@
 "use client";
-import { SearchableTable } from "@/components/SearchableTable";
+import DataTable from "@/components/data-table";
 import Loader from "@/components/ui/Loader";
 import { db } from "@/lib/firebase";
-import { collection, getDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
+import { SearchableTable } from "@/components/SearchableTable";
 
 const TeacherListPage = () => {
   const [lecturers, setLecturers] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start with true
 
   useEffect(() => {
-    setLoading(true);
     const fetchLecturers = async () => {
       try {
         const lecturersCollection = collection(db, "users");
@@ -21,26 +21,32 @@ const TeacherListPage = () => {
           querySnapshot.docs.map(async (doc) => {
             const lecturer = doc.data();
 
-            const departments = await Promise.all(
-              lecturer.departments.map(async (ref) => {
-                try {
-                  const departmentDoc = await getDoc(ref);
-                  return departmentDoc.data()?.title;
-                } catch (e) {
-                  return e.message;
-                }
-              }),
-            );
+            // Only process if lecturer role
+            if (lecturer.role === "Lecturer" || lecturer.role === "Admin") {
+              const departments = await Promise.all(
+                (lecturer.departments || []).map(async (ref) => {
+                  try {
+                    const departmentDoc = await getDoc(ref);
+                    return departmentDoc.data()?.title;
+                  } catch (e) {
+                    console.error("Error fetching department:", e);
+                    return "Unknown Department";
+                  }
+                }),
+              );
 
-            return {
-              ...lecturer,
-              id: doc.id,
-              departments: departments.join(", "),
-            };
+              return {
+                ...lecturer,
+                id: doc.id,
+                departments: departments.join(", "),
+              };
+            }
+            return null;
           }),
         );
 
-        setLecturers(lecturerData);
+        // Filter out null values (non-lecturers)
+        setLecturers(lecturerData.filter((lecturer) => lecturer !== null));
       } catch (error) {
         console.error("Error fetching lecturers:", error);
       } finally {

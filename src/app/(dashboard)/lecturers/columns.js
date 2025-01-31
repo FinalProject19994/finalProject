@@ -68,19 +68,19 @@ export const columns = [
       );
     },
   },
-  {
-    accessorKey: "departments",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Departments
-        </Button>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "departments",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Departments
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "email",
     header: "Email",
