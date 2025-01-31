@@ -27,9 +27,10 @@ const GraphInfo = () => {
               activities, and skills.
             </p>
             <p className="text-sm">
-              Use the mouse wheel to <b>zoom</b>, drag nodes to <b>move</b>, and
-              hover to <b>explore connections</b>. <b>Click</b> a node to
-              navigate to the relevant page.
+              Use the mouse wheel to <b>zoom</b>, drag nodes to <b>move</b>{" "}
+              them, drag from empty space to <b>pan</b>, and hover to{" "}
+              <b>explore connections</b>. <b>Click</b> a node to navigate to the
+              relevant page.
             </p>
             <div className="flex items-center pt-2">
               <button
