@@ -366,7 +366,7 @@ const ActivityForm = ({ type, data, closeModal }) => {
       {/* Description Field */}
       <div>
         <label className="text-sm text-gray-600 dark:text-gray-50">
-          Description
+          Description (Optional)
         </label>
         <Textarea
           className="rounded-md border p-2 text-sm text-gray-700 outline-none dark:bg-gray-400 dark:placeholder-slate-700"
@@ -457,7 +457,7 @@ const ActivityForm = ({ type, data, closeModal }) => {
       {/* Reflection Textarea */}
       <div>
         <label className="text-sm text-gray-600 dark:text-gray-50">
-          Reflection
+          Reflection (Optional)
         </label>
         <Textarea
           placeholder="Enter a Reflection..."
