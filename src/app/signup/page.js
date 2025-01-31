@@ -85,7 +85,6 @@ const Page = () => {
     }
   };
 
-  // Function to generate dynamic border classes (corrected):
   const getInputBorderClass = (field) => {
     if (error) {
       switch (field) {
@@ -97,8 +96,8 @@ const Page = () => {
         case "email":
           if (
             !emailRef.current?.value ||
-            // !emailRef.current?.value.endsWith("@braude.ac.il")
-            !emailRef.current?.value.endsWith("@gmail.com")
+            !emailRef.current?.value.endsWith("@braude.ac.il")
+            // !emailRef.current?.value.endsWith("@gmail.com")
           ) {
             return "";
           }
@@ -121,7 +120,7 @@ const Page = () => {
           break;
       }
     }
-    // Default style when there's no error or no error for the specific field
+
     return "border-gray-300 focus:border-primary_purple dark:border-gray-500 dark:focus:border-primary_purple_table_light";
   };
   return (
