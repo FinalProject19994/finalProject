@@ -14,7 +14,7 @@ const GraphInfo = () => {
   };
 
   return (
-    <HoverCard>
+    <HoverCard openDelay={50} closeDelay={300}>
       <HoverCardTrigger asChild>
         <CircleHelp className="h-5 w-5 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-200 dark:hover:text-gray-200" />
       </HoverCardTrigger>
