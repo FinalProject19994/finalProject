@@ -109,7 +109,17 @@ const LecturerChat = () => {
             <div className="text-sm font-semibold">{message.senderName}</div>
             <div className="break-words text-sm">{message.messageText}</div>
             <div className="mt-1 text-xs text-gray-400 dark:text-gray-300">
-              {message.timestamp?.toDate().toLocaleTimeString()}
+              {new Intl.DateTimeFormat("en-il", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }).format(message.timestamp?.toDate())}{" "}
+              -{" "}
+              {new Intl.DateTimeFormat("en-IL", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              }).format(message.timestamp?.toDate())}
             </div>
           </div>
         ))}
