@@ -34,9 +34,9 @@ const GraphInfo = () => {
             <div className="flex items-center pt-2">
               <button
                 onClick={handleGoHelp}
-                className="rounded-md bg-primary_purple px-2 py-1 text-sm font-semibold text-white dark:bg-primary_purple_table dark:text-gray-600"
+                className="rounded-sm bg-primary_purple px-2 py-1 text-sm font-semibold text-white dark:bg-primary_purple_table dark:text-gray-600"
               >
-                Learn more
+                Learn more<span className="ml-1 text-xs">{`>`}</span>
               </button>
             </div>
           </div>
