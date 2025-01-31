@@ -9,7 +9,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <ThemeProvider attribute="class" enableSystem>
+        <ThemeProvider
+          attribute="class"
+          enableSystem={false}
+          defaultTheme="light"
+        >
           {children}
         </ThemeProvider>
       </body>
