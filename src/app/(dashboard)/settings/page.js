@@ -16,25 +16,51 @@ const settingsSchema = z
   .object({
     name: z.string().min(2, { message: "Name must be at least 2 characters" }),
     phone: z.string().optional(),
-    currentPassword: z.string().optional(), // Current password is now optional, required for password change
-    newPassword: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" })
-      .optional(),
+    currentPassword: z.string().optional(),
+    newPassword: z.string().optional(),
     confirmPassword: z.string().optional(),
   })
   .refine(
     (data) => {
-      // Refine to ensure newPassword and confirmPassword match
+      // Only proceed with password validation if any password field is filled
+      if (data.currentPassword || data.newPassword || data.confirmPassword) {
+        // Check if current password is provided
+        if (!data.currentPassword) {
+          return false;
+        }
+        return true;
+      }
+      return true;
+    },
+    {
+      message: "Current password is required to change password",
+      path: ["currentPassword"],
+    },
+  )
+  .refine(
+    (data) => {
+      // Validate new password length only if it's provided
+      if (data.newPassword) {
+        return data.newPassword.length >= 6;
+      }
+      return true;
+    },
+    {
+      message: "New password must be at least 6 characters",
+      path: ["newPassword"],
+    },
+  )
+  .refine(
+    (data) => {
+      // Only check if passwords match if both are provided
       if (data.newPassword || data.confirmPassword) {
-        // Only validate if newPassword or confirmPassword are entered
         return data.newPassword === data.confirmPassword;
       }
-      return true; // If no password change, no need to validate
+      return true;
     },
     {
       message: "Passwords do not match",
-      path: ["confirmPassword"], // Apply error to confirmPassword field
+      path: ["confirmPassword"],
     },
   );
 
@@ -87,10 +113,10 @@ const Settings = () => {
   const onSubmit = async (formData) => {
     setErrorMessage("");
     setSuccessMessage("");
+    setLoading(true);
+    let passwordUpdated = false;
 
     try {
-      setLoading(true);
-
       const user = auth.currentUser;
       if (!user) {
         throw new Error("User not authenticated");
@@ -98,6 +124,7 @@ const Settings = () => {
 
       const userDocRef = doc(db, "users", user.uid);
       const updateData = {};
+      console.log("Current Password:", formData.currentPassword);
 
       // Update Name and Phone (Personal Settings)
       if (formData.name !== userData?.name) {
@@ -107,35 +134,40 @@ const Settings = () => {
         updateData.phone = formData.phone;
       }
 
-      // Update Password (Privacy Settings)
-      if (
-        formData.newPassword &&
-        formData.currentPassword &&
-        formData.confirmPassword &&
-        formData.newPassword === formData.confirmPassword
-      ) {
+      // Update Password (Privacy Settings) only if newPassword field is filled
+      if (formData.newPassword) {
+        if (!formData.currentPassword) {
+          setErrorMessage(
+            "Please enter your current password to change password",
+          );
+          setLoading(false);
+          return; // Stop the submission if current password is not provided
+        }
+
+        // Re-authenticate user before password change
         try {
-          // Re-authenticate user before password change
           const credential = EmailAuthProvider.credential(
             user.email,
             formData.currentPassword,
           );
           await reauthenticateWithCredential(user, credential);
-
-          // Update password after re-authentication
+        } catch (authError) {
+          console.error("Reauthentication error:", authError);
+          setErrorMessage("Error re-authenticating. Please try again.");
+          setLoading(false);
+          return;
+        }
+        // Update password after re-authentication
+        try {
           await updatePassword(user, formData.newPassword);
+          passwordUpdated = true;
           setSuccessMessage("Password updated successfully!");
-          reset(
-            { currentPassword: "", newPassword: "", confirmPassword: "" },
-            { keepValues: false },
-          ); // Clear password fields on success
-        } catch (passwordError) {
-          console.error("Error updating password:", passwordError);
-          setErrorMessage(
-            "Incorrect current password or failed to update password.",
-          );
-          setLoading(false); // Ensure loading is set to false in error case
-          return; // Exit onSubmit function early if password update fails
+          reset({ currentPassword: "", newPassword: "", confirmPassword: "" }); // Clear password fields on success
+        } catch (passwordUpdateError) {
+          console.error("Password update error:", passwordUpdateError);
+          setErrorMessage("Failed to update password. Please try again.");
+          setLoading(false);
+          return;
         }
       }
 
@@ -144,13 +176,15 @@ const Settings = () => {
         await updateDoc(userDocRef, updateData);
         setUserData({ ...userData, ...updateData });
         setSuccessMessage("Profile settings updated successfully!");
-      } else if (!successMessage) {
-        // Show "No changes" message only if no success message already set by password update
+      } else if (!passwordUpdated) {
+        // Only show "No changes" message if no changes and no password update
         setSuccessMessage("No changes to save.");
       }
     } catch (error) {
       console.error("Error handling profile settings:", error);
-      setErrorMessage("Failed to update profile settings. Please try again.");
+      setErrorMessage(
+        "Incorrect current password or failed to update password.",
+      );
     } finally {
       setLoading(false);
     }
