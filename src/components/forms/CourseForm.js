@@ -205,7 +205,7 @@ const CourseForm = ({ type, data, closeModal }) => {
       />
       <InputField
         type="text"
-        label="ID"
+        label="course ID"
         register={register}
         name="id"
         error={errors.id}
