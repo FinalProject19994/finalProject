@@ -1,7 +1,6 @@
 "use client";
-import Chart from "@/components/Chart";
-import EventCalendar from "@/components/EventCalendar";
 import ForceDirectedGraph from "@/components/ForceDirectedGraph";
+import GraphInfo from "@/components/GraphInfo";
 import Legend from "@/components/ui/Legend";
 import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
 import { useEffect, useState } from "react";
@@ -26,6 +25,9 @@ const HomePage = () => {
         {/* LEFT - UP */}
         <div className="flex h-full w-[99%] rounded-md bg-white shadow-md dark:bg-gray-500">
           <Legend header="Overview" />
+          <div className="relative left-40 top-4">
+            <GraphInfo />
+          </div>
           <ForceDirectedGraph nodes={graphData.nodes} links={graphData.links} />
         </div>
         {/* LEFT - DOWN */}
