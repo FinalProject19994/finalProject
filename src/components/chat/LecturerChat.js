@@ -122,7 +122,7 @@ const LecturerChat = () => {
           <input
             type="text"
             placeholder="Type your message..."
-            className="flex-1 rounded-md border border-gray-500 bg-gray-500 p-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-primary_purple dark:border-gray-700 dark:text-white"
+            className="flex-1 rounded-md border border-gray-500 p-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-primary_purple dark:border-gray-700 dark:bg-gray-500 dark:text-white"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
           />
