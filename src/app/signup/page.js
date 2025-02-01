@@ -45,8 +45,8 @@ const Page = () => {
       return;
     }
 
-    // if (!emailRef.current?.value.endsWith("@gmail.com")) {
-    if (!emailRef.current?.value.endsWith("@braude.ac.il")) {
+    if (!emailRef.current?.value.endsWith("@gmail.com")) {
+      // if (!emailRef.current?.value.endsWith("@braude.ac.il")) {
       setError("Email must be from Braude domain.");
       return;
     }
