@@ -1,6 +1,7 @@
 "use client";
 import { SearchableTable } from "@/components/SearchableTable";
 import Loader from "@/components/ui/Loader";
+import { SelectedActivityIdContext } from "@/context/ActivitiesContext";
 import { auth, db } from "@/lib/firebase";
 import {
   collection,
@@ -9,14 +10,19 @@ import {
   getDocs,
   query,
   where,
-} from "firebase/firestore"; // Import query and where
-import { useEffect, useState } from "react";
-import { Columns } from "../activities/Columns"; // Reuse Activities columns for now
+} from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
+import { columns } from "./columns";
+import { useRouter } from "next/navigation";
 
 const FavoritesPage = () => {
+  const router = useRouter();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null); // Fetch user data if needed
+  const { selectedActivityId, setSelectedActivityId } = useContext(
+    SelectedActivityIdContext,
+  );
 
   useEffect(() => {
     const fetchFavoritedActivities = async () => {
@@ -24,7 +30,7 @@ const FavoritesPage = () => {
       const user = auth.currentUser;
       if (!user) {
         setLoading(false);
-        return; // No user logged in
+        return;
       }
       const userId = user.uid;
 
@@ -95,26 +101,28 @@ const FavoritesPage = () => {
     fetchFavoritedActivities();
   }, []);
 
-  if (loading) {
-    return <Loader />;
-  }
+  const handleRowSelect = (activity) => {
+    setSelectedActivityId(
+      selectedActivityId === activity.id ? null : activity.id,
+    );
+    router.push(`/activities?search=${encodeURIComponent(activity?.title)}`);
+  };
 
   return (
     <div className="mx-4 mt-2 h-[98%] flex-1 rounded-md bg-white p-2 shadow-md dark:bg-gray-500">
       <h1 className="text-3xl font-bold text-gray-600 dark:text-gray-300">
         My Favorite Activities
       </h1>
-      <SearchableTable
-        columns={Columns({
-          onActivityDelete: () => {}, // No delete function on Favorites page
-          onActivityEdit: () => {}, // No edit function on Favorites page
-        })}
-        data={activities}
-        handleRowSelect={(activity) => {
-          // Optional: Handle row select behavior if needed
-        }}
-        page="favorite-activities" // Adjust page name
-      />
+      {loading ? (
+        <Loader />
+      ) : (
+        <SearchableTable
+          columns={columns}
+          data={activities}
+          handleRowSelect={handleRowSelect}
+          page="favorites"
+        />
+      )}
     </div>
   );
 };
