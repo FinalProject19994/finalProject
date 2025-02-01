@@ -124,7 +124,6 @@ const Settings = () => {
 
       const userDocRef = doc(db, "users", user.uid);
       const updateData = {};
-      console.log("Current Password:", formData.currentPassword);
 
       // Update Name and Phone (Personal Settings)
       if (formData.name !== userData?.name) {
