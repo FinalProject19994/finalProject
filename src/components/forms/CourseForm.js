@@ -195,7 +195,7 @@ const CourseForm = ({ type, data, closeModal }) => {
   return (
     <form className="flex flex-col gap-4" onSubmit={submit}>
       <h1 className="text-xl font-semibold">
-        {type === "edit" ? "Edit Course" : "Add a new Course"}
+        {type === "edit" ? "Edit Course" : "Create a new Course"}
       </h1>
       <InputField
         label="Title"

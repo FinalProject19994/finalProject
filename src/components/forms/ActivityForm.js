@@ -352,7 +352,7 @@ const ActivityForm = ({ type, data, closeModal }) => {
       onSubmit={submit}
     >
       <h1 className="text-xl font-semibold">
-        {type === "edit" ? "Edit Activity" : "Add a New Activity"}
+        {type === "edit" ? "Edit Activity" : "Create a New Activity"}
       </h1>
 
       {/* Name Field */}

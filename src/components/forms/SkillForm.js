@@ -73,7 +73,7 @@ const SkillForm = ({ type, data, closeModal }) => {
   return (
     <form className="flex flex-col gap-8" onSubmit={submit}>
       <h1 className="text-xl font-semibold">
-        {type === "edit" ? "Edit Skill" : "Add a new skill"}
+        {type === "edit" ? "Edit Skill" : "Create a new skill"}
       </h1>
       <InputField
         label="Name"
