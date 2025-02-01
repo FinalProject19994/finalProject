@@ -18,13 +18,6 @@ const Page = () => {
     setError("");
     setLoginStatus("loading");
 
-    // Basic client-side validation for password length
-    if (passwordRef.current.value.length < 6) {
-      setError("Password must be at least 6 characters long.");
-      setLoginStatus("error");
-      return;
-    }
-
     try {
       await signInWithEmailAndPassword(
         auth,
