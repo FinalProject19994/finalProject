@@ -5,9 +5,15 @@ import { useContext, useEffect, useState } from "react";
 import { fetchGraphData, prepareGraphData } from "@/lib/fetchGraphData";
 import { SelectedCourseIdContext } from "../../../context/CoursesContext";
 
-const CoursesGraph = () => {
+const CoursesGraph = ({ updateTrigger }) => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const { selectedCourseId } = useContext(SelectedCourseIdContext);
+
+  const refetchGraphData = async () => {
+    const rawData = await fetchGraphData();
+    const processedData = prepareGraphData(rawData);
+    setGraphData(processedData);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,6 +24,10 @@ const CoursesGraph = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    refetchGraphData();
+  }, [updateTrigger]);
 
   return (
     <>

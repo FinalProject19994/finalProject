@@ -151,9 +151,15 @@ export const columns = ({ onCourseDelete, onCourseEdit }) => {
           </Button>
         );
       },
-      cell: ({ row }) =>
-        row.original.lecturers?.map((lecturer) => lecturer.name).join(", ") ||
-        "Unknown lecturers",
+      cell: ({ getValue }) => {
+        const lecturers = getValue();
+        // Check if the value is an array and not empty
+        if (Array.isArray(lecturers) && lecturers.length > 0) {
+          return lecturers.map((lecturer) => lecturer.name).join(", ");
+        } else {
+          return "N/A";
+        }
+      },
     },
     {
       accessorKey: "departments",
@@ -167,10 +173,16 @@ export const columns = ({ onCourseDelete, onCourseEdit }) => {
           </Button>
         );
       },
-      cell: ({ row }) =>
-        row.original.departments
-          ?.map((department) => department.title)
-          .join(", ") || "Unknown departments",
+      cell: ({ row }) => {
+        const departments = row.original.departments;
+        return (
+          <div>
+            {Array.isArray(departments)
+              ? departments.join(", ")
+              : "Unknown Department"}
+          </div>
+        );
+      },
     },
     {
       id: "actions",

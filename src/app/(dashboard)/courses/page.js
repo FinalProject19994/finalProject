@@ -11,6 +11,7 @@ import {
   getDoc,
   onSnapshot,
 } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { SelectedCourseIdContext } from "../../../context/CoursesContext";
 import { columns } from "./columns";
@@ -19,12 +20,8 @@ const Page = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [modalType, setModalType] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const { selectedCourseId, setSelectedCourseId } = useContext(
-    SelectedCourseIdContext,
-  );
+  const [updateTrigger, setUpdateTrigger] = useState(0);
+  const router = useRouter();
 
   const handleCreateCourse = () => {
     setModalType("create");
@@ -34,6 +31,7 @@ const Page = () => {
     try {
       const courseDocRef = doc(db, "courses", courseId);
       await deleteDoc(courseDocRef);
+      setUpdateTrigger((prev) => prev + 1);
     } catch (error) {
       console.error("Error deleting course:", error);
     }
@@ -59,6 +57,13 @@ const Page = () => {
     fetchData();
   }, []);
 
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const { selectedCourseId, setSelectedCourseId } = useContext(
+    SelectedCourseIdContext,
+  );
+
   // Fetching the courses
   useEffect(() => {
     const coursesCollection = collection(db, "courses");
@@ -70,55 +75,37 @@ const Page = () => {
           snapshot.docs.map(async (doc) => {
             const data = doc.data();
 
-            // --- FORCE Resolve department references to objects with ID and title ---
-            const resolvedDepartments = await Promise.all(
+            // Resolve department references
+            const departments = await Promise.all(
               (data.departments || []).map(async (ref) => {
                 try {
-                  // Add try-catch for error handling in individual department fetch
+                  // Add try-catch for error handling
                   const departmentDoc = await getDoc(ref);
-                  if (departmentDoc.exists()) {
-                    return {
-                      id: departmentDoc.id, // Get department ID from departmentDoc.id
-                      title: departmentDoc.data().title, // Get department title from departmentDoc.data().title
-                    };
-                  } else {
-                    console.warn("Department document not found:", ref.path); // Warn if department doc is missing
-                    return null; // Or handle missing department as needed
-                  }
+                  return departmentDoc.exists()
+                    ? departmentDoc.data().title
+                    : "Unknown Department";
                 } catch (error) {
-                  console.error("Error fetching department:", ref.path, error); // Log error for individual department fetch
-                  return null; // Or handle error as needed
+                  console.error("Error fetching department:", error);
+                  return "Unknown Department";
                 }
               }),
             );
 
-            // --- FORCE Resolve lecturer references to objects with ID and name ---
-            const resolvedLecturers = await Promise.all(
+            // Resolve lecturer references
+            const lecturers = await Promise.all(
               (data.lecturers || []).map(async (ref) => {
-                try {
-                  // Add try-catch for error handling in individual lecturer fetch
-                  const lecturerDoc = await getDoc(ref);
-                  if (lecturerDoc.exists()) {
-                    return {
-                      id: lecturerDoc.id, // Get lecturer ID from lecturerDoc.id
-                      name: lecturerDoc.data().name, // Get lecturer name from lecturerDoc.data().name
-                    };
-                  } else {
-                    console.warn("Lecturer document not found:", ref.path); // Warn if lecturer doc is missing
-                    return null; // Handle missing lecturer as needed
-                  }
-                } catch (error) {
-                  console.error("Error fetching lecturer:", ref.path, error); // Log error for individual lecturer fetch
-                  return null; // Handle error as needed
-                }
+                const lecturerDoc = await getDoc(ref);
+                return lecturerDoc.exists()
+                  ? { id: lecturerDoc.id, name: lecturerDoc.data().name }
+                  : { id: null, name: "Unknown Lecturer" };
               }),
             );
 
             return {
               id: doc.id,
               ...data,
-              departments: resolvedDepartments.filter(Boolean), // Filter out nulls
-              lecturers: resolvedLecturers.filter(Boolean), // Filter out nulls
+              departments: departments, // This should be an array of strings (department names)
+              lecturers: lecturers, // This should be an array of objects (lecturer data)
               semester: data.semester + " - " + data.year,
             };
           }),
@@ -160,15 +147,18 @@ const Page = () => {
       {loading ? (
         <Loader />
       ) : (
-        <SearchableTable
-          data={courses}
-          columns={columns({
-            onCourseDelete: handleCourseDelete,
-            onCourseEdit: handleEditCourse,
-          })}
-          handleRowSelect={handleRowSelect}
-          page="courses"
-        />
+        (console.log(courses),
+        (
+          <SearchableTable
+            data={courses}
+            columns={columns({
+              onCourseDelete: handleCourseDelete,
+              onCourseEdit: handleEditCourse,
+            })}
+            handleRowSelect={handleRowSelect}
+            page="courses"
+          />
+        ))
       )}
       {/* Modal component */}
       {modalType && (

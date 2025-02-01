@@ -23,9 +23,22 @@ const fetchGraphData = async () => {
     activitiesSnapshot.docs.map(async (doc) => {
       const activityData = doc.data();
 
+      // Resolve course reference
+      let course = null;
+      if (activityData.course) {
+        const courseDoc = await getDoc(activityData.course);
+        if (courseDoc.exists()) {
+          course = { id: courseDoc.id, ...courseDoc.data() };
+        } else {
+          console.warn(
+            `Course reference ${activityData.course} not found for activity ${doc.id}`,
+          );
+        }
+      }
+
       // Resolve skill references
       const resolvedSkills = await Promise.all(
-        activityData.skills.map(async (skillRef) => {
+        (activityData.skills || []).map(async (skillRef) => {
           const skillDoc = await getDoc(skillRef);
           return skillDoc.exists()
             ? { id: skillDoc.id, ...skillDoc.data() }
@@ -36,6 +49,7 @@ const fetchGraphData = async () => {
       return {
         id: doc.id,
         ...activityData,
+        course: course, // Add the resolved course here
         skills: resolvedSkills.filter(Boolean), // Remove nulls from unresolved references so unused skills are not included
       };
     }),
@@ -73,8 +87,8 @@ const prepareGraphData = ({ courses, activities, skills }) => {
   activities.forEach((activity) => {
     nodes.push({ id: activity.id, name: activity.title, type: "activity" });
 
-    // Link activity to its course
-    if (activity.course) {
+    // Link activity to its course only if the course exists
+    if (activity.course && activity.course.id) {
       links.push({
         source: activity.id,
         target: activity.course.id,
@@ -92,15 +106,6 @@ const prepareGraphData = ({ courses, activities, skills }) => {
         });
       }
     });
-  });
-
-  skills.forEach((skill) => {
-    if (!links.some((link) => link.target === skill.id)) {
-      const index = nodes.findIndex((node) => node.id === skill.id);
-      if (index > -1) {
-        nodes.splice(index, 1);
-      }
-    }
   });
 
   return { nodes, links };
