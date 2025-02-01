@@ -37,6 +37,16 @@ body {
   background-color: #868282;
 }
 
+.multiple-selector li {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.multiple-selector li input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

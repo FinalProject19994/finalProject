@@ -135,9 +135,9 @@ export default function MultipleSelector({
               {filteredOptions.map((option) => (
                 <li
                   key={option.id}
-                  className={`relative m-1 select-none rounded-md px-3 py-2 hover:bg-primary_purple_table hover:text-primary-foreground ${
+                  className={`relative m-1 flex select-none rounded-md px-3 py-2 hover:bg-primary_purple_table hover:text-primary-foreground ${
                     selectedOptions.some((item) => item.id === option.id)
-                      ? "bg-primary_purple text-primary-foreground"
+                      ? "bg-primary_purple text-white"
                       : ""
                   }`}
                   id={`listbox-option-${option.id}`}
@@ -147,6 +147,14 @@ export default function MultipleSelector({
                   )}
                   onClick={() => toggleOption(option)}
                 >
+                  <input
+                    type="checkbox"
+                    checked={selectedOptions.some(
+                      (item) => item.id === option.id,
+                    )}
+                    onChange={() => {}}
+                    className="mr-2 h-4 w-4"
+                  />
                   <span className="block truncate">{option.label}</span>
                 </li>
               ))}
