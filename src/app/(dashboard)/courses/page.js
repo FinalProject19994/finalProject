@@ -78,15 +78,16 @@ const Page = () => {
             // Resolve department references
             const departments = await Promise.all(
               (data.departments || []).map(async (ref) => {
-                try {
-                  // Add try-catch for error handling
-                  const departmentDoc = await getDoc(ref);
-                  return departmentDoc.exists()
-                    ? departmentDoc.data().title
-                    : "Unknown Department";
-                } catch (error) {
-                  console.error("Error fetching department:", error);
-                  return "Unknown Department";
+                const departmentDoc = await getDoc(ref);
+                // Ensure the department document exists and has a title
+                if (departmentDoc.exists() && departmentDoc.data().title) {
+                  return {
+                    id: departmentDoc.id,
+                    title: departmentDoc.data().title,
+                  };
+                } else {
+                  console.warn(`Department not found or invalid: ${ref.path}`);
+                  return { id: null, title: "Unknown Department" };
                 }
               }),
             );
@@ -104,8 +105,8 @@ const Page = () => {
             return {
               id: doc.id,
               ...data,
-              departments: departments, // This should be an array of strings (department names)
-              lecturers: lecturers, // This should be an array of objects (lecturer data)
+              departments: departments.filter(Boolean), // Ensure only valid objects are included
+              lecturers: lecturers.filter(Boolean), // Ensure only valid objects are included
               semester: data.semester + " - " + data.year,
             };
           }),
@@ -144,22 +145,15 @@ const Page = () => {
           Create New Course
         </button>
       </div>
-      {loading ? (
-        <Loader />
-      ) : (
-        (console.log(courses),
-        (
-          <SearchableTable
-            data={courses}
-            columns={columns({
-              onCourseDelete: handleCourseDelete,
-              onCourseEdit: handleEditCourse,
-            })}
-            handleRowSelect={handleRowSelect}
-            page="courses"
-          />
-        ))
-      )}
+      <SearchableTable
+        data={courses}
+        columns={columns({
+          onCourseDelete: handleCourseDelete,
+          onCourseEdit: handleEditCourse,
+        })}
+        handleRowSelect={handleRowSelect}
+        page="courses"
+      />
       {/* Modal component */}
       {modalType && (
         <Modal

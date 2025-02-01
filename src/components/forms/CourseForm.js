@@ -43,8 +43,10 @@ const schema = z.object({
 const CourseForm = ({ type, data, closeModal }) => {
   const [departments, setDepartments] = useState([]);
   const [lecturers, setLecturers] = useState([]);
-  const [defaultDepartments, setDefaultDepartments] = useState([]);
-  const [defaultLecturers, setDefaultLecturers] = useState([]);
+  const [defaultSelectedDepartments, setDefaultSelectedDepartments] = useState(
+    [],
+  );
+  const [defaultSelectedLecturers, setDefaultSelectedLecturers] = useState([]);
 
   const router = useRouter();
   const {
@@ -88,32 +90,40 @@ const CourseForm = ({ type, data, closeModal }) => {
   useEffect(() => {
     if (type === "edit" && data) {
       setValue("title", data.title);
-      setValue("id", data.id);
+      setValue("id", data.id.split("-")[0]);
       setValue("semester", data.semester.split(" ")[0]);
 
-      // --- Default Departments - CREATE OBJECTS with label, value, id CORRECTLY ---
-      const defaultDepartments = data.departments.map((department) => {
-        // Iterate over data.departments (ASSUME array of department OBJECTS now)
-        return {
-          // Explicitly RETURN an object for each department
-          label: department.title, // Get label from department.title
-          value: department.id, // Get value (ID) from department.id
-          id: department.id, // Get id from department.id
-        };
-      });
-      setDefaultDepartments(defaultDepartments);
+      // Set default selected departments for editing
+      const defaultDepartments = data.departments
+        .filter(
+          (department) =>
+            department &&
+            typeof department === "object" &&
+            department.hasOwnProperty("id") &&
+            department.hasOwnProperty("title"),
+        )
+        .map((department) => ({
+          label: department.title,
+          value: department.id,
+          id: department.id,
+        }));
+      setDefaultSelectedDepartments(defaultDepartments); // Set default selected departments
 
-      // --- Default Lecturers - CREATE OBJECTS with label, value, id CORRECTLY ---
-      const defaultLecturers = data.lecturers.map((lecturer) => {
-        // Iterate over data.lecturers (ASSUME array of lecturer OBJECTS)
-        return {
-          // Explicitly RETURN an object for each lecturer
-          label: lecturer.name, // Get label from lecturer.name
-          value: lecturer.id, // Get value (ID) from lecturer.id
-          id: lecturer.id, // Get id from lecturer.id
-        };
-      });
-      setDefaultLecturers(defaultLecturers);
+      // Set default selected lecturers for editing
+      const defaultLecturers = data.lecturers
+        .filter(
+          (lecturer) =>
+            lecturer &&
+            typeof lecturer === "object" &&
+            lecturer.hasOwnProperty("id") &&
+            lecturer.hasOwnProperty("name"),
+        )
+        .map((lecturer) => ({
+          label: lecturer.name,
+          value: lecturer.id,
+          id: lecturer.id,
+        }));
+      setDefaultSelectedLecturers(defaultLecturers); // Set default selected lecturers
 
       setValue(
         "departments",
@@ -123,7 +133,6 @@ const CourseForm = ({ type, data, closeModal }) => {
         "lecturers",
         data.lecturers.map((lecturer) => lecturer.id),
       );
-      setValue("semester", data.semester.split(" ")[0]);
     }
   }, [type, data, setValue]);
 
@@ -224,15 +233,7 @@ const CourseForm = ({ type, data, closeModal }) => {
               selected.map((department) => department.value),
             );
           }}
-          defaultValues={
-            type === "edit"
-              ? data?.departments.map((department) => ({
-                  label: String(department?.title || department), // Force string conversion, handle potential undefined
-                  value: String(department?.id || department), // Force string conversion, handle potential undefined
-                  id: String(department?.id || department), // Ensure 'id' is also a string
-                }))
-              : []
-          }
+          defaultValues={defaultSelectedDepartments}
         />
         {errors.department && (
           <p className="text-xs text-red-500">
@@ -254,15 +255,7 @@ const CourseForm = ({ type, data, closeModal }) => {
               selected.map((lecturer) => lecturer.value),
             );
           }}
-          defaultValues={
-            type === "edit"
-              ? data?.lecturers.map((lecturer) => ({
-                  label: String(lecturer?.name || lecturer), // Force string conversion, handle potential undefined
-                  value: String(lecturer?.id || lecturer), // Force string conversion, handle potential undefined
-                  id: String(lecturer?.id || lecturer), // Ensure 'id' is also a string
-                }))
-              : []
-          }
+          defaultValues={defaultSelectedLecturers}
         />
         {errors.lecturers && (
           <p className="text-xs text-red-500">

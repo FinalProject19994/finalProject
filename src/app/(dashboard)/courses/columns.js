@@ -178,7 +178,7 @@ export const columns = ({ onCourseDelete, onCourseEdit }) => {
         return (
           <div>
             {Array.isArray(departments)
-              ? departments.join(", ")
+              ? departments.map((dept) => dept.title).join(", ")
               : "Unknown Department"}
           </div>
         );
