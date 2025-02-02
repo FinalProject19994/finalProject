@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata = {
@@ -15,6 +16,7 @@ export default function RootLayout({ children }) {
           defaultTheme="light"
         >
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
