@@ -1,10 +1,11 @@
 "use client";
 import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import InputField from "../InputField";
 import {
@@ -22,6 +23,7 @@ const schema = z.object({
     .string()
     .min(2, { message: "Code must be 2 characters" })
     .max(2, { message: "Code must be 2 characters" }),
+  properties: z.string().nonempty({ message: "Properties are required" }),
 });
 
 const SkillForm = ({ type, data, closeModal }) => {
@@ -40,6 +42,7 @@ const SkillForm = ({ type, data, closeModal }) => {
       setValue("name", data.name);
       setValue("category", data.category);
       setValue("code", data.id);
+      setValue("properties", data.properties);
     }
   }, [type, data, setValue]);
 
@@ -48,38 +51,60 @@ const SkillForm = ({ type, data, closeModal }) => {
       if (type === "edit") {
         // Check if the code is being updated
         if (data.id !== formData.code) {
+          // Check if a skill with the new code already exists
+          const newCodeRef = doc(db, "skills", formData.code);
+          const newCodeSnap = await getDoc(newCodeRef);
+          if (newCodeSnap.exists()) {
+            toast.error("A skill with this code already exists");
+            return;
+          }
+
           // Delete the old document
           const oldSkillDocRef = doc(db, "skills", data.id);
           await deleteDoc(oldSkillDocRef);
 
           // Create a new document with the new code as ID
-          const newSkillDocRef = doc(db, "skills", formData.code);
-          await setDoc(newSkillDocRef, {
+          await setDoc(newCodeRef, {
             name: formData.name,
             category: formData.category,
-            code: formData.code, // Use the new code
+            code: formData.code,
+            properties: formData.properties,
           });
+          toast.success("Skill updated and moved to new code successfully");
         } else {
           // Update existing skill without changing the ID
           const skillDocRef = doc(db, "skills", data.id);
           await updateDoc(skillDocRef, {
             name: formData.name,
             category: formData.category,
-            code: formData.code, // Ensure code is still updated
+            code: formData.code,
+            properties: formData.properties,
           });
+          toast.success("Skill updated successfully");
         }
       } else {
+        // Check if a skill with the entered code already exists
+        const codeRef = doc(db, "skills", formData.code);
+        const codeSnap = await getDoc(codeRef);
+        if (codeSnap.exists()) {
+          toast.error("A skill with this code already exists");
+          return;
+        }
+
         // Create new skill
         await setDoc(doc(db, "skills", formData.code), {
           name: formData.name,
           category: formData.category,
           code: formData.code,
+          properties: formData.properties,
         });
+        toast.success("Skill created successfully");
       }
       closeModal();
       router.refresh();
     } catch (error) {
       console.error("Error saving skill:", error);
+      toast.error("Failed to save skill");
     }
   });
 
@@ -127,7 +152,13 @@ const SkillForm = ({ type, data, closeModal }) => {
         register={register}
         name="code"
         error={errors.code}
-        disabled={type === "edit"}
+      />
+
+      <InputField
+        label="Properties"
+        register={register}
+        name="properties"
+        error={errors.properties}
       />
 
       <button
