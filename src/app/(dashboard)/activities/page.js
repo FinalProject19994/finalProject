@@ -77,7 +77,7 @@ const Page = () => {
                         name: skillSnapshot.data().name,
                       };
                     } else {
-                      console.warn("Skill document not found:", skillRef.path);
+                      // console.warn("Skill document not found:", skillRef.path);
                       return null;
                     }
                   } catch (error) {
@@ -102,10 +102,10 @@ const Page = () => {
                         name: lecturerData.name,
                       };
                     } else {
-                      console.warn(
-                        "Lecturer document not found:",
-                        lecturerRef.path,
-                      );
+                      // console.warn(
+                      //   "Lecturer document not found:",
+                      //   lecturerRef.path,
+                      // );
                       return null;
                     }
                   } catch (error) {

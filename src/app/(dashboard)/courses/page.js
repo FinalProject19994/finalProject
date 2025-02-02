@@ -86,7 +86,7 @@ const Page = () => {
                     title: departmentDoc.data().title,
                   };
                 } else {
-                  console.warn(`Department not found or invalid: ${ref.path}`);
+                  // console.warn(`Department not found or invalid: ${ref.path}`);
                   return { id: null, title: "Unknown Department" };
                 }
               }),

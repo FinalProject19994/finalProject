@@ -30,9 +30,9 @@ const fetchGraphData = async () => {
         if (courseDoc.exists()) {
           course = { id: courseDoc.id, ...courseDoc.data() };
         } else {
-          console.warn(
-            `Course reference ${activityData.course} not found for activity ${doc.id}`,
-          );
+          // console.warn(
+          //   `Course reference ${activityData.course} not found for activity ${doc.id}`,
+          // );
         }
       }
 

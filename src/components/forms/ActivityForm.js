@@ -152,26 +152,26 @@ const ActivityForm = ({ type, data, closeModal }) => {
                   id: skill.id,
                 };
               } else {
-                console.warn(
-                  `ActivityForm - useEffect - Invalid skill object (missing name or id string) at index ${index}:`,
-                  skill,
-                );
+                // console.warn(
+                //   `ActivityForm - useEffect - Invalid skill object (missing name or id string) at index ${index}:`,
+                //   skill,
+                // );
                 return null;
               }
             } else {
-              console.warn(
-                `ActivityForm - useEffect - Invalid skill item (not an object) at index ${index}:`,
-                skill,
-              );
+              // console.warn(
+              //   `ActivityForm - useEffect - Invalid skill item (not an object) at index ${index}:`,
+              //   skill,
+              // );
               return null;
             }
           })
           .filter(Boolean); // Filter out any null values from mapping
       } else {
-        console.warn(
-          "ActivityForm - useEffect - data.skills is NOT an array or is undefined:",
-          data.skills,
-        );
+        // console.warn(
+        //   "ActivityForm - useEffect - data.skills is NOT an array or is undefined:",
+        //   data.skills,
+        // );
       }
 
       setDefaultSelectedSkills(defaultSkills);
@@ -192,26 +192,26 @@ const ActivityForm = ({ type, data, closeModal }) => {
                   id: lecturer.id,
                 };
               } else {
-                console.warn(
-                  `ActivityForm - useEffect - Invalid lecturer object (missing name or id string) at index ${index}:`,
-                  lecturer,
-                );
+                // console.warn(
+                //   `ActivityForm - useEffect - Invalid lecturer object (missing name or id string) at index ${index}:`,
+                //   lecturer,
+                // );
                 return null;
               }
             } else {
-              console.warn(
-                `ActivityForm - useEffect - Invalid lecturer item (not an object) at index ${index}:`,
-                lecturer,
-              );
+              // console.warn(
+              //   `ActivityForm - useEffect - Invalid lecturer item (not an object) at index ${index}:`,
+              //   lecturer,
+              // );
               return null;
             }
           })
           .filter(Boolean);
       } else {
-        console.warn(
-          "ActivityForm - useEffect - data.lecturers is NOT an array or is undefined:",
-          data.lecturers,
-        );
+        // console.warn(
+        //   "ActivityForm - useEffect - data.lecturers is NOT an array or is undefined:",
+        //   data.lecturers,
+        // );
       }
       setDefaultSelectedLecturers(
         data.lecturers.map((lecturer) => ({
