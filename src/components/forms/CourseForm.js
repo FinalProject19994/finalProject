@@ -28,7 +28,7 @@ const schema = z.object({
   id: z.string().min(5, { message: "ID must be at least 5 characters" }),
   departments: z
     .array(z.string())
-    .min(1, { message: "Select at least one department" }),
+    .nonempty({ message: "Select at least one department" }),
   lecturers: z
     .array(z.string())
     .nonempty({ message: "At least one lecturer must be selected" }),
@@ -235,9 +235,9 @@ const CourseForm = ({ type, data, closeModal }) => {
           }}
           defaultValues={defaultSelectedDepartments}
         />
-        {errors.department && (
+        {errors.departments && (
           <p className="text-xs text-red-500">
-            {errors.department.message.toString()}
+            {errors.departments.message.toString()}
           </p>
         )}
       </div>
