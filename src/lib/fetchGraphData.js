@@ -49,7 +49,7 @@ const fetchGraphData = async () => {
       return {
         id: doc.id,
         ...activityData,
-        course: course, // Add the resolved course here
+        course: course,
         skills: resolvedSkills.filter(Boolean), // Remove nulls from unresolved references so unused skills are not included
       };
     }),
@@ -61,6 +61,7 @@ const fetchGraphData = async () => {
 const prepareGraphData = ({ courses, activities, skills }) => {
   const nodes = [];
   const links = [];
+  const usedSkillIds = new Set(); // Keep track of skills that are used in activities
 
   // Add courses as nodes
   courses.forEach((course) => {
@@ -73,21 +74,11 @@ const prepareGraphData = ({ courses, activities, skills }) => {
     });
   });
 
-  // Add skills as nodes
-  skills.forEach((skill) => {
-    nodes.push({
-      id: skill.id,
-      name: skill.name,
-      type: "skill",
-      category: skill.category,
-    });
-  });
-
   // Add activities as nodes and links
   activities.forEach((activity) => {
     nodes.push({ id: activity.id, name: activity.title, type: "activity" });
 
-    // Link activity to its course only if the course exists
+    // Link activity to its course
     if (activity.course && activity.course.id) {
       links.push({
         source: activity.id,
@@ -96,16 +87,29 @@ const prepareGraphData = ({ courses, activities, skills }) => {
       });
     }
 
-    // Link activity to its resolved skills
+    // Link activity to its resolved skills and track used skills
     activity.skills.forEach((skill) => {
-      if (nodes.some((node) => node.id === skill.id)) {
+      if (skill && skill.id) {
         links.push({
           source: activity.id,
           target: skill.id,
           type: "activity-skill",
         });
+        usedSkillIds.add(skill.id); // Add skill ID to the set
       }
     });
+  });
+
+  // Add only used skills as nodes
+  skills.forEach((skill) => {
+    if (usedSkillIds.has(skill.id)) {
+      nodes.push({
+        id: skill.id,
+        name: skill.name,
+        type: "skill",
+        category: skill.category,
+      });
+    }
   });
 
   return { nodes, links };
