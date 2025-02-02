@@ -1,10 +1,10 @@
 "use client";
 import { db } from "@/lib/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputField from "../InputField";
 import {
@@ -37,7 +37,6 @@ const SkillForm = ({ type, data, closeModal }) => {
 
   useEffect(() => {
     if (type === "edit" && data) {
-      // Pre-fill the form fields with the data of the selected skill
       setValue("name", data.name);
       setValue("category", data.category);
       setValue("code", data.id);
@@ -47,14 +46,28 @@ const SkillForm = ({ type, data, closeModal }) => {
   const submit = handleSubmit(async (formData) => {
     try {
       if (type === "edit") {
-        // Update existing skill
-        const skillDocRef = doc(db, "skills", data.id);
-        await updateDoc(skillDocRef, {
-          name: formData.name,
-          category:
-            formData.category.charAt(0).toUpperCase() +
-            formData.category.slice(1),
-        });
+        // Check if the code is being updated
+        if (data.id !== formData.code) {
+          // Delete the old document
+          const oldSkillDocRef = doc(db, "skills", data.id);
+          await deleteDoc(oldSkillDocRef);
+
+          // Create a new document with the new code as ID
+          const newSkillDocRef = doc(db, "skills", formData.code);
+          await setDoc(newSkillDocRef, {
+            name: formData.name,
+            category: formData.category,
+            code: formData.code, // Use the new code
+          });
+        } else {
+          // Update existing skill without changing the ID
+          const skillDocRef = doc(db, "skills", data.id);
+          await updateDoc(skillDocRef, {
+            name: formData.name,
+            category: formData.category,
+            code: formData.code, // Ensure code is still updated
+          });
+        }
       } else {
         // Create new skill
         await setDoc(doc(db, "skills", formData.code), {
@@ -73,7 +86,7 @@ const SkillForm = ({ type, data, closeModal }) => {
   return (
     <form className="flex flex-col gap-8" onSubmit={submit}>
       <h1 className="text-xl font-semibold">
-        {type === "edit" ? "Edit Skill" : "Create a new skill"}
+        {type === "edit" ? "Edit Skill" : "Add a new skill"}
       </h1>
       <InputField
         label="Name"
@@ -83,12 +96,10 @@ const SkillForm = ({ type, data, closeModal }) => {
       />
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-600 dark:text-gray-50">
-          Category
-        </label>
+        <label className="text-sm text-gray-400">Category</label>
         <Select
           onValueChange={(value) => setValue("category", value)}
-          defaultValue={data?.category ?? undefined}
+          defaultValue={data?.category}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select category" />
@@ -118,6 +129,7 @@ const SkillForm = ({ type, data, closeModal }) => {
         error={errors.code}
         disabled={type === "edit"}
       />
+
       <button
         className="w-max self-center rounded-md bg-primary_purple p-2 text-white"
         type="submit"
